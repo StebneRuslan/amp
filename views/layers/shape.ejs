@@ -1,0 +1,40 @@
+<% function getStyles(settings) {
+  let styles = ''
+  if (settings) {
+    if (settings.margin) {
+      if (['1', '4', '7', '10', '13'].some(position => position === settings.position)) {
+        styles += `left: ${settings.margin}px; `
+      } else if (['3', '6', '9', '12', '15'].some(position => position === settings.position)) {
+        styles += `right: ${settings.margin}px; `
+      }
+      styles += `top: ${settings.margin}px; `
+      styles += `bottom: ${settings.margin}px; `
+    }
+    if (settings.opacity) {
+      styles += `opacity: ${settings.opacity / 100}; `
+    }
+    if (settings.rotate) {
+      styles += `transform: rotate(${settings.rotate}deg)`
+    }
+  }
+  return styles
+} %>
+<div
+  <% if (layer.settings.animateIn && !preview){ %>
+  animate-in="<%= layer.settings.animateIn %>"
+  <% } %>
+  <% if (layer.settings.animateDuration){ %>
+  animate-in-duration="<%= layer.settings.animateDuration %>s"
+  <% } %>
+  class="<%= layer.settings.generalSettings.position ? `item position${layer.settings.generalSettings.position}` : 'item position8' %>"
+  style="z-index: <%= layer.position %>;">
+  <div class="inner-item shape">
+    <div
+      id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
+      style="<%= getStyles(layer.settings.generalSettings)%>; text-align: center; position: relative;">
+      <div
+        class="<%= layer.content.value %><%= page ? page.position : currentSlide.position %><%= layer.position %>"
+        style="transform: rotate(<%= layer.content.value === 'line' ? 45 : 0 %>deg)"></div>
+    </div>
+  </div>
+</div>

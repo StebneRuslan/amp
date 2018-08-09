@@ -1,0 +1,211 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <script async src=<%=v0Path%>></script>
+  <script async custom-element="amp-story"
+          src=<%=ampStoryPath%>></script>
+  <script async custom-element="amp-video" src=<%=ampVideoPath%>></script>
+  <title><%= ampStory.title%></title>
+  <link rel="canonical" href="http://example.ampproject.org/my-story.html" />
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+  <style amp-custom>
+    <% if (ampStory.cuts.length !== 0) {%>
+    <% let layer = ampStory.cuts[0].layers[0] %>
+
+    <% for (let cutIndex = 0; cutIndex < ampStory.cuts.length; cutIndex++) {
+      let cut = ampStory.cuts[cutIndex]
+      for (let layerIndex = 0; layerIndex < ampStory.cuts[cutIndex].layers.length; layerIndex++) {
+        let layer = ampStory.cuts[cutIndex].layers[layerIndex]
+        if (layer.type === 'shape') { %>
+    .<%= layer.content.value %><%= cut.position %><%= layer.position %> {
+      min-width: <%= layer.settings.layerSettings.width %>px;
+      min-height: <%= layer.settings.layerSettings.height %>px;
+    <% if (layer.content.value) { %>
+      background: url(<%- include('shapes/' + layer.content.value, {layer: layer}) %>) center no-repeat;
+    <% } %>
+    <% if (layer.content.value === 'circle' && layer.settings.layerSettings.width !== layer.settings.layerSettings.height) { %>
+      background: url(<%- include('shapes/oval', {layer: layer}) %>) center no-repeat;
+    <% } %>
+    }
+    <% }}
+      }
+    }
+    %>
+    amp-story.single-slide > div {
+      display: none;
+    }
+    .disable-overlay {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+    }
+    amp-story-grid-layer:not(#full-screen) {
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+    }
+    .container:not(#full-screen) {
+      background-color: #eeeeee;
+    }
+    .grid {
+      height: 100%;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+    }
+    .item {
+      height: 100%;
+      align-self: center;
+      z-index: 1;
+      position: relative;
+    }
+    .item.text {
+      position: relative;
+      align-self: center;
+      justify-self: stretch;
+      /*height: 150px;*/
+    }
+    .item.text .inner-item {
+      min-width: 100%;
+      align-self: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .inner-item.shape {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .text-container p {
+      white-space: nowrap;
+    }
+    .text-content {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .single-text {
+      width: 100%;
+    }
+    .flex-container {
+      display: flex;
+      position: relative;
+    }
+
+    .flex-container-full {
+      display: flex;
+      position: initial;
+    }
+
+    .position1 {
+      grid-row: 1;
+      grid-column: 1;
+    }
+    .position2 {
+      grid-row: 1;
+      grid-column: 2;
+    }
+    .position3 {
+      grid-row: 1;
+      grid-column: 3;
+    }
+    .position4 {
+      grid-row: 2;
+      grid-column: 1;
+    }
+    .position5 {
+      grid-row: 2;
+      grid-column: 2;
+    }
+    .position6 {
+      grid-row: 2;
+      grid-column: 3;
+    }
+    .position7 {
+      grid-row: 3;
+      grid-column: 1;
+    }
+    .position8 {
+      grid-row: 3;
+      grid-column: 2;
+    }
+    .position9 {
+      grid-row: 3;
+      grid-column: 3;
+    }
+    .position10 {
+      grid-row: 4;
+      grid-column: 1;
+    }
+    .position11 {
+      grid-row: 4;
+      grid-column: 2;
+    }
+    .position12 {
+      grid-row: 4;
+      grid-column: 3;
+    }
+    .position13 {
+      grid-row: 5;
+      grid-column: 1;
+    }
+    .position14 {
+      grid-row: 5;
+      grid-column: 2;
+    }
+    .position15 {
+      grid-row: 5;
+      grid-column: 3;
+    }
+    .image {
+      align-self: center;
+      justify-self: center;
+    }
+
+    .image-full {
+      overflow: hidden;
+      align-self: center;
+      justify-self: center;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .amp-img-full {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    img {
+      object-fit: cover;
+    }
+
+    video {
+      object-fit: cover;
+    }
+
+    #full-screen {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    #full-screen video {
+      object-fit: cover;
+    }
+    .single-text div {
+      font-family: Montserrat;
+      font-size: 8vw;
+    }
+  </style>
+</head>
