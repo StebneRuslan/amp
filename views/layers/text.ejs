@@ -2,13 +2,25 @@
   let styles = ''
   if (settings) {
     if (settings.margin) {
-      if (['1', '4', '7', '10', '13'].some(position => position === settings.position)) {
+      if (['4', '7', '10'].some(position => position === settings.position)) {
         styles += `left: ${settings.margin}px; `
-      } else if (['3', '6', '9', '12', '15'].some(position => position === settings.position)) {
+      } else if (['6', '9', '12'].some(position => position === settings.position)) {
+        styles += `left: ${settings.margin}px; `
+      } else if (['1', '15'].some(position => position === settings.position)) {
+        styles += `left: ${settings.margin}px; `
+        styles += `top: ${settings.margin}px; `
+        styles += `right: ''; `
+      } else if (['3', '13'].some(position => position === settings.position)) {
         styles += `right: ${settings.margin}px; `
+        styles += `top: ${settings.margin}px; `
+        styles += `left: ''; `
+      } else if (['2'].some(position => position === settings.position)) {
+        styles += `top: ${settings.margin}px; `
+      } else if (['14'].some(position => position === settings.position)) {
+        styles += `top: ${settings.margin}px; `
+      } else {
+        styles += `top: ${settings.margin}px; `
       }
-      styles += `top: ${settings.margin}px; `
-      styles += `bottom: ${settings.margin}px; `
     }
     if (settings.opacity > 0) {
       styles += `opacity: ${settings.opacity / 100}; `
@@ -23,19 +35,22 @@
   return styles
 } %>
 <div
+<% if (layer.settings.animateIn && !preview){ %>
+  animate-in="<%= layer.settings.animateIn %>"
+        <% } %>
+<% if (layer.settings.animateDuration){ %>
+  animate-in-duration="<%= layer.settings.animateDuration %>s"
+        <% } %>
+<% if (layer.settings.animateDelay){ %>
+  animate-in-delay="<%= layer.settings.animateDelay %>s"
+        <% } %>
   class="<%=`${layer.settings.generalSettings.position ? `item text position${layer.settings.generalSettings.position}` : 'item position8'}` %>"
   style="z-index: <%= layer.position %>">
   <div class="inner-item">
     <div
-      class="text-container"
-      style="<%= getStyles(layer.settings.generalSettings)%>; position: relative"
-      <% if (layer.settings.animateIn && !preview){ %>
-      animate-in="<%= layer.settings.animateIn %>"
-      <% } %>
-      <% if (layer.settings.animateDuration){ %>
-      animate-in-duration="<%= layer.settings.animateDuration %>s"
-      <% } %>
-      id="text<%= layer.settings.generalSettings.position ? `${layer.settings.generalSettings.position}${page ? page.position : ''}` : '' %>">
+            class="text-container"
+            style="<%= getStyles(layer.settings.generalSettings)%>; position: relative"
+            id="text<%= layer.settings.generalSettings.position ? `${layer.settings.generalSettings.position}${page ? page.position : ''}` : '' %>">
       <div class="single-text"><%- layer.content.value %></div>
     </div>
   </div>

@@ -1,85 +1,113 @@
 <%
 function getStyles(settings) {
-  let styles = ''
-  if (settings) {
-    if (settings.margin) {
-      if (['1', '4', '7', '10', '13'].some(position => position === settings.position)) {
-        styles += `left: ${settings.margin}px; `
-      } else if (['3', '6', '9', '12', '15'].some(position => position === settings.position)) {
-        styles += `right: ${settings.margin}px; `
-      }
-      styles += `top: ${settings.margin}px; `
-      styles += `bottom: ${settings.margin}px; `
+    let styles = ''
+    if (settings) {
+        if (settings.margin) {
+            if (['4', '7', '10'].some(position => position === settings.position)) {
+                styles += `left: ${settings.margin}px; `
+            } else if (['6', '9', '12'].some(position => position === settings.position)) {
+                styles += `left: ${settings.margin}px; `
+            } else if (['1', '15'].some(position => position === settings.position)) {
+                styles += `left: ${settings.margin}px; `
+                styles += `top: ${settings.margin}px; `
+                styles += `right: ''; `
+            } else if (['3', '13'].some(position => position === settings.position)) {
+                styles += `right: ${settings.margin}px; `
+                styles += `top: ${settings.margin}px; `
+                styles += `left: ''; `
+            } else if (['2'].some(position => position === settings.position)) {
+                styles += `top: ${settings.margin}px; `
+            } else if (['14'].some(position => position === settings.position)) {
+                styles += `top: ${settings.margin}px; `
+            } else {
+                styles += `top: ${settings.margin}px; `
+            }
+        }
+        if (settings.opacity > 0) {
+            styles += `opacity: ${settings.opacity / 100}; `
+        }
+        if (settings.shadow > 0) {
+            styles += `box-shadow: 0px 0px ${settings.shadow}px 0px rgba(0,0,0,0.75); `
+        }
+        if (settings.rotate > 0) {
+            styles += `transform: rotate(${settings.rotate}deg)`
+        }
     }
-    if (settings.opacity > 0) {
-      styles += `opacity: ${settings.opacity / 100}; `
-    }
-    if (settings.shadow > 0) {
-      styles += `box-shadow: 0px 0px ${settings.shadow}px 0px rgba(0,0,0,0.75); `
-    }
-    if (settings.rotate > 0) {
-      styles += `transform: rotate(${settings.rotate}deg)`
-    }
-  }
-  return styles
+    return styles
 }
 function getVideoUrl (url) {
-  // TODO change to https
-  if (/http:\/\//.test(url) || /https:\/\//.test(url)) {
-    // const httpsUrl = url.slice(0, 4) + 's' + url.slice(4)
-    // console.log('httpsUrlhttpsUrlhttpsUrlhttpsUrl', httpsUrl)
-    return url
-  } else {
-    return `//localhost:3978${url}`
-  }
+    // TODO change to https
+    if (/http:\/\//.test(url) || /https:\/\//.test(url)) {
+        // const httpsUrl = url.slice(0, 4) + 's' + url.slice(4)
+        // console.log('httpsUrlhttpsUrlhttpsUrlhttpsUrl', httpsUrl)
+        return url
+    } else {
+        return `//localhost:3978${url}`
+    }
 }
 if (layer.settings.layerSettings.fullscreen) {%>
-<div
-  style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;">
-  <amp-video
-    autoplay
-    noaudio
-    controls
-    src="<%= getVideoUrl(layer.content.value)%>"
-    id="full-screen"
-    layout="responsive"
-    width="<%= layer.settings.layerSettings.width %>"
-    height="<%= layer.settings.layerSettings.height %>"
-    poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
-    style="z-index: <%= layer.position %>; <%= getStyles(layer.settings.generalSettings) %>">
-    <source src="<%= getVideoUrl(layer.content.value)%>"
-            type="video/mp4" />
-    <div fallback>
-      <p>This browser does not support the video element.</p>
+    <div
+    <% if (layer.settings.animateIn && !preview){ %>
+        animate-in="<%= layer.settings.animateIn %>"
+            <% } %>
+    <% if (layer.settings.animateDuration){ %>
+        animate-in-duration="<%= layer.settings.animateDuration %>s"
+            <% } %>
+    <% if (layer.settings.animateDelay){ %>
+        animate-in-delay="<%= layer.settings.animateDelay %>s"
+            <% } %>
+        style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;">
+        <amp-video
+                autoplay
+        <% if (layer.settings.layerSettings.mute) {%>
+                noaudio
+                <% } %>
+                controls
+                src="<%= getVideoUrl(layer.content.value)%>"
+                id="full-screen"
+                layout="responsive"
+                width="<%= layer.settings.layerSettings.width %>"
+                height="<%= layer.settings.layerSettings.height %>"
+                poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
+                style="z-index: <%= layer.position %>; <%= getStyles(layer.settings.generalSettings) %>">
+            <source src="<%= getVideoUrl(layer.content.value)%>"
+                    type="video/mp4" />
+            <div fallback>
+                <p>This browser does not support the video element.</p>
+            </div>
+        </amp-video>
     </div>
-  </amp-video>
-</div>
 <% } else { %>
 
-<div
-  <% if (layer.settings.animateIn && !preview){ %>
-  animate-in="<%= layer.settings.animateIn %>"
-  <% } %>
-  <% if (layer.settings.animateDuration){ %>
-  animate-in-duration="<%= layer.settings.animateDuration %>s"
-  <% } %>
-  class="flex-container video position<%= layer.settings.generalSettings.position %>"
-  style="z-index: <%= layer.position %>">
-  <amp-video
-    autoplay
-    noaudio
-    controls
-    src="<%= getVideoUrl(layer.content.value)%>"
-    width="<%= layer.settings.layerSettings.width %>"
-    height="<%= layer.settings.layerSettings.height %>"
-    poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
-    layout="fixed"
-    style="<%= getStyles(layer.settings.generalSettings)%>">
-    <source src="<%= getVideoUrl(layer.content.value)%>"
-            type="video/mp4" />
-    <div fallback>
-      <p>This browser does not support the video element.</p>
+    <div
+    <% if (layer.settings.animateIn && !preview){ %>
+        animate-in="<%= layer.settings.animateIn %>"
+            <% } %>
+    <% if (layer.settings.animateDuration){ %>
+        animate-in-duration="<%= layer.settings.animateDuration %>s"
+            <% } %>
+    <% if (layer.settings.animateDelay){ %>
+        animate-in-delay="<%= layer.settings.animateDelay %>s"
+            <% } %>
+        class="flex-container video position<%= layer.settings.generalSettings.position %>"
+        style="z-index: <%= layer.position %>">
+        <amp-video
+                autoplay
+        <% if (layer.settings.layerSettings.mute) {%>
+                noaudio
+                <% } %>
+                controls
+                src="<%= getVideoUrl(layer.content.value)%>"
+                width="<%= layer.settings.layerSettings.width %>"
+                height="<%= layer.settings.layerSettings.height %>"
+                poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
+                layout="fixed"
+                style="<%= getStyles(layer.settings.generalSettings)%>">
+            <source src="<%= getVideoUrl(layer.content.value)%>"
+                    type="video/mp4" />
+            <div fallback>
+                <p>This browser does not support the video element.</p>
+            </div>
+        </amp-video>
     </div>
-  </amp-video>
-</div>
 <%}%>
