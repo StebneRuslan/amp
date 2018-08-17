@@ -5,7 +5,6 @@
 const path = require('path')
 const express = require('express')
 const app = express()
-
 let amp = class Amp {
     constructor(type, configPaths) {
         this.type = type;
@@ -13,11 +12,13 @@ let amp = class Amp {
     }
 
     setConfigPath(data) {
+        const fontPath = path.resolve(__dirname, 'src/public/fonts', '')
         data.type = this.type
         data.v0Path = this.configPaths.v0Path
         data.ampStoryPath = this.configPaths.ampStoryPath
         data.ampVideoPath = this.configPaths.ampVideoPath
         data.ampAnimationPath = this.configPaths.ampAnimationPath
+        data.fontPath = fontPath;
         return data;
     }
 
@@ -52,6 +53,7 @@ let amp = class Amp {
         let resultHtml = ''
         data.type = this.type
         let fullData = this.setConfigPath(data);
+        console.log('fullDatafullData', fullData)
         app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function(err, html) {
             if (err) {
                 console.log(err);
