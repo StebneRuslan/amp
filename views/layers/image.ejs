@@ -1,8 +1,7 @@
-
 <% function getStyles (settings) {
     let styles = ''
     if (settings) {
-        if (settings.margin) {
+        if (settings.margin && !layer.settings.layerSettings.fullscreen) {
             if (['1', '3', '13', '15', '2', '5', '11', '14'].includes(settings.position)) {
                 if (['1', '2', '3', '5'].includes(settings.position)) {
                     styles += `top:${settings.margin}px;`;
@@ -20,7 +19,7 @@
         if (settings.opacity) {
             styles += `opacity:${settings.opacity / 100};`
         }
-        if (settings.rotate >= 0 && layer.settings.layerSettings.fullscreen) {
+        if (layer.settings.layerSettings.fullscreen) {
             var dist = Math.sqrt((Math.pow(layer.iframeWidth, 2) || Math.pow(400, 2)) + (Math.pow(layer.iframeHeight, 2) || Math.pow(711, 2)));
             var diagAngle = Math.asin((layer.iframeHeight || 711) / dist);
 
@@ -38,8 +37,6 @@
 
             var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.height
             var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.width
-            console.log('Math.PI / 2 - diagAngle - Math.abs(a1)', Math.PI / 2 - diagAngle - Math.abs(a1))
-
             var scale = Math.max(scale1, scale2)
             styles += `transform: rotate(${settings.rotate}deg) scale(${scale + 0.05});`
         }
@@ -65,19 +62,25 @@ function getImageUrl (content) {
         return content.value || ''
     }
 }
-if (layer.settings.layerSettings.fullscreen){ %>
+if (layer.settings.layerSettings.fullscreen) { %>
     <div
-    <% if (layer.settings.generalSettings.rotate >= '1' && layer.settings.generalSettings.rotate !== '360'){ %>
-        class="image flex-container position<%= layer.settings.generalSettings.position %>"
+    <% if (layer.settings.generalSettings.rotate !== '-180' &&
+      layer.settings.generalSettings.rotate !== '0' &&
+      layer.settings.generalSettings.rotate !== '180'
+    ) { %>
+        class="image flex-container position8"
         style="<%= getStyles(layer.settings.generalSettings) %>; overflow: hidden; "
     <% } else { %>
-        class="image-full flex-container-full position<%= layer.settings.generalSettings.position %>"
+        class="image-full flex-container-full position8"
         style="<%= getStyles(layer.settings.generalSettings) %>; transform: none;"
             <% } %>
     >
         <amp-img
                 src="<%= getImageUrl(layer.content) %>"
-        <% if (layer.settings.generalSettings.rotate < '1' || layer.settings.generalSettings.rotate == '360' ) { %>
+        <% if (layer.settings.generalSettings.rotate === '-180' ||
+          layer.settings.generalSettings.rotate === '0' ||
+          layer.settings.generalSettings.rotate === '180'
+        ) { %>
                 width='100'
                 height='100'
                 layout="responsive"
@@ -98,8 +101,6 @@ if (layer.settings.layerSettings.fullscreen){ %>
                 <% } %>
         <% if (layer.settings.animateDelay){ %>
                 animate-in-delay="<%= layer.settings.animateDelay %>s"
-                <% } %>
-                <% if (layer.settings.generalSettings.rotate >= '1' && layer.settings.generalSettings.rotate !== '360'){ %>
                 <% } %>
         >
         </amp-img>
@@ -134,7 +135,7 @@ if (layer.settings.layerSettings.fullscreen){ %>
         >
             <div
                     class="rotate-wrapper"
-                    style="<%= getStyles(layer.settings.generalSettings); %>"
+                    style="position:relative;<%= getStyles(layer.settings.generalSettings); %>"
             >
                 <amp-img
                         src="<%= getImageUrl(layer.content) %>"
