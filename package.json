@@ -1,15 +1,41 @@
 {
-  "name": "amp-to-html",
-  "version": "1.4.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "_from": "amp-to-html@^1.4.0",
+  "_id": "amp-to-html@1.4.1",
+  "_inBundle": false,
+  "_integrity": "sha512-p1kc1C2+VGCAAjAxHF4CrNUhbYP4kTn+HfqoUIFuoErNJ94OxgwSgSavvghFyE/igodoca/vGglmQHEkZP2kLg==",
+  "_location": "/amp-to-html",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "amp-to-html@^1.4.0",
+    "name": "amp-to-html",
+    "escapedName": "amp-to-html",
+    "rawSpec": "^1.4.0",
+    "saveSpec": null,
+    "fetchSpec": "^1.4.0"
   },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/amp-to-html/-/amp-to-html-1.4.1.tgz",
+  "_shasum": "2e61bb75b0b2a326989c3a83118557c21bb4fb6f",
+  "_spec": "amp-to-html@^1.4.0",
+  "_where": "C:\\Git\\backend-nodeJS",
   "author": "",
-  "license": "ISC",
+  "bundleDependencies": false,
   "dependencies": {
     "ejs": "^2.6.1",
     "express": "^4.16.3"
-  }
+  },
+  "deprecated": false,
+  "description": "",
+  "license": "ISC",
+  "main": "index.js",
+  "name": "amp-to-html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.4.1"
 }

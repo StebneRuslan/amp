@@ -43,7 +43,7 @@
             var scale = Math.max(scale1, scale2)
             styles += `transform: rotate(${settings.rotate}deg) scale(${scale + 0.05});`
         }
-        if (settings.rotate >= 0 && !layer.settings.layerSettings.fullscreen) {
+        if (!layer.settings.layerSettings.fullscreen) {
             styles += `transform: rotate(${settings.rotate}deg);`
         }
         styles += `z-index: ${layer.position}`
