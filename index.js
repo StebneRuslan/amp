@@ -12,13 +12,12 @@ let amp = class Amp {
     }
 
     setConfigPath(data) {
-        // const fontPath = path.resolve(__dirname, 'src/public/fonts', '')
         data.type = this.type
         data.v0Path = this.configPaths.v0Path
         data.ampStoryPath = this.configPaths.ampStoryPath
         data.ampVideoPath = this.configPaths.ampVideoPath
         data.ampAnimationPath = this.configPaths.ampAnimationPath
-        // data.fontPath = fontPath;
+        data.fontPath = this.configPaths.fontPath
         return data;
     }
 
