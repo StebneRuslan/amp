@@ -20,8 +20,8 @@
             styles += `opacity:${settings.opacity / 100};`
         }
         if (layer.settings.layerSettings.fullscreen) {
-            var dist = Math.sqrt((Math.pow(layer.iframeWidth, 2) || Math.pow(400, 2)) + (Math.pow(layer.iframeHeight, 2) || Math.pow(711, 2)));
-            var diagAngle = Math.asin((layer.iframeHeight || 711) / dist);
+            var dist = Math.sqrt((Math.pow(ampStory.editorWidth, 2) || Math.pow(400, 2)) + (Math.pow(ampStory.editorHeight, 2) || Math.pow(711, 2)));
+            var diagAngle = Math.asin((ampStory.editorHeight || 711) / dist);
 
             var a1 = (((settings.rotate * Math.PI / 180) % (Math.PI * 2)) + Math.PI * 4) % (Math.PI * 2);
             console.log('a1', a1)
@@ -38,7 +38,7 @@
             var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.height
             var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.width
             var scale = Math.max(scale1, scale2)
-            styles += `transform: rotate(${settings.rotate}deg) scale(${scale + 0.05});`
+            styles += `transform: rotate(${settings.rotate}deg) scale(${scale});`
         }
         if (!layer.settings.layerSettings.fullscreen) {
             styles += `transform: rotate(${settings.rotate}deg);`
