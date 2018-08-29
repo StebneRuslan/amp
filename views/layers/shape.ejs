@@ -59,14 +59,19 @@
               class="<%= layer.content.value %><%= page ? page.position : currentSlide.position %><%= layer.position %>"
               style="display:flex;justify-content:center;align-items:center;"
       >
-        <% if (layer.content.value === 'square') { %>
-          <%- include ../shapes/square.ejs %>
-        <% } else if (layer.content.value === 'circle') { %>
-          <%- include ../shapes/circle.ejs %>
-        <% } else if (layer.content.value === 'triangle') { %>
-          <%- include ../shapes/triangle.ejs %>
-        <% } else if (layer.content.value === 'line') { %>
-          <%- include ../shapes/line.ejs %>
+        <% switch (layer.content.value) {
+          case 'square' : %>
+          <% include ../shapes/square.ejs %>
+        <% break
+          case 'circle' : %>
+          <% include ../shapes/circle.ejs %>
+        <% break
+          case'triangle' : %>
+          <% include ../shapes/triangle.ejs %>
+        <% break
+          case'line' : %>
+          <% include ../shapes/line.ejs %>
+        <% break %>
         <% } %>
       </div>
     </div>
