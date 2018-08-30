@@ -26,17 +26,8 @@
   return styles
 } %>
 <div
-<% if (layer.settings.animateIn && !preview){ %>
-  animate-in="<%= layer.settings.animateIn %>"
-        <% } %>
-<% if (layer.settings.animateDuration){ %>
-  animate-in-duration="<%= layer.settings.animateDuration %>s"
-        <% } %>
-<% if (layer.settings.animateDelay){ %>
-  animate-in-delay="<%= layer.settings.animateDelay %>s"
-        <% } %>
-  class="<%= layer.settings.generalSettings.position ? `item position${layer.settings.generalSettings.position}` : 'item position8' %>"
-  style="z-index: <%= layer.position %>;">
+        class="<%= layer.settings.generalSettings.position ? `item position${layer.settings.generalSettings.position}` : 'item position8' %>"
+        style="z-index: <%= layer.position %>;">
   <div
   <% if (['5', '8', '11'].includes(layer.settings.generalSettings.position)) { %>
     style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"
@@ -53,22 +44,30 @@
           <% } %>
   >
     <div
-            id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
-            style="<%= getStyles(layer.settings.generalSettings)%>; text-align: center; position: relative;">
+    >
       <div
-              class="<%= layer.content.value %><%= page ? page.position : currentSlide.position %><%= layer.position %>"
-              style="display:flex;justify-content:center;align-items:center;"
-      >
-        <% if (layer.content.value === 'square') { %>
-          <%- include ../shapes/square.ejs %>
-        <% } else if (layer.content.value === 'circle') { %>
-          <%- include ../shapes/circle.ejs %>
-        <% } else if (layer.content.value === 'triangle') { %>
-          <%- include ../shapes/triangle.ejs %>
-        <% } else if (layer.content.value === 'line') { %>
-          <%- include ../shapes/line.ejs %>
-        <% } %>
+              id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
+              style="<%= getStyles(layer.settings.generalSettings)%>; text-align: center; position: relative;">
+        <div
+                class="<%= layer.content.value %><%= page ? page.position : currentSlide.position %><%= layer.position %>"
+        <% if (['13', '14', '15'].includes(layer.settings.generalSettings.position) && layer.content.value === 'triangle') { %>
+                style="display:flex;justify-content:center;align-items:center;transform: translateY(17%)"
+        <% } else { %>
+                style="display:flex;justify-content:center;align-items:center;"
+                <% } %>
+        >
+          <% if (layer.content.value === 'square') { %>
+            <%- include ../shapes/square.ejs %>
+          <% } else if (layer.content.value === 'circle') { %>
+            <%- include ../shapes/circle.ejs %>
+          <% } else if (layer.content.value === 'triangle') { %>
+            <%- include ../shapes/triangle.ejs %>
+          <% } else if (layer.content.value === 'line') { %>
+            <%- include ../shapes/line.ejs %>
+          <% } %>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
