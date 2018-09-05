@@ -22,7 +22,9 @@
             if (layer.type === 'shape') { %>
         .<%= layer.content.value %><%= cut.position %><%= layer.position %> {
             min-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness %>px;
+            max-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness %>px;
             min-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness %>px;
+            max-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness %>px;
         }
         <% }}
           }
@@ -238,6 +240,10 @@
 
         img {
             object-fit: cover;
+        }
+
+        .small-image img {
+            object-fit: fill;
         }
 
         video {
