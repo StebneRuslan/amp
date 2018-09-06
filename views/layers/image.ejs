@@ -154,14 +154,14 @@ if (layer.settings.layerSettings.fullscreen) { %>
     >
       <div
         id="image-animation"
-      <% if (layer.settings.animateIn && !preview){ %>
-        animate-in="<%= layer.settings.animateIn %>"
-        <% } %>
-      <% if (layer.settings.animateDuration){ %>
-        animate-in-duration="<%= layer.settings.animateDuration %>s"
-        <% } %>
-      <% if (layer.settings.animateDelay){ %>
-        animate-in-delay="<%= layer.settings.animateDelay %>s"
+        <% if (layer.settings.animateIn && !preview){ %>
+          animate-in="<%= layer.settings.animateIn %>"
+          <% } %>
+        <% if (layer.settings.animateDuration){ %>
+          animate-in-duration="<%= layer.settings.animateDuration %>s"
+          <% } %>
+        <% if (layer.settings.animateDelay){ %>
+          animate-in-delay="<%= layer.settings.animateDelay %>s"
         <% } %>
         style="display:flex;justify-content:center;align-items:center;min-width:<%= animationWidth(layer) %>px;max-width:<%= animationWidth(layer) %>px;min-height:<%= animationHeight(layer) %>px;max-height:<%= animationHeight(layer) %>px;"
       >
