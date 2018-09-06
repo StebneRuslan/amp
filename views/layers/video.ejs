@@ -56,7 +56,6 @@ if (layer.settings.layerSettings.fullscreen) {%>
         <% if (layer.settings.layerSettings.mute) {%>
                 noaudio
                 <% } %>
-                controls
                 src="<%= getVideoUrl(layer.content.value)%>"
                 id="full-screen"
                 layout="responsive"
@@ -101,7 +100,6 @@ if (layer.settings.layerSettings.fullscreen) {%>
         <% if (layer.settings.layerSettings.mute) {%>
                 noaudio
                 <% } %>
-                controls
                 src="<%= getVideoUrl(layer.content.value)%>"
                 width="<%= layer.settings.layerSettings.width %>"
                 height="<%= layer.settings.layerSettings.height %>"
