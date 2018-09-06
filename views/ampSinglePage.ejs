@@ -27,7 +27,16 @@
       <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
         <amp-story-grid-layer id="layer<%= layer.position %>" template="fill">
           <div>
-            <div class="grid">
+            <div class="grid"
+              <% if (layer.type === 'image' &&
+                layer.settings.layerSettings.fullscreen &&
+                layer.settings.generalSettings.rotate !== '-180' &&
+                layer.settings.generalSettings.rotate !== '0' &&
+                layer.settings.generalSettings.rotate !== '180') {
+              %>
+               style="display:block;"
+              <% } %>
+            >
               <% var page = null
                       switch (layer.type) {
               case 'text': %>
