@@ -23,9 +23,6 @@ function getStyles(settings) {
     if (settings.rotate) {
       styles += `transform:rotate(${settings.rotate}deg);`
     }
-    if (settings.shadow > 0) {
-      styles += `box-shadow: 0px 0px ${settings.shadow}px 0px rgba(0,0,0,0.75); `
-    }
   }
   return styles
 }
@@ -120,14 +117,15 @@ if (layer.settings.layerSettings.fullscreen) {%>
       >
         <amp-video
           autoplay
-        <% if (layer.settings.layerSettings.mute) {%>
-          noaudio
+          <% if (layer.settings.layerSettings.mute) { %>
+            noaudio
           <% } %>
           src="<%= getVideoUrl(layer.content.value)%>"
           width="<%= layer.settings.layerSettings.width %>"
           height="<%= layer.settings.layerSettings.height %>"
           poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
           layout="fixed"
+          style="box-shadow:0px 0px <%= layer.settings.generalSettings.shadow %>px 0px rgba(0,0,0,0.75);"
         >
           <div fallback>
             <p>This browser does not support the video element.</p>
