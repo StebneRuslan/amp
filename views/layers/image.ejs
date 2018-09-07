@@ -52,12 +52,12 @@ function getRotateValue(settings) {
 
 function animationHeight(layer) {
   return Math.abs((+layer.settings.layerSettings.width) * Math.sin(Radians(+layer.settings.generalSettings.rotate))) +
-    Math.abs((+layer.settings.layerSettings.height) * Math.cos(Radians(+layer.settings.generalSettings.rotate)))
+          Math.abs((+layer.settings.layerSettings.height) * Math.cos(Radians(+layer.settings.generalSettings.rotate)))
 }
 
 function animationWidth(layer) {
   return Math.abs((+layer.settings.layerSettings.width) * Math.cos(Radians(+layer.settings.generalSettings.rotate))) +
-    Math.abs((+layer.settings.layerSettings.height) * Math.sin(Radians(+layer.settings.generalSettings.rotate)))
+          Math.abs((+layer.settings.layerSettings.height) * Math.sin(Radians(+layer.settings.generalSettings.rotate)))
 }
 
 function Radians(deg) {
@@ -82,60 +82,60 @@ function getImageUrl (content) {
 if (layer.settings.layerSettings.fullscreen) { %>
   <div
   <% if (layer.settings.generalSettings.rotate !== '-180' &&
-    layer.settings.generalSettings.rotate !== '0' &&
-    layer.settings.generalSettings.rotate !== '180'
+          layer.settings.generalSettings.rotate !== '0' &&
+          layer.settings.generalSettings.rotate !== '180'
   ) { %>
     class="position8 image flex-container"
     style="overflow:hidden;width:100%;height:100%;"
   <% } else { %>
     class="position8 image-full flex-container-full"
-    <% } %>
+          <% } %>
   <% if (layer.settings.animateIn && !preview) { %>
     animate-in="<%= layer.settings.animateIn %>"
-    <% } %>
+          <% } %>
   <% if (layer.settings.animateDuration) { %>
     animate-in-duration="<%= layer.settings.animateDuration %>s"
-    <% } %>
+          <% } %>
   <% if (layer.settings.animateDelay) { %>
     animate-in-delay="<%= layer.settings.animateDelay %>s"
-    <% } %>
+          <% } %>
   >
     <div
     <% if (layer.settings.generalSettings.rotate !== '-180' &&
-      layer.settings.generalSettings.rotate !== '0' &&
-      layer.settings.generalSettings.rotate !== '180'
+            layer.settings.generalSettings.rotate !== '0' &&
+            layer.settings.generalSettings.rotate !== '180'
     ) { %>
       style="width:100%;height:100%;<%= getStyles(layer.settings.generalSettings) %>;display:flex;justify-content:center;align-items:center;"
     <% } else { %>
       style="width:100%;height:100%;<%= getStyles(layer.settings.generalSettings) %>;"
-      <% } %>
+            <% } %>
     >
       <amp-img
-        src="<%= getImageUrl(layer.content) %>"
-        <% if (layer.settings.generalSettings.rotate === '-180' ||
-          layer.settings.generalSettings.rotate === '0' ||
-          layer.settings.generalSettings.rotate === '180'
-        ) { %>
-          width='100'
-          height='100'
-          layout="responsive"
-          class="amp-img-full"
-          style="transform:rotate(<%= layer.settings.generalSettings.rotate %>deg);"
-        <% } else { %>
-          width="<%= layer.settings.layerSettings.width %>px"
-          height="<%= layer.settings.layerSettings.height %>px"
-          style="min-width:<%= layer.settings.layerSettings.width %>px!important;min-height:<%= layer.settings.layerSettings.height %>px!important;<%= getRotateValue(layer.settings.generalSettings) %>;"
-          class=""
-          layout="fixed"
-        <% } %>
-        alt="an image"
+              src="<%= getImageUrl(layer.content) %>"
+      <% if (layer.settings.generalSettings.rotate === '-180' ||
+              layer.settings.generalSettings.rotate === '0' ||
+              layer.settings.generalSettings.rotate === '180'
+      ) { %>
+              width='100'
+              height='100'
+              layout="responsive"
+              class="amp-img-full"
+              style="transform:rotate(<%= layer.settings.generalSettings.rotate %>deg);"
+      <% } else { %>
+              width="<%= layer.settings.layerSettings.width %>px"
+              height="<%= layer.settings.layerSettings.height %>px"
+              style="min-width:<%= layer.settings.layerSettings.width %>px!important;min-height:<%= layer.settings.layerSettings.height %>px!important;<%= getRotateValue(layer.settings.generalSettings) %>;"
+              class=""
+              layout="fixed"
+              <% } %>
+              alt="an image"
       ></amp-img>
     </div>
   </div>
 <% } else { %>
   <div
-    class="image flex-container position<%= layer.settings.generalSettings.position %>"
-    style="width:100%;height:100%;"
+          class="image flex-container position<%= layer.settings.generalSettings.position %>"
+          style="width:100%;height:100%;"
   >
     <div
     <% if (['5', '8', '11'].includes(layer.settings.generalSettings.position)) { %>
@@ -150,33 +150,37 @@ if (layer.settings.layerSettings.fullscreen) { %>
       style="position:absolute;top:0;<%= layer.settings.generalSettings.position === '1' ? 'left:0' : 'right:0' %>;transform:translate(0,0);"
     <% } else if (['13', '15'].includes(layer.settings.generalSettings.position)) { %>
       style="position:absolute;bottom:0;<%= layer.settings.generalSettings.position === '13' ? 'left:0' : 'right:0' %>;transform:translate(0,0)"
-      <% } %>
+            <% } %>
     >
       <div
-        id="image-animation"
-        <% if (layer.settings.animateIn && !preview){ %>
-          animate-in="<%= layer.settings.animateIn %>"
-          <% } %>
-        <% if (layer.settings.animateDuration){ %>
-          animate-in-duration="<%= layer.settings.animateDuration %>s"
-          <% } %>
-        <% if (layer.settings.animateDelay){ %>
-          animate-in-delay="<%= layer.settings.animateDelay %>s"
-        <% } %>
-        style="display:flex;justify-content:center;align-items:center;min-width:<%= animationWidth(layer) %>px;max-width:<%= animationWidth(layer) %>px;min-height:<%= animationHeight(layer) %>px;max-height:<%= animationHeight(layer) %>px;"
+              id="image-animation"
+      <% if (layer.settings.animateIn && !preview){ %>
+              animate-in="<%= layer.settings.animateIn %>"
+              <% } %>
+      <% if (layer.settings.animateDuration){ %>
+              animate-in-duration="<%= layer.settings.animateDuration %>s"
+              <% } %>
+      <% if (layer.settings.animateDelay){ %>
+              animate-in-delay="<%= layer.settings.animateDelay %>s"
+              <% } %>
+              style="display:flex;justify-content:center;align-items:center;min-width:<%= animationWidth(layer) %>px;max-width:<%= animationWidth(layer) %>px;min-height:<%= animationHeight(layer) %>px;max-height:<%= animationHeight(layer) %>px;"
       >
         <div
-          class="rotate-wrapper"
-          style="position:relative;<%= getStyles(layer.settings.generalSettings) + ';' + getRotateValue(layer.settings.generalSettings) + ';' %>"
+                class="rotate-wrapper"
+                style="position:relative;<%= getStyles(layer.settings.generalSettings) + ';' + getRotateValue(layer.settings.generalSettings) + ';' %>"
         >
           <amp-img
-            class="small-image"
-            src="<%= getImageUrl(layer.content) %>"
-            width="<%= layer.settings.layerSettings.width %>"
-            height="<%= layer.settings.layerSettings.height %>"
-            layout="fixed"
-            alt="an image"
-            style="filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));"
+                  class="small-image"
+                  src="<%= getImageUrl(layer.content) %>"
+                  width="<%= layer.settings.layerSettings.width %>"
+                  height="<%= layer.settings.layerSettings.height %>"
+                  layout="fixed"
+                  alt="an image"
+          <% if (layer.settings.generalSettings.shadow !== '0') { %>
+                  style="filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));"
+          <% } else { %>
+                  style=""
+                  <% } %>
           ></amp-img>
         </div>
       </div>
