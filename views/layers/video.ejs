@@ -1,114 +1,139 @@
 <%
 function getStyles(settings) {
-    let styles = ''
-    if (settings) {
-        if (settings.margin) {
-            if (['1', '3', '13', '15', '2', '5', '11', '14'].includes(settings.position)) {
-                if (['1', '2', '3', '5'].includes(settings.position)) {
-                    styles += `top:${settings.margin}px;`;
-                } else if (['11', '13', '14', '15'].includes(settings.position)) {
-                    styles += `top:${-settings.margin}px;`;
-                }
-            }
-            if (['1', '4', '7', '10', '13'].includes(settings.position)) {
-                styles += `left:${settings.margin}px;`;
-            }
-            if (['3', '6', '9', '12', '15'].includes(settings.position)) {
-                styles += `right:${settings.margin}px;`;
-            }
+  let styles = ''
+  if (settings) {
+    if (settings.margin) {
+      if (['1', '3', '13', '15', '2', '5', '11', '14'].includes(settings.position)) {
+        if (['1', '2', '3', '5'].includes(settings.position)) {
+          styles += `top:${settings.margin}px;`;
+        } else if (['11', '13', '14', '15'].includes(settings.position)) {
+          styles += `top:${-settings.margin}px;`;
         }
-        if (settings.opacity) {
-            styles += `opacity:${settings.opacity / 100};`
-        }
-        if (settings.rotate) {
-            styles += `transform:rotate(${settings.rotate}deg);`
-        }
-        if (settings.shadow > 0) {
-            styles += `box-shadow: 0px 0px ${settings.shadow}px 0px rgba(0,0,0,0.75); `
-        }
+      }
+      if (['1', '4', '7', '10', '13'].includes(settings.position)) {
+        styles += `left:${settings.margin}px;`;
+      }
+      if (['3', '6', '9', '12', '15'].includes(settings.position)) {
+        styles += `right:${settings.margin}px;`;
+      }
     }
-    return styles
+    if (settings.opacity) {
+      styles += `opacity:${settings.opacity / 100};`
+    }
+    if (settings.rotate) {
+      styles += `transform:rotate(${settings.rotate}deg);`
+    }
+    if (settings.shadow > 0) {
+      styles += `box-shadow: 0px 0px ${settings.shadow}px 0px rgba(0,0,0,0.75); `
+    }
+  }
+  return styles
 }
+
+function animationHeight(layer) {
+  return Math.abs((+layer.settings.layerSettings.width) * Math.sin(Radians(+layer.settings.generalSettings.rotate))) +
+    Math.abs((+layer.settings.layerSettings.height) * Math.cos(Radians(+layer.settings.generalSettings.rotate)))
+}
+
+function animationWidth(layer) {
+  return Math.abs((+layer.settings.layerSettings.width) * Math.cos(Radians(+layer.settings.generalSettings.rotate))) +
+    Math.abs((+layer.settings.layerSettings.height) * Math.sin(Radians(+layer.settings.generalSettings.rotate)))
+}
+
+function Radians(deg) {
+  return deg * (Math.PI / 180)
+}
+
 function getVideoUrl (url) {
-    // TODO change to https
-    if (/http:\/\//.test(url) || /https:\/\//.test(url)) {
-        // const httpsUrl = url.slice(0, 4) + 's' + url.slice(4)
-        // console.log('httpsUrlhttpsUrlhttpsUrlhttpsUrl', httpsUrl)
-        return url
-    } else {
-        return `//localhost:3978${url}`
-    }
+  // TODO change to https
+  if (/http:\/\//.test(url) || /https:\/\//.test(url)) {
+    // const httpsUrl = url.slice(0, 4) + 's' + url.slice(4)
+    // console.log('httpsUrlhttpsUrlhttpsUrlhttpsUrl', httpsUrl)
+    return url
+  } else {
+    return `//localhost:3978${url}`
+  }
 }
 if (layer.settings.layerSettings.fullscreen) {%>
-    <div
+  <div
     <% if (layer.settings.animateIn && !preview){ %>
-        animate-in="<%= layer.settings.animateIn %>"
-            <% } %>
+      animate-in="<%= layer.settings.animateIn %>"
+    <% } %>
     <% if (layer.settings.animateDuration){ %>
-        animate-in-duration="<%= layer.settings.animateDuration %>s"
-            <% } %>
+      animate-in-duration="<%= layer.settings.animateDuration %>s"
+    <% } %>
     <% if (layer.settings.animateDelay){ %>
-        animate-in-delay="<%= layer.settings.animateDelay %>s"
-            <% } %>
-        style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;">
-        <amp-video
-                autoplay
-        <% if (layer.settings.layerSettings.mute) {%>
-                noaudio
-                <% } %>
-                src="<%= getVideoUrl(layer.content.value)%>"
-                id="full-screen"
-                layout="responsive"
-                width="<%= layer.settings.layerSettings.width %>"
-                height="<%= layer.settings.layerSettings.height %>"
-                poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
-                style="z-index: <%= layer.position %>; <%= getStyles(layer.settings.generalSettings) %>">
-            <div fallback>
-                <p>This browser does not support the video element.</p>
-            </div>
-        </amp-video>
-    </div>
-<% } else { %>
-
-    <div
-    <% if (layer.settings.animateIn && !preview){ %>
-        animate-in="<%= layer.settings.animateIn %>"
-            <% } %>
-    <% if (layer.settings.animateDuration){ %>
-        animate-in-duration="<%= layer.settings.animateDuration %>s"
-            <% } %>
-    <% if (layer.settings.animateDelay){ %>
-        animate-in-delay="<%= layer.settings.animateDelay %>s"
-            <% } %>
-        class="flex-container video position<%= layer.settings.generalSettings.position %>"
-    <% if (['5', '8', '11'].includes(layer.settings.generalSettings.position)) { %>
-        style="justify-content:center;align-items:center;z-index:<%= layer.position %>;"
-    <% } else if (['2', '14'].includes(layer.settings.generalSettings.position)) { %>
-        style="justify-content:center;align-items:<%= layer.settings.generalSettings.position === '2' ? 'flex-start' : 'flex-end' %>;z-index:<%= layer.position %>;"
-    <% } else if (['4', '7', '10'].includes(layer.settings.generalSettings.position)) { %>
-        style="justify-content:flex-start;align-items:center;z-index:<%= layer.position %>;"
-    <% } else if (['6', '9', '12'].includes(layer.settings.generalSettings.position)) { %>
-        style="justify-content:flex-end;align-items:center;z-index:<%= layer.position %>;"
-    <% } else if (['1', '3'].includes(layer.settings.generalSettings.position)) { %>
-        style="justify-content:<%= layer.settings.generalSettings.position === '1' ? 'flex-start' : 'flex-end' %>;align-items:flex-start;z-index:<%= layer.position %>;"
-    <% } else if (['13', '15'].includes(layer.settings.generalSettings.position)) { %>
-        style="justify-content:<%= layer.settings.generalSettings.position === '13' ? 'flex-start' : 'flex-end' %>;align-items:flex-end;z-index:<%= layer.position %>;"
-            <% } %>
+      animate-in-delay="<%= layer.settings.animateDelay %>s"
+    <% } %>
+    style="position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden;">
+    <amp-video
+      autoplay
+      <% if (layer.settings.layerSettings.mute) {%>
+        noaudio
+      <% } %>
+      src="<%= getVideoUrl(layer.content.value)%>"
+      id="full-screen"
+      layout="responsive"
+      width="<%= layer.settings.layerSettings.width %>"
+      height="<%= layer.settings.layerSettings.height %>"
+      poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
+      style="z-index:<%= layer.position %>;<%= getStyles(layer.settings.generalSettings) %>"
     >
+      <div fallback>
+        <p>This browser does not support the video element.</p>
+      </div>
+    </amp-video>
+  </div>
+<% } else { %>
+  <div
+    class="flex-container video position<%= layer.settings.generalSettings.position %>"
+    <% if (['5', '8', '11'].includes(layer.settings.generalSettings.position)) { %>
+      style="justify-content:center;align-items:center;z-index:<%= layer.position %>;"
+    <% } else if (['2', '14'].includes(layer.settings.generalSettings.position)) { %>
+      style="justify-content:center;align-items:<%= layer.settings.generalSettings.position === '2' ? 'flex-start' : 'flex-end' %>;z-index:<%= layer.position %>;"
+    <% } else if (['4', '7', '10'].includes(layer.settings.generalSettings.position)) { %>
+      style="justify-content:flex-start;align-items:center;z-index:<%= layer.position %>;"
+    <% } else if (['6', '9', '12'].includes(layer.settings.generalSettings.position)) { %>
+      style="justify-content:flex-end;align-items:center;z-index:<%= layer.position %>;"
+    <% } else if (['1', '3'].includes(layer.settings.generalSettings.position)) { %>
+      style="justify-content:<%= layer.settings.generalSettings.position === '1' ? 'flex-start' : 'flex-end' %>;align-items:flex-start;z-index:<%= layer.position %>;"
+    <% } else if (['13', '15'].includes(layer.settings.generalSettings.position)) { %>
+      style="justify-content:<%= layer.settings.generalSettings.position === '13' ? 'flex-start' : 'flex-end' %>;align-items:flex-end;z-index:<%= layer.position %>;"
+    <% } %>
+  >
+    <div
+      id="video-animation"
+      <% if (layer.settings.animateIn && !preview){ %>
+       animate-in="<%= layer.settings.animateIn %>"
+      <% } %>
+      <% if (layer.settings.animateDuration){ %>
+       animate-in-duration="<%= layer.settings.animateDuration %>s"
+      <% } %>
+      <% if (layer.settings.animateDelay){ %>
+       animate-in-delay="<%= layer.settings.animateDelay %>s"
+      <% } %>
+     style="display:flex;justify-content:center;align-items:center;min-width:<%= animationWidth(layer) %>px;max-width:<%= animationWidth(layer) %>px;min-height:<%= animationHeight(layer) %>px;max-height:<%= animationHeight(layer) %>px;"
+    >
+      <div
+        class="rotate-wrapper"
+        style="position:relative;<%= getStyles(layer.settings.generalSettings) %>;"
+      >
         <amp-video
-                autoplay
+          autoplay
         <% if (layer.settings.layerSettings.mute) {%>
-                noaudio
-                <% } %>
-                src="<%= getVideoUrl(layer.content.value)%>"
-                width="<%= layer.settings.layerSettings.width %>"
-                height="<%= layer.settings.layerSettings.height %>"
-                poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
-                layout="fixed"
-                style="<%= getStyles(layer.settings.generalSettings)%>">
-            <div fallback>
-                <p>This browser does not support the video element.</p>
-            </div>
+          noaudio
+          <% } %>
+          src="<%= getVideoUrl(layer.content.value)%>"
+          width="<%= layer.settings.layerSettings.width %>"
+          height="<%= layer.settings.layerSettings.height %>"
+          poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
+          layout="fixed"
+        >
+          <div fallback>
+            <p>This browser does not support the video element.</p>
+          </div>
         </amp-video>
+      </div>
     </div>
-<%}%>
+  </div>
+<% } %>
