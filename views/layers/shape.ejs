@@ -107,11 +107,17 @@ function Radians(deg) {
           case 'circle' : %>
           <% include ../shapes/circle.ejs %>
           <% break
-          case'triangle' : %>
+          case 'triangle' : %>
           <% include ../shapes/triangle.ejs %>
           <% break
-          case'line' : %>
+          case 'line' : %>
           <% include ../shapes/line.ejs %>
+          <% break
+          case 'frame' : %>
+          <% include ../shapes/frame.ejs %>
+          <% break
+          case 'rim' : %>
+          <% include ../shapes/rim.ejs %>
           <% break %>
           <% } %>
         </div>

@@ -10,7 +10,7 @@
     style="
       width:<%= layer.settings.layerSettings.width ? +layer.settings.layerSettings.width : 100 %>px;
       height:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height : 100 %>px;
-      background-color:<%= layer.settings.layerSettings.shapeStyles.fillColor ? layer.settings.layerSettings.shapeStyles.fillColor : '#ee2222' %>;
-      border:<%= layer.settings.layerSettings.shapeStyles.thickness %>px solid <%= layer.settings.layerSettings.shapeStyles.borderColor %>;"
+      background-color:transparent;
+      border:<%= layer.settings.layerSettings.shapeStyles.thickness || 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.borderColor %>;"
   ></div>
 </div>

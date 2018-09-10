@@ -1,22 +1,56 @@
-<svg
-        xmlns='http://www.w3.org/2000/svg'
-        xmlns:xlink='http://www.w3.org/1999/xlink'
-        width='<%= layer.settings.layerSettings.width ? layer.settings.layerSettings.width : 70 %>'
-        height='<%= layer.settings.layerSettings.height ? layer.settings.layerSettings.height : 10 %>'
-        style='overflow:visible;filter:drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow / 10 %>px rgba(0,0,0,0.9));transform:rotate(45deg)'
-        viewBox='0 -41 64 100'
-        preserveAspectRatio='none'
+<div
+  class="shape line"
+  style="
+    width:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2) : 10 %>px;
+    height:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height + (+layer.settings.layerSettings.shapeStyles.thickness * 2) : 70 %>px;
+    transform:rotate(-45deg)"
 >
-    <g>
-        <g>
-            <use fill='transparent' xlink:href='#ym1na'/>
-            <path
-                    d='M 0 8 L 4 16 L 60 16 L 64 8 L 60 0 L 4 0 z'
-                    stroke='<%= layer.settings.layerSettings.shapeStyles.borderColor ? layer.settings.layerSettings.shapeStyles.borderColor : 'black' %>'
-                    fill='<%= layer.settings.layerSettings.shapeStyles.fillColor ? layer.settings.layerSettings.shapeStyles.fillColor : 'transparent' %>'
-                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? layer.settings.layerSettings.shapeStyles.thickness : 0 %>'
-                    vector-effect='non-scaling-stroke'
-            ></path>
-        </g>
-    </g>
-</svg>
+  <div
+    class="inner"
+    style="
+      width:<%= layer.settings.layerSettings.width ? +layer.settings.layerSettings.width / 7 : 10 %>px;
+      height:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness : 70 %>px;
+      background-color:<%= layer.settings.layerSettings.shapeStyles.fillColor %>"
+  >
+    <div
+      style="
+        position:absolute;
+        top:-<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px;
+        border-left:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid transparent;
+        border-right:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid transparent;
+        border-bottom:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.fillColor %>;"
+    ></div>
+    <div
+      style="
+        position:absolute;
+        bottom:-<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px;
+        border-left:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid transparent;
+        border-right:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid transparent;
+        border-top:<%= layer.settings.layerSettings.width ?(+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.fillColor %>;"
+    ></div>
+  </div>
+  <div
+    class="outer"
+    style="
+      width:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2) : 10 %>px;
+      height:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height + (+layer.settings.layerSettings.shapeStyles.thickness * 2) : 70 %>px;
+      background-color:<%= layer.settings.layerSettings.shapeStyles.borderColor %>"
+  >
+    <div
+      style="
+        position:absolute;
+        top:-<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px;
+        border-left:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid transparent;
+        border-right:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid transparent;
+        border-bottom:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.borderColor %>;"
+    ></div>
+    <div
+      style="
+        position:absolute;
+        bottom:-<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px;
+        border-left:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid transparent;
+        border-right:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid transparent;
+        border-top:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.borderColor %>;"
+    ></div>
+  </div>
+</div>
