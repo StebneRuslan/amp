@@ -13,6 +13,7 @@
       background-color:<%= layer.settings.layerSettings.shapeStyles.fillColor %>"
   >
     <div
+      class="topInner"
       style="
         position:absolute;
         top:-<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px;
@@ -21,6 +22,7 @@
         border-bottom:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.fillColor %>;"
     ></div>
     <div
+      class="bottomInner"
       style="
         position:absolute;
         bottom:-<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px;
@@ -37,6 +39,7 @@
       background-color:<%= layer.settings.layerSettings.shapeStyles.borderColor %>"
   >
     <div
+      class="topOuter"
       style="
         position:absolute;
         top:-<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px;
@@ -45,6 +48,7 @@
         border-bottom:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.borderColor %>;"
     ></div>
     <div
+      class="bottomOuter"
       style="
         position:absolute;
         bottom:-<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px;

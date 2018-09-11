@@ -58,8 +58,9 @@ function Radians(deg) {
   return deg * (Math.PI / 180)
 }%>
 <div
-        class="<%= layer.settings.generalSettings.position ? `item position${layer.settings.generalSettings.position}` : 'item position8' %>"
-        style="z-index: <%= layer.position %>;">
+  class="<%= layer.settings.generalSettings.position ? `item position${layer.settings.generalSettings.position}` : 'item position8' %>"
+  style="z-index: <%= layer.position %>;"
+>
   <div
   <% if (['5', '8', '11'].includes(layer.settings.generalSettings.position)) { %>
     style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;justify-content:center;align-items:center;"
@@ -73,32 +74,34 @@ function Radians(deg) {
     style="position:absolute;top:0;<%= layer.settings.generalSettings.position === '1' ? 'left:0;justify-content:flex-start' : 'right:0;justify-content:flex-end' %>;transform:translate(0,0);display:flex;align-items:flex-start;"
   <% } else if (['13', '15'].includes(layer.settings.generalSettings.position)) { %>
     style="position:absolute;bottom:0;<%= layer.settings.generalSettings.position === '13' ? 'left:0;justify-content:flex-start' : 'right:0;justify-content:flex-end' %>;transform:translate(0,0);display:flex;align-items:flex-end;"
-          <% } %>
+  <% } %>
   >
     <div
-            id="shape-animation"
-    <% if (layer.settings.animateIn && !preview){ %>
-            animate-in="<%= layer.settings.animateIn %>"
-            <% } %>
-    <% if (layer.settings.animateDuration){ %>
-            animate-in-duration="<%= layer.settings.animateDuration %>s"
-            <% } %>
-    <% if (layer.settings.animateDelay){ %>
-            animate-in-delay="<%= layer.settings.animateDelay %>s"
-            <% } %>
-            style="display:flex;justify-content:center;align-items:center;min-width:<%= animationWidth(layer) %>px;max-width:<%= animationWidth(layer) %>px;min-height:<%= animationHeight(layer) %>px;max-height:<%= animationHeight(layer) %>px;"
+      id="shape-animation"
+      <% if (layer.settings.animateIn && !preview){ %>
+        animate-in="<%= layer.settings.animateIn %>"
+      <% } %>
+      <% if (layer.settings.animateDuration){ %>
+        animate-in-duration="<%= layer.settings.animateDuration %>s"
+      <% } %>
+      <% if (layer.settings.animateDelay){ %>
+        animate-in-delay="<%= layer.settings.animateDelay %>s"
+      <% } %>
+    style="display:flex;justify-content:center;align-items:center;min-width:<%= animationWidth(layer) %>px;max-width:<%= animationWidth(layer) %>px;min-height:<%= animationHeight(layer) %>px;max-height:<%= animationHeight(layer) %>px;"
     >
       <div
-              id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
-              style="<%= getStyles(layer.settings.generalSettings)%>;text-align:center;position:relative;"
+        class="shape-container"
+        id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
+        style="<%= getStyles(layer.settings.generalSettings)%>;text-align:center;position:relative;"
       >
         <div
-                class="<%= layer.content.value %><%= page ? page.position : currentSlide.position %><%= layer.position %>"
-        <% if (['13', '14', '15'].includes(layer.settings.generalSettings.position) && layer.content.value === 'triangle') { %>
-                style="display:flex;justify-content:center;align-items:center;transform: translateY(17%)"
-        <% } else { %>
-                style="display:flex;justify-content:center;align-items:center;"
-                <% } %>
+          id="shape-parent"
+          class="<%= layer.content.value %><%= page ? page.position : currentSlide.position %><%= layer.position %>"
+          <% if (['13', '14', '15'].includes(layer.settings.generalSettings.position) && layer.content.value === 'triangle') { %>
+            style="display:flex;justify-content:center;align-items:center;transform: translateY(17%)"
+          <% } else { %>
+            style="display:flex;justify-content:center;align-items:center;"
+          <% } %>
         >
           <% switch (layer.content.value) {
           case 'square' : %>
