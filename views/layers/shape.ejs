@@ -97,7 +97,7 @@ function Radians(deg) {
         <div
           id="shape-parent"
           class="<%= layer.content.value %><%= page ? page.position : currentSlide.position %><%= layer.position %>"
-          style="display:flex;justify-content:center;align-items:center;"
+          style="display:flex;justify-content:center;align-items:center;<%= layer.content.value === 'triangle' ? 'transform:translateY(-15%);' : '' %>"
         >
           <% if (layer.content.value === 'triangle') { %>
             <% layer.settings.layerSettings.width = layer.settings.layerSettings.width % 2 === 0 ? layer.settings.layerSettings.width : layer.settings.layerSettings.width + 1 %>
