@@ -21,10 +21,10 @@
             let layer = ampStory.cuts[cutIndex].layers[layerIndex]
             if (layer.type === 'shape') { %>
         .<%= layer.content.value %><%= cut.position %><%= layer.position %> {
-            min-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness %>px;
-            max-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness %>px;
-            min-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness %>px;
-            max-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness %>px;
+            min-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
+            max-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
+            min-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
+            max-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
         }
         <% }}
           }
@@ -263,6 +263,55 @@
             font-size: 3.1vh;
             font-weight: 500;
             white-space: nowrap;
+        }
+        /*Css shapes*/
+        .shape {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+        }
+        .inner {
+          position: absolute;
+          z-index: 11;
+        }
+        .outer {
+          position: absolute;
+          z-index: 1;
+        }
+        .square .inner,
+        .frame .inner {
+          box-sizing: content-box!important;
+        }
+        .circle .inner,
+        .rim .inner {
+          border-radius: 50%;
+          width: 0;
+          height: 0;
+          box-sizing: content-box!important;
+        }
+        .triangle {
+          position: relative;
+          display: flex;
+          justify-content: center;
+        }
+        .line .outer,
+        .line .inner {
+          position: absolute;
+        }
+        .line .outer div,
+        .line .inner div {
+          width: 0;
+          height: 0;
+          left: 0;
+        }
+        .line .outer div:first-child,
+        .line .inner div:first-child {
+          transform: translateY(1.5%);
+        }
+        .line .outer div:last-child,
+        .line .inner div:last-child {
+          transform: translateY(-1.5%);
         }
     </style>
 </head>
