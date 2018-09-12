@@ -3,7 +3,8 @@
   style="
     width:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2) : 10 %>px;
     height:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height + (+layer.settings.layerSettings.shapeStyles.thickness * 2) : 70 %>px;
-    transform:rotate(-45deg)"
+    transform:rotate(-45deg);
+    filter:drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow / 10 %>px #000000);"
 >
   <div
     class="inner"
@@ -16,7 +17,7 @@
       class="topInner"
       style="
         position:absolute;
-        top:-<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px;
+        top:-<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) / 2) : 5 %>px;
         border-left:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid transparent;
         border-right:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid transparent;
         border-bottom:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.fillColor %>;"
@@ -25,7 +26,7 @@
       class="bottomInner"
       style="
         position:absolute;
-        bottom:-<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px;
+        bottom:-<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) / 2) : 5 %>px;
         border-left:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid transparent;
         border-right:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid transparent;
         border-top:<%= layer.settings.layerSettings.width ?(+layer.settings.layerSettings.width / 7) / 2 : 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.fillColor %>;"
@@ -42,7 +43,7 @@
       class="topOuter"
       style="
         position:absolute;
-        top:-<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px;
+        top:-<%= layer.settings.layerSettings.width ? (((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2) : 5 %>px;
         border-left:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid transparent;
         border-right:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid transparent;
         border-bottom:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.borderColor %>;"
@@ -51,7 +52,7 @@
       class="bottomOuter"
       style="
         position:absolute;
-        bottom:-<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px;
+        bottom:-<%= layer.settings.layerSettings.width ? (((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2) : 5 %>px;
         border-left:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid transparent;
         border-right:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid transparent;
         border-top:<%= layer.settings.layerSettings.width ? ((+layer.settings.layerSettings.width / 7) + (+layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 5 %>px solid <%= layer.settings.layerSettings.shapeStyles.borderColor %>;"

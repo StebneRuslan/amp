@@ -1,5 +1,18 @@
+<% function scaleValue(width, height, thickness) {
+  return (width + height + (thickness * 4)) / (width + height)
+}
+
+function bottomValue(width, height, thickness) {
+  const bottomValue = thickness * (3/5)
+  const scale = scaleValue(width, height, thickness)
+  const scaledHeight = height * scale
+  const realHeight = height + thickness * 2
+  const diff = scaledHeight > realHeight ? scaledHeight - realHeight : realHeight - scaledHeight
+  return scaledHeight > realHeight ? bottomValue - diff / 2 : bottomValue + diff / 2
+} %>
+
 <div
-  class="triangle"
+  class="shape triangle"
   style="
     width:<%= layer.settings.layerSettings.width ? +layer.settings.layerSettings.width + (layer.settings.layerSettings.shapeStyles.thickness * 2) : 100 %>px;
     height:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height + (layer.settings.layerSettings.shapeStyles.thickness * 2) : 100 %>px;
@@ -8,7 +21,7 @@
   <div
     class="inner"
     style="
-      bottom:<%= +layer.settings.layerSettings.shapeStyles.thickness * (3/5) %>px;
+      bottom:<%= bottomValue(+layer.settings.layerSettings.width, +layer.settings.layerSettings.height, +layer.settings.layerSettings.shapeStyles.thickness) %>px;
       border-left:<%= layer.settings.layerSettings.width ? +layer.settings.layerSettings.width / 2 : 50 %>px solid transparent;
       border-right:<%= layer.settings.layerSettings.width ? +layer.settings.layerSettings.width / 2 : 50 %>px solid transparent;
       border-bottom:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height : 100 %>px solid <%= layer.settings.layerSettings.shapeStyles.fillColor %>;"
@@ -16,8 +29,9 @@
   <div
     class="outer"
     style="
-      border-left:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width + (layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 100 %>px solid transparent;
-      border-right:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width + (layer.settings.layerSettings.shapeStyles.thickness * 2)) / 2 : 100 %>px solid transparent;
-      border-bottom:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height + (layer.settings.layerSettings.shapeStyles.thickness * 2) : 100 %>px solid <%= layer.settings.layerSettings.shapeStyles.borderColor %>;"
+      border-left:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width) / 2 : 100 %>px solid transparent;
+      border-right:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width) / 2 : 100 %>px solid transparent;
+      border-bottom:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height : 100 %>px solid <%= layer.settings.layerSettings.shapeStyles.borderColor %>;
+      transform:scale(<%= scaleValue(+layer.settings.layerSettings.width, +layer.settings.layerSettings.height, +layer.settings.layerSettings.shapeStyles.thickness) %>);"
   ></div>
 </div>
