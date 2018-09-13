@@ -27,7 +27,7 @@
 }
 
 function animationHeight(layer) {
-  if (layer.content.value === 'square' || layer.content.value === 'frame') {
+  if (['square', 'frame', 'line'].includes(layer.content.value)) {
     return Math.abs((+layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2) * Math.sin(Radians(+layer.settings.generalSettings.rotate))) +
             Math.abs((+layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2) * Math.cos(Radians(+layer.settings.generalSettings.rotate)))
   } else if (layer.content.value === 'circle' || layer.content.value === 'rim') {
@@ -35,13 +35,11 @@ function animationHeight(layer) {
             ((+layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2) ** 2 * Math.cos(Radians(+layer.settings.generalSettings.rotate)) ** 2))
   } else if (layer.content.value === 'triangle') {
     return (+layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2) + (Math.abs((+layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2) * (+layer.settings.generalSettings.rotate / 1000)))
-  } else {
-    return +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2
   }
 }
 
 function animationWidth(layer) {
-  if (layer.content.value === 'square' || layer.content.value === 'frame') {
+  if (['square', 'frame', 'line'].includes(layer.content.value)) {
     return Math.abs((+layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2) * Math.cos(Radians(+layer.settings.generalSettings.rotate))) +
             Math.abs((+layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2) * Math.sin(Radians(+layer.settings.generalSettings.rotate)))
   } else if (layer.content.value === 'circle' || layer.content.value === 'rim') {
@@ -49,8 +47,6 @@ function animationWidth(layer) {
             ((+layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2) ** 2 * Math.sin(Radians(+layer.settings.generalSettings.rotate)) ** 2))
   } else if (layer.content.value === 'triangle') {
     return (+layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2) + (Math.abs((+layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2) * (+layer.settings.generalSettings.rotate / 1000)))
-  } else {
-    return +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2
   }
 }
 
