@@ -13,16 +13,16 @@ ampStory.cuts.map(page => { %>
     }) %>
     <% page && page.layers && page.layers.map((layer, layerIndex) => { %>
       <amp-story-grid-layer template="fill">
-        <div>
+        <div class="grid-parent">
           <div class="grid"
-            <% if (layer.type === 'image' &&
-              layer.settings.layerSettings.fullscreen &&
-              layer.settings.generalSettings.rotate !== '-180' &&
-              layer.settings.generalSettings.rotate !== '0' &&
-              layer.settings.generalSettings.rotate !== '180') {
-            %>
-              style="display:block;"
-            <% } %>
+          <% if (layer.type === 'image' &&
+                  layer.settings.layerSettings.fullscreen &&
+                  layer.settings.generalSettings.rotate !== '-180' &&
+                  layer.settings.generalSettings.rotate !== '0' &&
+                  layer.settings.generalSettings.rotate !== '180') {
+          %>
+               style="display:block;"
+                  <% } %>
           >
             <% switch (layer.type) {
             case 'text': %>

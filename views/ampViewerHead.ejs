@@ -9,7 +9,7 @@
     <script async custom-element="amp-animation" src=<%=ampAnimationPath%>></script>
     <% } %>
     <title><%= ampStory.title%></title>
-    <link rel="canonical" href="https://storage-googleapis-com.cdn.ampproject.org/c/s/storage.googleapis.com/cutnut-test/amp/<%=ampStory.key%>.html" />
+    <link rel="canonical" href="https://test-cutnut-tv.cdn.ampproject.org/c/s/test.cutnut.tv/amp/<%=ampStory._id%>" />
     <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
     <style amp-custom>
         <% if (ampStory.cuts.length !== 0) {%>
@@ -21,10 +21,10 @@
             let layer = ampStory.cuts[cutIndex].layers[layerIndex]
             if (layer.type === 'shape') { %>
         .<%= layer.content.value %><%= cut.position %><%= layer.position %> {
-            min-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
-            max-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
-            min-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
-            max-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
+            min-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness %>px;
+            max-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness %>px;
+            min-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness %>px;
+            max-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness %>px;
         }
         <% }}
           }
@@ -114,12 +114,28 @@
         .container:not(#full-screen) {
             background-color: #eeeeee;
         }
+
+        .grid-parent {
+            position: relative;
+        }
+
         .grid {
             height: 100%;
             padding: 0;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(5, 1fr);
+            width: 100%;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            position: absolute;
+            /*height: 100%;*/
+            /*padding: 0;*/
+            /*display: grid;*/
+            /*grid-template-columns: repeat(3, 1fr);*/
+            /*grid-template-rows: repeat(5, 1fr);*/
         }
         .item {
             height: 100%;
@@ -263,55 +279,6 @@
             font-size: 3.1vh;
             font-weight: 500;
             white-space: nowrap;
-        }
-        /*Css shapes*/
-        .shape {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: relative;
-        }
-        .inner {
-          position: absolute;
-          z-index: 11;
-        }
-        .outer {
-          position: absolute;
-          z-index: 1;
-        }
-        .square .inner,
-        .frame .inner {
-          box-sizing: content-box!important;
-        }
-        .circle .inner,
-        .rim .inner {
-          border-radius: 50%;
-          width: 0;
-          height: 0;
-          box-sizing: content-box!important;
-        }
-        .triangle {
-          position: relative;
-          display: flex;
-          justify-content: center;
-        }
-        .line .outer,
-        .line .inner {
-          position: absolute;
-        }
-        .line .outer div,
-        .line .inner div {
-          width: 0;
-          height: 0;
-          left: 0;
-        }
-        .line .outer div:first-child,
-        .line .inner div:first-child {
-          transform: translateY(1.5%);
-        }
-        .line .outer div:last-child,
-        .line .inner div:last-child {
-          transform: translateY(-1.5%);
         }
     </style>
 </head>
