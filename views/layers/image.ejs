@@ -124,7 +124,7 @@ if (layer.settings.layerSettings.fullscreen) { %>
       <% } else { %>
               width="<%= layer.settings.layerSettings.width %>px"
               height="<%= layer.settings.layerSettings.height %>px"
-              style="min-width:<%= layer.settings.layerSettings.width %>px!important;min-height:<%= layer.settings.layerSettings.height %>px!important;<%= getRotateValue(layer.settings.generalSettings) %>;"
+              style="min-width:<%= layer.settings.layerSettings.width %>px;min-height:<%= layer.settings.layerSettings.height %>px;<%= getRotateValue(layer.settings.generalSettings) %>;"
               class=""
               layout="fixed"
               <% } %>
