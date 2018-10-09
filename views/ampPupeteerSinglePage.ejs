@@ -15,13 +15,15 @@
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
   <amp-story-page  id='story' auto-advance-after="10s" class="container">
     <% let preview = true;
-    currentSlide.layers.sort((first, second) => {
-      var keyA = first.position,
-              keyB = second.position;
-      if(keyA < keyB) return -1;
-      if(keyA > keyB) return 1;
-      return 0;
-    }) %>
+    if (currentSlide) {
+      currentSlide.layers.sort((first, second) => {
+        var keyA = first.position,
+          keyB = second.position;
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      })
+    } %>
     <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
       <amp-story-grid-layer id="layer<%= layer.position %>" template="fill">
         <div>

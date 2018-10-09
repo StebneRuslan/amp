@@ -1,6 +1,6 @@
 {
   "name": "amp-to-html",
-  "version": "1.6.9",
+  "version": "1.6.11",
   "description": "",
   "main": "index.js",
   "scripts": {
