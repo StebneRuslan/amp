@@ -2,65 +2,88 @@
 <html lang="en">
 <% include ampViewerHead.ejs %>
 <% let currentSlide = ampStory.cuts.find(cut => {
-  return cut.position === +current
+    return cut.position === +current
 })
 %>
 <body>
+<script>
+    function drag (event) {
+        if (event.screenX !== 0) {
+            event.currentTarget.style.left = event.x + 'px';
+            event.currentTarget.style.top = event.y + 'px';
+        }
+    }
 
+    function drop (event) {
+        window.parent.postMessage("hello there!", 'http://127.0.0.1:3978/#/edit');
+    }
+</script>
 <!-- Overlay to disable click on single slide -->
 <!--TODO uncoment this line for release-->
-<div class="disable-overlay"></div>
+<!--<div class="disable-overlay"></div>-->
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-  <amp-story-page  id='story' auto-advance-after="10s" class="container">
-    <% let preview = false;
-    if (currentSlide) {
-      currentSlide.layers.sort((first, second) => {
-        var keyA = first.position,
-                keyB = second.position;
-        if(keyA < keyB) return -1;
-        if(keyA > keyB) return 1;
-        return 0;
-      })
-    } %>
-    <% if (currentSlide) { %>
-      <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
-        <amp-story-grid-layer id="layer<%= layer.position %>" template="fill">
-          <div>
-            <div class="grid"
-              <% if (layer.type === 'image' &&
-                layer.settings.layerSettings.fullscreen &&
-                layer.settings.generalSettings.rotate !== '-180' &&
-                layer.settings.generalSettings.rotate !== '0' &&
-                layer.settings.generalSettings.rotate !== '180') {
-              %>
-               style="display:block;"
-              <% } %>
-            >
-              <% var page = null
-                      switch (layer.type) {
-              case 'text': %>
-              <% include layers/text.ejs %>
-              <% break;
-              case 'html': %>
-              <% include layers/text.ejs %>
-              <% break;
-              case 'shape': %>
-              <% include layers/shape.ejs %>
-              <% break;
-              case 'image': %>
-              <% include layers/image.ejs %>
-              <% break
-              case 'video': %>
-              <% include layers/video.ejs %>
-              <% break
-              } %>
-            </div>
-          </div>
-        </amp-story-grid-layer>
-      <% }) %>
-    <% } %>
-  </amp-story-page>
+    <amp-story-page  id='story' auto-advance-after="10s" class="container">
+        <% let preview = false;
+        if (currentSlide) {
+            currentSlide.layers.sort((first, second) => {
+                var keyA = first.position,
+                        keyB = second.position;
+                if(keyA < keyB) return -1;
+                if(keyA > keyB) return 1;
+                return 0;
+            })
+        } %>
+        <% if (currentSlide) { %>
+            <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
+                <amp-story-grid-layer id="layer<%= layer.position %>" template="fill">
+                    <div>
+                        <div class="grid"
+                        <% if (layer.type === 'image' &&
+                                layer.settings.layerSettings.fullscreen &&
+                                layer.settings.generalSettings.rotate !== '-180' &&
+                                layer.settings.generalSettings.rotate !== '0' &&
+                                layer.settings.generalSettings.rotate !== '180') {
+                        %>
+                             style="display:block;"
+                                <% } %>
+                        >
+                            <% var page = null
+                                    switch (layer.type) {
+                            case 'text': %>
+                            <div id="testText"
+                                 draggable="true"
+                                 ondrag="drag(event)"
+                                 ondragend="drop(event)"
+                            >
+                                <% include layers/text.ejs %>
+                            </div>
+                            <% break;
+                            case 'html': %>
+                            <% include layers/text.ejs %>
+                            <% break;
+                            case 'shape': %>
+                            <% include layers/shape.ejs %>
+                            <% break;
+                            case 'image': %>
+                            <div id="testImage"
+                                 draggable="true"
+                                 ondrag="drag(event)"
+                                 ondragend="drop(event)"
+                            >
+                                <% include layers/image.ejs %>
+                            </div>
+                            <% break
+                            case 'video': %>
+                            <% include layers/video.ejs %>
+                            <% break
+                            } %>
+                        </div>
+                    </div>
+                </amp-story-grid-layer>
+            <% }) %>
+        <% } %>
+    </amp-story-page>
 </amp-story>
 </body>
 
