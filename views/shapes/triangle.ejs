@@ -16,7 +16,10 @@ function bottomValue(width, height, thickness) {
   style="
     width:<%= layer.settings.layerSettings.width ? +layer.settings.layerSettings.width + (layer.settings.layerSettings.shapeStyles.thickness * 2) : 100 %>px;
     height:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height + (layer.settings.layerSettings.shapeStyles.thickness * 2) : 100 %>px;
-    filter:drop-shadow(0px 0px <%= +layer.settings.generalSettings.shadow / 10 %>px #000000)"
+    <% if (layer.settings.generalSettings.shadow > 0) { %>
+      filter:drop-shadow(0px 0px <%= +layer.settings.generalSettings.shadow / 10 %>px #000000)
+    <% } %>
+  "
 >
   <div
     class="inner"
@@ -32,6 +35,7 @@ function bottomValue(width, height, thickness) {
       border-left:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width) / 2 : 100 %>px solid transparent;
       border-right:<%= layer.settings.layerSettings.width ? (+layer.settings.layerSettings.width) / 2 : 100 %>px solid transparent;
       border-bottom:<%= layer.settings.layerSettings.height ? +layer.settings.layerSettings.height : 100 %>px solid <%= layer.settings.layerSettings.shapeStyles.borderColor %>;
+      opacity: <%= layer.settings.layerSettings.shapeStyles && layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness > 0 ? '1' : '0' %>;
       transform:scale(<%= scaleValue(+layer.settings.layerSettings.width, +layer.settings.layerSettings.height, +layer.settings.layerSettings.shapeStyles.thickness) %>);"
   ></div>
 </div>
