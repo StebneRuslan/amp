@@ -4,14 +4,16 @@ ampStory.cuts.map(page => { %>
           id="<%= page.position %>"
           auto-advance-after="10s"
           style="background: #eeeeee">
-    <div>
-      <% page.layers.sort((first, second) => {
-        var keyA = first.position,
-                keyB = second.position;
-        if(keyA < keyB) return -1;
-        if(keyA > keyB) return 1;
-        return 0;
-      }) %>
+    <% page.layers.sort((first, second) => {
+      var keyA = first.position,
+              keyB = second.position;
+      if(keyA < keyB) return -1;
+      if(keyA > keyB) return 1;
+      return 0;
+    }) %>
+    <% if (page.layers.length === 0) { %>
+      <amp-story-grid-layer template="fill"></amp-story-grid-layer>
+    <% } else { %>
       <% page && page.layers && page.layers.map((layer, layerIndex) => { %>
         <amp-story-grid-layer template="fill">
           <div class="grid-parent">
@@ -46,6 +48,6 @@ ampStory.cuts.map(page => { %>
           </div>
         </amp-story-grid-layer>
       <% }) %>
-    </div>
+    <% }%>
   </amp-story-page>
 <% }) %>
