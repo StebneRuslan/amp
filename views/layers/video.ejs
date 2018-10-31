@@ -63,20 +63,23 @@ if (layer.settings.layerSettings.fullscreen) {%>
     animate-in-delay="<%= layer.settings.animateDelay %>s"
           <% } %>
     style="position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden;">
+    <%console.log('sdsdsdasdasdasdas', ampStory.fromPreview)%>
     <amp-video
             autoplay
     <% if (layer.settings.layerSettings.mute) {%>
-        noaudio
-      <% } %>
-        id="full-screen"
-        layout="responsive"
-        width="<%= layer.settings.layerSettings.width %>"
-        height="<%= layer.settings.layerSettings.height %>"
-        src="<%= getVideoUrl(layer.content.value)%>"
-        poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
-        style="z-index:<%= layer.position %>;<%= getStyles(layer.settings.generalSettings) %>">
+            noaudio
+            <% } %>
+            id="full-screen"
+            layout="responsive"
+    <% if (ampStory.fromPreview) { %>
+            src="<%= getVideoUrl(layer.content.value)%>"
+            <% }%>
+            width="<%= layer.settings.layerSettings.width %>"
+            height="<%= layer.settings.layerSettings.height %>"
+            poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
+            style="z-index:<%= layer.position %>;<%= getStyles(layer.settings.generalSettings) %>">
       <source src="<%= getVideoUrl(layer.content.value)%>"
-        type="video/mp4">
+              type="video/mp4">
       <div fallback>
         <p>This browser does not support the video element.</p>
       </div>
@@ -84,58 +87,25 @@ if (layer.settings.layerSettings.fullscreen) {%>
 
   </div>
 <% } else { %>
-  <div
-    class="flex-container video position<%= layer.settings.generalSettings.position %>"
-  <% if (['5', '8', '11'].includes(layer.settings.generalSettings.position)) { %>
-    style="justify-content:center;align-items:center;z-index:<%= layer.position %>;"
-  <% } else if (['2', '14'].includes(layer.settings.generalSettings.position)) { %>
-    style="justify-content:center;align-items:<%= layer.settings.generalSettings.position === '2' ? 'flex-start' : 'flex-end' %>;z-index:<%= layer.position %>;"
-  <% } else if (['4', '7', '10'].includes(layer.settings.generalSettings.position)) { %>
-    style="justify-content:flex-start;align-items:center;z-index:<%= layer.position %>;"
-  <% } else if (['6', '9', '12'].includes(layer.settings.generalSettings.position)) { %>
-    style="justify-content:flex-end;align-items:center;z-index:<%= layer.position %>;"
-  <% } else if (['1', '3'].includes(layer.settings.generalSettings.position)) { %>
-    style="justify-content:<%= layer.settings.generalSettings.position === '1' ? 'flex-start' : 'flex-end' %>;align-items:flex-start;z-index:<%= layer.position %>;"
-  <% } else if (['13', '15'].includes(layer.settings.generalSettings.position)) { %>
-    style="justify-content:<%= layer.settings.generalSettings.position === '13' ? 'flex-start' : 'flex-end' %>;align-items:flex-end;z-index:<%= layer.position %>;"
-  <% } %>
-  >
-    <div
-      id="video-animation"
-    <% if (layer.settings.animateIn && !preview){ %>
-      animate-in="<%= layer.settings.animateIn %>"
-    <% } %>
-    <% if (layer.settings.animateDuration){ %>
-      animate-in-duration="<%= layer.settings.animateDuration %>s"
-    <% } %>
-    <% if (layer.settings.animateDelay){ %>
-      animate-in-delay="<%= layer.settings.animateDelay %>s"
-    <% } %>
-      style="display:flex;justify-content:center;align-items:center;min-width:<%= animationWidth(layer) %>px;max-width:<%= animationWidth(layer) %>px;min-height:<%= animationHeight(layer) %>px;max-height:<%= animationHeight(layer) %>px;"
-    >
-      <div
-        class="rotate-wrapper"
-        style="position:relative;<%= getStyles(layer.settings.generalSettings) %>;"
-      >
-        <amp-video
+  <amp-video
+          class="small-video"
           autoplay
-        <% if (layer.settings.layerSettings.mute) { %>
+  <% if (layer.settings.layerSettings.mute) { %>
           noaudio
           <% } %>
+          style="width:100%;height:100%;box-shadow:0px 0px <%= layer.settings.generalSettings.shadow %>px 0px rgba(0,0,0,0.75);"
           width="<%= layer.settings.layerSettings.width %>"
           height="<%= layer.settings.layerSettings.height %>"
-          src="<%= getVideoUrl(layer.content.value)%>"
           poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
-          layout="fixed"
-          style="box-shadow:0px 0px <%= layer.settings.generalSettings.shadow %>px 0px rgba(0,0,0,0.75);"
-        >
-          <source src="<%= getVideoUrl(layer.content.value)%>"
+          layout="responsive"
+  <% if (ampStory.fromPreview) { %>
+          src="<%= getVideoUrl(layer.content.value)%>"
+          <% }%>
+  >
+    <source src="<%= getVideoUrl(layer.content.value)%>"
             type="video/mp4">
-          <div fallback>
-            <p>This browser does not support the video element.</p>
-          </div>
-        </amp-video>
-      </div>
+    <div fallback>
+      <p>This browser does not support the video element.</p>
     </div>
-  </div>
+  </amp-video>
 <% } %>

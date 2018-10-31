@@ -48,14 +48,22 @@
     };
 
     function drag (event, moveEvent, centerX, centerY) {
-        event.target.style.transform = 'translate(0%, 0%)';
+        console.dir(event.target);
+        let element = event.target;
+        if (event.target.nodeName === 'AMP-VIDEO') {
+            element = event.target.parentNode;
+        } else if (['square', 'circle', 'triangle', 'line'].includes(event.target.className)) {
+            element = event.target.parentNode.parentNode.parentNode.parentNode;
+        } else if (event.target.parentNode.className === 'single-text') {
+            element = event.target.parentNode.parentNode.parentNode.parentNode;
+        }
+        element.style.transform = 'translate(0%, 0%)';
         let divParams = event.target.getBoundingClientRect();
         let getAmpStoryWidth = document.getElementById("dataWidth").innerText;
         let getAmpStoryHeight = document.getElementById("dataHeight").innerText;
-        console.log('ampStory.editorWidth', ((moveEvent.x - centerX) / getAmpStoryWidth) * 100);
         if (event.screenX !== 0) {
-            event.target.style.left = (((moveEvent.x - centerX) / getAmpStoryWidth) * 100) + '%';
-            event.target.style.top = (((moveEvent.y - centerY) / getAmpStoryHeight) * 100)+ '%';
+            element.style.left = (((moveEvent.x - centerX) / getAmpStoryWidth) * 100) + '%';
+            element.style.top = (((moveEvent.y - centerY) / getAmpStoryHeight) * 100)+ '%';
         }
     };
 
@@ -85,30 +93,66 @@
                     <% var page = null
                             switch (layer.type) {
                     case 'text': %>
-                    <% include layers/text.ejs %>
+                    <div draggable="true"
+                         class="drag-text"
+                         style="transform: translate(-50%, -50%);"
+                         onmousedown="mouseDown(event)"
+                         onmouseup="mouseUp(event)">
+                        <% include layers/text.ejs %>
+                    </div>
+
                     <% break;
                     case 'html': %>
-                    <% include layers/text.ejs %>
+                    <div draggable="true" id="testImage" style="transform: translate(-50%, -50%);"
+                         onmousedown="mouseDown(event)"
+                         onmouseup="mouseUp(event)">
+                        <% include layers/text.ejs %>
+                    </div>
                     <% break;
                     case 'shape': %>
-                    <% include layers/shape.ejs %>
+                    <div draggable="true"
+                         class="drag-shape"
+                         style="transform: translate(-50%, -50%);
+                                 width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
+                                 height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;"
+                         onmousedown="mouseDown(event)"
+                         onmouseup="mouseUp(event)">
+                        <% include layers/shape.ejs %>
+                    </div>
                     <% break;
                     case 'image': %>
                     <div draggable="true"
+                         id="image<%=layer.position%>"
                     <%if (layer.settings.layerSettings.fullscreen) {%>
-                         class="full-screan-image"
+                         class="full-screan-image drag-image"
                          style="transform: translate(-50%, -50%);"
-                    <%} else {%>
-                         style="transform: translate(-50%, -50%);width: 52%;height: 23%"
+                            <%} else {%>
+                         style="transform: translate(-50%, -50%);
+                                 width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
+                                 height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;"
                             <% } %>
-                         id="testImage"
+                         class="drag-image"
                          onmousedown="mouseDown(event)"
                          onmouseup="mouseUp(event)">
                         <% include layers/image.ejs %>
                     </div>
                     <% break
                     case 'video': %>
-                    <% include layers/video.ejs %>
+                    <div draggable="true"
+                         id="video<%=layer.position%>"
+                    <%if (layer.settings.layerSettings.fullscreen) {%>
+                         class="full-screan-image drag-video"
+                         style="transform: translate(-50%, -50%);"
+                            <%} else {%>
+                         style="transform: translate(-50%, -50%);
+                                 width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
+                                 height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;"
+                            <% } %>
+                         class="drag-video"
+                         onmousedown="mouseDown(event)"
+                         onmouseup="mouseUp(event)">
+                        <% include layers/video.ejs %>
+                    </div>
                     <% break
                     } %>
                 <% }) %>

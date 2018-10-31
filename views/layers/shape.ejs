@@ -54,73 +54,21 @@ function Radians(deg) {
   return deg * (Math.PI / 180)
 }%>
 <div
-  class="<%= layer.settings.generalSettings.position ? `item position${layer.settings.generalSettings.position}` : 'item position8' %>"
-  style="z-index: <%= layer.position %>;"
->
-  <div
-  <% if (['5', '8', '11'].includes(layer.settings.generalSettings.position)) { %>
-    style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;justify-content:center;align-items:center;"
-  <% } else if (['2', '14'].includes(layer.settings.generalSettings.position)) { %>
-    style="position:absolute;<%= layer.settings.generalSettings.position === '2' ? 'top:0;align-items:flex-start' : 'bottom:0;align-items:flex-end' %>;left:50%;transform:translate(-50%,0);display:flex;justify-content:center;"
-  <% } else if (['4', '7', '10'].includes(layer.settings.generalSettings.position)) { %>
-    style="position:absolute;top:50%;left:0;transform:translate(0,-50%);display:flex;justify-content:flex-start;align-items:center;"
-  <% } else if (['6', '9', '12'].includes(layer.settings.generalSettings.position)) { %>
-    style="position:absolute;top:50%;right:0;transform:translate(0,-50%);display:flex;justify-content:flex-end;align-items:center"
-  <% } else if (['1', '3'].includes(layer.settings.generalSettings.position)) { %>
-    style="position:absolute;top:0;<%= layer.settings.generalSettings.position === '1' ? 'left:0;justify-content:flex-start' : 'right:0;justify-content:flex-end' %>;transform:translate(0,0);display:flex;align-items:flex-start;"
-  <% } else if (['13', '15'].includes(layer.settings.generalSettings.position)) { %>
-    style="position:absolute;bottom:0;<%= layer.settings.generalSettings.position === '13' ? 'left:0;justify-content:flex-start' : 'right:0;justify-content:flex-end' %>;transform:translate(0,0);display:flex;align-items:flex-end;"
-  <% } %>
-  >
-    <div
-      id="shape-animation"
-      <% if (layer.settings.animateIn && !preview){ %>
+        style="width: 100%;height: 100%;"
+<% if (layer.settings.animateIn && !preview){ %>
         animate-in="<%= layer.settings.animateIn %>"
-      <% } %>
-      <% if (layer.settings.animateDuration){ %>
+        <% } %>
+<% if (layer.settings.animateDuration){ %>
         animate-in-duration="<%= layer.settings.animateDuration %>s"
-      <% } %>
-      <% if (layer.settings.animateDelay){ %>
-        animate-in-delay="<%= layer.settings.animateDelay %>s"
-      <% } %>
-    style="display:flex;justify-content:center;align-items:center;min-width:<%= animationWidth(layer) %>px;max-width:<%= animationWidth(layer) %>px;min-height:<%= animationHeight(layer) %>px;max-height:<%= animationHeight(layer) %>px;"
-    >
+        <% } %>
+        style="z-index: <%= layer.position %>;">
+  <div class="inner-item shape" style="width: 100%;height: 100%;">
+    <div
+            id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
+            style="<%= getStyles(layer.settings.generalSettings)%>; text-align: center; position: relative;width: 100%;height: 100%;">
       <div
-        class="shape-container"
-        id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
-        style="<%= getStyles(layer.settings.generalSettings)%>;text-align:center;position:relative;"
-      >
-        <div
-          id="shape-parent"
-          class="<%= layer.content.value %><%= page ? page.position : currentSlide.position %><%= layer.position %>"
-          style="display:flex;justify-content:center;align-items:center;<%= layer.content.value === 'triangle' ? 'transform:translateY(-15%);' : '' %>"
-        >
-          <% if (layer.content.value === 'triangle') { %>
-            <% layer.settings.layerSettings.width = layer.settings.layerSettings.width % 2 === 0 ? layer.settings.layerSettings.width : layer.settings.layerSettings.width + 1 %>
-            <% layer.settings.layerSettings.height = layer.settings.layerSettings.height % 2 === 0 ? layer.settings.layerSettings.height : layer.settings.layerSettings.height + 1 %>
-          <% } %>
-          <% switch (layer.content.value) {
-          case 'square' : %>
-          <% include ../shapes/square.ejs %>
-          <% break
-          case 'circle' : %>
-          <% include ../shapes/circle.ejs %>
-          <% break
-          case 'triangle' : %>
-          <% include ../shapes/triangle.ejs %>
-          <% break
-          case 'line' : %>
-          <% include ../shapes/line.ejs %>
-          <% break
-          case 'frame' : %>
-          <% include ../shapes/frame.ejs %>
-          <% break
-          case 'rim' : %>
-          <% include ../shapes/rim.ejs %>
-          <% break %>
-          <% } %>
-        </div>
-      </div>
+              class="<%= layer.content.value %>"
+              style="transform: rotate(0 deg);background-size: contain;background-position: center;width: 100%;height: 100%;"></div>
     </div>
   </div>
 </div>
