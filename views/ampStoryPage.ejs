@@ -1,12 +1,12 @@
 <%let preview = false;
 ampStory.cuts.map(page => { %>
   <amp-story-page
-          id="<%= page.position %>"
-          auto-advance-after="10s"
-          style="background: #eeeeee">
+    id="<%= page.position %>"
+    auto-advance-after="10s"
+    style="background: #eeeeee">
     <% page.layers.sort((first, second) => {
       var keyA = first.position,
-              keyB = second.position;
+      keyB = second.position;
       if(keyA < keyB) return -1;
       if(keyA > keyB) return 1;
       return 0;
@@ -19,13 +19,13 @@ ampStory.cuts.map(page => { %>
           <div class="grid-parent">
             <div class="grid"
             <% if (layer.type === 'image' &&
-                    layer.settings.layerSettings.fullscreen &&
-                    layer.settings.generalSettings.rotate !== '-180' &&
-                    layer.settings.generalSettings.rotate !== '0' &&
-                    layer.settings.generalSettings.rotate !== '180') {
+              layer.settings.layerSettings.fullscreen &&
+              layer.settings.generalSettings.rotate !== '-180' &&
+              layer.settings.generalSettings.rotate !== '0' &&
+              layer.settings.generalSettings.rotate !== '180') {
             %>
-                 style="display:block;"
-                    <% } %>
+              style="display:block;"
+            <% } %>
             >
               <% switch (layer.type) {
               case 'text': %>
