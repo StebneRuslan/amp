@@ -2,7 +2,7 @@
 <html lang="en">
 <% include ampViewerHead.ejs %>
 <% let currentSlide = ampStory.cuts.find(cut => {
-        return cut.position === +current
+    return cut.position === +current
 })
 %>
 <body>
@@ -41,13 +41,22 @@
         event.preventDefault();
     }
 
+    function getDraggableNode (path) {
+        for (let i = 0; i < path.length; i++) {
+            console.log('path[i].clasList', path[i].classList);
+            if ([].includes.call(path[i].classList, 'drag-item')) {
+                return path[i];
+            }
+        }
+    }
+
     function mouseDown(event) {
         event.preventDefault();
         let divParams = event.target.getBoundingClientRect();
         let centerX = event.x - divParams.left;
         let centerY = event.y - divParams.top;
         document.onmousemove = (moveEvent) => {
-            drag(event, moveEvent, centerX, centerY);
+            drag(event, getDraggableNode(event.path), moveEvent, centerX, centerY);
         };
         document.onmousedovn = (moveEvent) => {
             mouseUp(event);
@@ -59,24 +68,14 @@
         document.onmousemove = null;
     };
 
-    function drag (event, moveEvent, centerX, centerY) {
-        let element = event.target;
-        if (event.target.nodeName === 'AMP-VIDEO') {
-            element = event.target.parentNode;
-        } else if ([].includes.call(event.target.parentNode.classList, 'small-video')) {
-            element = event.target.parentNode.parentNode;
-        } else if (['square', 'circle', 'triangle', 'line'].includes(event.target.className)) {
-            element = event.target.parentNode.parentNode.parentNode.parentNode;
-        } else if (event.target.parentNode.className === 'single-text') {
-            element = event.target.parentNode.parentNode.parentNode.parentNode;
-        }
-        element.style.transform = 'translate(0%, 0%)';
+    function drag (event, target, moveEvent, centerX, centerY) {
+        target.style.transform = 'translate(0%, 0%)';
         let divParams = event.target.getBoundingClientRect();
         let getAmpStoryWidth = document.getElementById("dataWidth").innerText;
         let getAmpStoryHeight = document.getElementById("dataHeight").innerText;
         if (event.screenX !== 0) {
-            element.style.left = (((moveEvent.x - centerX) / getAmpStoryWidth) * 100) + '%';
-            element.style.top = (((moveEvent.y - centerY) / getAmpStoryHeight) * 100)+ '%';
+            target.style.left = (((moveEvent.x - centerX) / getAmpStoryWidth) * 100) + '%';
+            target.style.top = (((moveEvent.y - centerY) / getAmpStoryHeight) * 100)+ '%';
         }
     };
 
@@ -89,87 +88,80 @@
 <!--<div class="disable-overlay"></div>-->
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-        <amp-story-page  id='story' auto-advance-after="10s" class="container">
-                <% let preview = false;
-                if (currentSlide) {
-                        currentSlide.layers.sort((first, second) => {
-                                var keyA = first.position,
-                                        keyB = second.position;
-                                if(keyA < keyB) return -1;
-                                if(keyA > keyB) return 1;
-                                return 0;
-                        })
-                } %>
-                <% if (currentSlide) { %>
-                        <amp-story-grid-layer template="horizontal">
-                                <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
-                                        <% var page = null
-                                                switch (layer.type) {
-                                        case 'text': %>
-                                        <div draggable="true"
-                                             class="drag-text"
-                                             style="transform: translate(-50%, -50%);"
-                                             onmousedown="mouseDown(event)"
-                                             onmouseup="mouseUp(event)">
-                                                <% include layers/text.ejs %>
-                                        </div>
+    <amp-story-page  id='story' auto-advance-after="10s" class="container">
+        <% let preview = false;
+        if (currentSlide) {
+            currentSlide.layers.sort((first, second) => {
+                var keyA = first.position,
+                        keyB = second.position;
+                if(keyA < keyB) return -1;
+                if(keyA > keyB) return 1;
+                return 0;
+            })
+        } %>
+        <% if (currentSlide) { %>
+            <amp-story-grid-layer template="horizontal">
+                <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
+                    <% var page = null
+                            switch (layer.type) {
+                    case 'text': %>
+                    <div draggable="true" id="layer<%=layer.position%>"
+                         class="drag-item"
+                         style="transform: translate(-50%, -50%);">
+                        <% include layers/text.ejs %>
+                    </div>
 
-                                        <% break;
-                                        case 'html': %>
-                                        <div draggable="true" id="testImage" style="transform: translate(-50%, -50%);"
-                                             onmousedown="mouseDown(event)"
-                                             onmouseup="mouseUp(event)">
-                                                <% include layers/text.ejs %>
-                                        </div>
-                                        <% break;
-                                        case 'shape': %>
-                                        <div
-                                                id="layer<%=layer.position%>"
-                                                draggable="true"
-                                                class="drag-shape"
-                                                style="transform: translate(-50%, -50%);
-                                                        width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
-                                                        height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;">
-                                                <% include layers/shape.ejs %>
-                                        </div>
-                                        <% break;
-                                        case 'image': %>
-                                        <div draggable="true"
-                                             id="layer<%=layer.position%>"
-                                        <%if (layer.settings.layerSettings.fullscreen) {%>
-                                             class="full-screan-image drag-image"
-                                             style="transform: translate(-50%, -50%);"
-                                                <%} else {%>
-                                             style="transform: translate(-50%, -50%);
-                                                     width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
-                                                     height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;"
-                                                <% } %>
-                                             class="drag-image"
-                                        >
-                                                <% include layers/image.ejs %>
-                                        </div>
-                                        <% break
-                                        case 'video': %>
-                                        <div draggable="true"
-                                             id="layer<%=layer.position%>"
-                                        <%if (layer.settings.layerSettings.fullscreen) {%>
-                                             class="full-screan-image drag-video"
-                                             style="transform: translate(-50%, -50%);"
-                                                <%} else {%>
-                                             style="transform: translate(-50%, -50%);
-                                                     width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
-                                                     height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;"
-                                                <% } %>
-                                             class="drag-video"
-                                        >
-                                                <% include layers/video.ejs %>
-                                        </div>
-                                        <% break
-                                        } %>
-                                <% }) %>
-                        </amp-story-grid-layer>
-                <% } %>
-        </amp-story-page>
+                    <% break;
+                    case 'html': %>
+                    <div draggable="true" id="layer<%=layer.position%>" style="transform: translate(-50%, -50%);">
+                        <% include layers/text.ejs %>
+                    </div>
+                    <% break;
+                    case 'shape': %>
+                    <div
+                            id="layer<%=layer.position%>"
+                            draggable="true"
+                            class="drag-item"
+                            style="transform: translate(-50%, -50%);
+                                    width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
+                                    height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;">
+                        <% include layers/shape.ejs %>
+                    </div>
+                    <% break;
+                    case 'image': %>
+                    <div draggable="true"
+                         id="layer<%=layer.position%>"
+                    <%if (layer.settings.layerSettings.fullscreen) {%>
+                         class="full-screan-image"
+                            <%} else {%>
+                         style="transform: translate(-50%, -50%);
+                                 width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
+                                 height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;"
+                            <% } %>
+                         class="drag-item"
+                    >
+                        <% include layers/image.ejs %>
+                    </div>
+                    <% break
+                    case 'video': %>
+                    <div draggable="true"
+                         id="layer<%=layer.position%>"
+                    <%if (layer.settings.layerSettings.fullscreen) {%>
+                         class="full-screan-image"
+                            <%} else {%>
+                         style="transform: translate(-50%, -50%);
+                                 width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
+                                 height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;"
+                            <% } %>
+                         class="drag-item">
+                        <% include layers/video.ejs %>
+                    </div>
+                    <% break
+                    } %>
+                <% }) %>
+            </amp-story-grid-layer>
+        <% } %>
+    </amp-story-page>
 </amp-story>
 </body>
 
