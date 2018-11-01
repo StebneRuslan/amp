@@ -177,9 +177,9 @@ if (layer.settings.layerSettings.fullscreen) { %>
                   layout="fixed"
                   alt="an image"
           <% if (layer.settings.generalSettings.shadow !== '0') { %>
-                  style="filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));"
+                  style="filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));position: initial;"
           <% } else { %>
-                  style=""
+                  style="position: initial;"
                   <% } %>
           ></amp-img>
         </div>
