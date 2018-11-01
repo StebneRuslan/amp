@@ -60,10 +60,11 @@
     };
 
     function drag (event, moveEvent, centerX, centerY) {
-        console.dir(event.target);
         let element = event.target;
         if (event.target.nodeName === 'AMP-VIDEO') {
             element = event.target.parentNode;
+        } else if ([].includes.call(event.target.parentNode.classList, 'small-video')) {
+            element = event.target.parentNode.parentNode;
         } else if (['square', 'circle', 'triangle', 'line'].includes(event.target.className)) {
             element = event.target.parentNode.parentNode.parentNode.parentNode;
         } else if (event.target.parentNode.className === 'single-text') {
@@ -160,8 +161,7 @@
                                                      height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;"
                                                 <% } %>
                                              class="drag-video"
-                                             onmousedown="mouseDown(event)"
-                                             onmouseup="mouseUp(event)">
+                                        >
                                                 <% include layers/video.ejs %>
                                         </div>
                                         <% break
