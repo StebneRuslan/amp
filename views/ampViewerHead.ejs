@@ -3,31 +3,31 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <script async custom-element="amp-video" src=<%=ampVideoPath%>></script>
     <script async src=<%=v0Path%>></script>
-    <script async custom-element="amp-story" src=<%=ampStoryPath%>></script>
+    <script async custom-element="amp-story"
+            src=<%=ampStoryPath%>></script>
     <% if (ampAnimationPath !== null) { %>
     <script async custom-element="amp-animation" src=<%=ampAnimationPath%>></script>
     <% } %>
     <title><%= ampStory.title%></title>
-    <% if(ampStory.fromPreview) { %>
-        <link rel="canonical" href="" />
-    <% } else  { %>
-    <link rel="canonical" href="https://test.cutnut.tv/amp/<%=ampStory.key%>" />
-    <% } %>
+    <link rel="canonical" href="https://test-cutnut-tv.cdn.ampproject.org/c/s/test.cutnut.tv/amp/<%=ampStory.key%>" />
     <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
     <style amp-custom>
         <% if (ampStory.cuts.length !== 0) {%>
         <% let layer = ampStory.cuts[0].layers[0] %>
-
         <% for (let cutIndex = 0; cutIndex < ampStory.cuts.length; cutIndex++) {
           let cut = ampStory.cuts[cutIndex]
           for (let layerIndex = 0; layerIndex < ampStory.cuts[cutIndex].layers.length; layerIndex++) {
             let layer = ampStory.cuts[cutIndex].layers[layerIndex]
             if (layer.type === 'shape') { %>
-        .<%= layer.content.value %><%= cut.position %><%= layer.position %> {
-            min-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
-            max-width: <%= +layer.settings.layerSettings.width + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
-            min-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
-            max-height: <%= +layer.settings.layerSettings.height + +layer.settings.layerSettings.shapeStyles.thickness * 2 %>px;
+        .<%= layer.content.value %> {
+            width: 100%;
+            height: 100%;
+        <% if (layer.content.value) { %>
+            background: url(<%- include('shapes/' + layer.content.value, {layer: layer}) %>) no-repeat;
+        <% } %>
+        <% if (layer.content.value === 'circle' && layer.settings.layerSettings.width !== layer.settings.layerSettings.height) { %>
+            background: url(<%- include('shapes/oval', {layer: layer}) %>) no-repeat;
+        <% } %>
         }
         <% }}
           }
@@ -254,14 +254,38 @@
 
         img {
             object-fit: cover;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        amp-img {
+            pointer-events: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        .small-image img {
+        .drag-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .small-image img, .small-video video {
             object-fit: fill;
+            width: 100%;
+            height: 100%;
         }
 
         video {
             object-fit: cover;
+        }
+
+        .drag-item {
+            border: 1px dotted blue;
         }
 
         #full-screen {
@@ -272,6 +296,12 @@
         #full-screen video {
             object-fit: cover;
         }
+
+        .full-screan-image {
+            width: 100%;
+            height: 100%;
+        }
+
         .single-text div {
             font-family: Montserrat;
             font-size: 3.1vh;
