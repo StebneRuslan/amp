@@ -6,93 +6,10 @@
 })
 %>
 <body>
-<p id="dataWidth"style="display:none"><%= ampStory.editorWidth %></p>
-<p id="dataHeight"style="display:none"><%= ampStory.editorHeight %></p>
-<script>
-    window.addEventListener('message', function (event) {
-        if (event.data.previousId !== null) {
-            const previousLayer = document.getElementById(`layer${event.data.previousId}`);
-            previousLayer.removeEventListener('mousedown', mouseDown, false);
-            previousLayer.addEventListener('mousedown', preventImageDragging, false);
-            previousLayer.removeEventListener('mouseup', mouseUp, false);
-            previousLayer.style.border = '';
-        }
-        const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-        currentLayer.addEventListener('mousedown', mouseDown, false);
-        currentLayer.addEventListener('mouseup', mouseUp, false);
-        currentLayer.style.border = '1px dotted red';
-    });
 
-    window.onload = () => {
-        var css = '.i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
-            head = document.head || document.getElementsByTagName('head')[0],
-            style = document.createElement('style');
-        style.type = 'text/css';
-        if (style.styleSheet){
-            style.styleSheet.cssText = css;
-        } else {
-            style.appendChild(document.createTextNode(css));
-        };
-        head.appendChild(style);
-    };
-    const element = null;
-
-    function preventImageDragging (event) {
-        event.preventDefault();
-    }
-
-    function getDraggableNode (path) {
-        for (let i = 0; i < path.length; i++) {
-            if (path[i].classList && path[i].classList.value) {
-                console.log('targetElement', path[i].classList);
-                if ([].includes.call(path[i].classList, 'drag-item')) {
-
-                    return path[i];
-                }
-            }
-        }
-    }
-
-    function mouseDown(event) {
-        event.preventDefault();
-        const target = getDraggableNode(event.path);
-        const divParams = target.getBoundingClientRect();
-        let centerX = event.x - divParams.left;
-        let centerY = event.y - divParams.top;
-        document.onmousemove = (moveEvent) => {
-            drag(event, getDraggableNode(event.path), moveEvent, centerX, centerY);
-        };
-        document.onmousedovn = (moveEvent) => {
-            mouseUp(event);
-        };
-    };
-
-    function mouseUp (event) {
-        event.preventDefault();
-        document.onmousemove = null;
-    };
-
-    function drag (event, target, moveEvent, centerX, centerY) {
-        target.style.transform = 'translate(0%, 0%) rotate(90deg);';
-        let divParams = event.target.getBoundingClientRect();
-        let getAmpStoryWidth = document.getElementById("dataWidth").innerText;
-        let getAmpStoryHeight = document.getElementById("dataHeight").innerText;
-        if (event.screenX !== 0) {
-            let topInPx = (moveEvent.x - centerX);
-            let leftInPx = (moveEvent.y - centerY);
-            target.style.left = ((topInPx / getAmpStoryWidth) * 100) + '%';
-            target.style.top = ((leftInPx / getAmpStoryHeight) * 100) + '%';
-            drop({top: parseInt(topInPx, 10), left: parseInt(leftInPx, 10)});
-        }
-    };
-
-    function drop (coordinates) {
-        window.parent.postMessage(coordinates, 'http://127.0.0.1:3978/#/edit');
-    }
-</script>
 <!-- Overlay to disable click on single slide -->
 <!--TODO uncoment this line for release-->
-<!--<div class="disable-overlay"></div>-->
+<div class="disable-overlay"></div>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
     <amp-story-page  id='story' auto-advance-after="10s" class="container">
@@ -107,117 +24,41 @@
             })
         } %>
         <% if (currentSlide) { %>
-            <amp-story-grid-layer template="horizontal">
-                <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
-                    <% var page = null
-                            switch (layer.type) {
-                    case 'text': %>
-                    <div draggable="true" id="layer<%=layer.position%>"
-                         class="drag-item"
-                         style="
-                                 position: absolute;
-                                 left: <%= ((layer.settings.generalSettings.top / ampStory.editorWidth) * 100) + '%'%>;
-                                 top: <%= ((layer.settings.generalSettings.left / ampStory.editorHeight) * 100) + '%'%>;">
-                        <% include layers/text.ejs %>
-                    </div>
-                    <% break;
-                    case 'html': %>
-                    <div draggable="true" id="layer<%=layer.position%>"
-                         style="
-                                 position: absolute;
-                                 left: <%= ((layer.settings.generalSettings.top / ampStory.editorWidth) * 100) + '%'%>;
-                                 top: <%= ((layer.settings.generalSettings.left / ampStory.editorHeight) * 100) + '%'%>;">
-                        <% include layers/text.ejs %>
-                    </div>
-                    <% break;
-                    case 'shape': %>
-                    <div
-                            id="layer<%=layer.position%>"
-                            draggable="true"
-                            class="drag-item"
-                            style="
-                                    position: absolute;
-                                    width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
-                                    height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;
-                                    left: <%= ((layer.settings.generalSettings.top / ampStory.editorWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.left / ampStory.editorHeight) * 100) + '%'%>;">
-                        <% include layers/shape.ejs %>
-                    </div>
-                    <% break;
-
-
-
-
-
-
-
-
-                    case 'image': %>
-                    <div
-                            class="drag-item animate"
-                            style="
-                                    position: absolute;
-                                    width: <%=parseInt((100 * (Math.abs(layer.settings.layerSettings.width * Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) + Math.abs(layer.settings.layerSettings.height * Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.editorWidth, 10) + '%';%>;
-
-                                    height: <%=parseInt((100 * (Math.abs(layer.settings.layerSettings.width * Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) + Math.abs(layer.settings.layerSettings.height * Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.editorHeight, 10) + '%';%>;
-
-                                    left: <%= ((layer.settings.generalSettings.top / ampStory.editorWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.left / ampStory.editorHeight) * 100) + '%'%>;"
-                    <% if (layer.settings.animateIn && !preview){ %>
-                            animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>
-                    >
-                        <div draggable="true"
-                             id="layer<%=layer.position%>"
-                        <%if (layer.settings.layerSettings.fullscreen) {%>
-                             class="full-screan-image"
-                                <%} else {%>
-                             class="rotate-wrapper"
-                             style="
-                                     width: <%=layer.settings.layerSettings.width + 'px'%>;
-                                     height: <%=layer.settings.layerSettings.height + 'px'%>;
-                                     transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
+            <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
+                <amp-story-grid-layer id="layer<%= layer.position %>" template="fill">
+                    <div>
+                        <div class="grid"
+                        <% if (layer.type === 'image' &&
+                                layer.settings.layerSettings.fullscreen &&
+                                layer.settings.generalSettings.rotate !== '-180' &&
+                                layer.settings.generalSettings.rotate !== '0' &&
+                                layer.settings.generalSettings.rotate !== '180') {
+                        %>
+                             style="display:block;"
                                 <% } %>
                         >
+                            <% var page = null
+                                    switch (layer.type) {
+                            case 'text': %>
+                            <% include layers/text.ejs %>
+                            <% break;
+                            case 'html': %>
+                            <% include layers/text.ejs %>
+                            <% break;
+                            case 'shape': %>
+                            <% include layers/shape.ejs %>
+                            <% break;
+                            case 'image': %>
                             <% include layers/image.ejs %>
+                            <% break
+                            case 'video': %>
+                            <% include layers/video.ejs %>
+                            <% break
+                            } %>
                         </div>
                     </div>
-                    <% break
-
-
-
-
-
-
-
-
-
-                    case 'video': %>
-                    <div draggable="true"
-                         id="layer<%=layer.position%>"
-                    <%if (layer.settings.layerSettings.fullscreen) {%>
-                         class="full-screan-image"
-                            <%} else {%>
-                         style="
-                                 position: absolute;
-                                 width: <%=parseInt((100 *  layer.settings.layerSettings.width) / ampStory.editorWidth, 10) + '%' %>;
-                                 height: <%=parseInt((100 *  layer.settings.layerSettings.height) / ampStory.editorHeight, 10) + '%' %>;
-                                 left: <%= ((layer.settings.generalSettings.top / ampStory.editorWidth) * 100) + '%'%>;
-                                 top: <%= ((layer.settings.generalSettings.left / ampStory.editorHeight) * 100) + '%'%>;"
-                            <% } %>
-                         class="drag-item">
-                        <% include layers/video.ejs %>
-                    </div>
-                    <% break
-                    } %>
-                <% }) %>
-            </amp-story-grid-layer>
+                </amp-story-grid-layer>
+            <% }) %>
         <% } %>
     </amp-story-page>
 </amp-story>
