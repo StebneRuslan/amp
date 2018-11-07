@@ -24,32 +24,6 @@
   return styles
 }
 
-function getRotateValue(settings) {
-  if (layer.settings.layerSettings.fullscreen) {
-    var dist = Math.sqrt((Math.pow(ampStory.editorWidth, 2) || Math.pow(400, 2)) + (Math.pow(ampStory.editorHeight, 2) || Math.pow(711, 2)));
-    var diagAngle = Math.asin((ampStory.editorHeight || 711) / dist);
-
-    var a1 = (((settings.rotate * Math.PI / 180) % (Math.PI * 2)) + Math.PI * 4) % (Math.PI * 2);
-    console.log('a1', a1)
-    if (a1 > Math.PI) {
-      a1 -= Math.PI;
-    }
-    if (a1 > Math.PI / 2 && a1 <= Math.PI) {
-      a1 = (Math.PI / 2) - (a1 - (Math.PI / 2));
-    }
-
-    var ang1 = Math.PI / 2 - diagAngle - Math.abs(a1)
-    var ang2 = Math.abs(diagAngle - Math.abs(a1))
-
-    var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.height
-    var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.width
-    var scale = Math.max(scale1, scale2)
-    return `transform: rotate(${settings.rotate}deg) scale(${scale});`
-  } else {
-    return `transform: rotate(${settings.rotate}deg);`
-  }
-}
-
 function animationHeight(layer) {
   return Math.abs((+layer.settings.layerSettings.width) * Math.sin(Radians(+layer.settings.generalSettings.rotate))) +
           Math.abs((+layer.settings.layerSettings.height) * Math.cos(Radians(+layer.settings.generalSettings.rotate)))
@@ -98,7 +72,10 @@ if (layer.settings.layerSettings.fullscreen) { %>
           layout="fixed"
           alt="an image"
   <% if (layer.settings.generalSettings.shadow !== '0') { %>
-          style="filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));position: initial;"
+          style="
+                  filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));
+                  position: initial;
+                  opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
   <% } else { %>
           style="position: initial;"
           <% } %>
