@@ -146,17 +146,20 @@ function getDraggableElementHeight (layer) {
 }
 
 function getDeraggableElementOffsetY (layer) {
-    console.log('fdfdsfsdfsdfsdfdsfdsf', layer.settings.generalSettings.innerOffsetX);
-    return (100 * layer.settings.generalSettings.innerOffsetX) / parseInt((Math.abs(layer.settings.layerSettings.width *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs(layer.settings.layerSettings.height *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+    if (layer.settings.generalSettings.rotate !== '0') {
+        return (100 * layer.settings.generalSettings.innerOffsetX) / parseInt((Math.abs(layer.settings.layerSettings.width *
+                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs(layer.settings.layerSettings.height *
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+    } else return '0';
 }
 function getDeraggableElementOffsetX (layer) {
-    return (100 * layer.settings.generalSettings.innerOffsetY) / parseInt((Math.abs(layer.settings.layerSettings.width *
-            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs(layer.settings.layerSettings.height *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))))  + '%';
+    if (layer.settings.generalSettings.rotate !== '0') {
+        return (100 * layer.settings.generalSettings.innerOffsetY) / parseInt((Math.abs(layer.settings.layerSettings.width *
+                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs(layer.settings.layerSettings.height *
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+    } else return '0';
 }
 %>
 
@@ -183,8 +186,8 @@ function getDeraggableElementOffsetX (layer) {
                     <div
                             class="drag-item animate"
                             style="
-                                    left: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialHeight) * 100) + '%'%>;"
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                     <% if (layer.settings.animateIn && !preview){ %>
                             animate-in="<%= layer.settings.animateIn %>"
                             <% } %>
@@ -206,8 +209,8 @@ function getDeraggableElementOffsetX (layer) {
                     <div
                             class="drag-item animate"
                             style="
-                                    left: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialHeight) * 100) + '%'%>;"
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                     <% if (layer.settings.animateIn && !preview){ %>
                             animate-in="<%= layer.settings.animateIn %>"
                             <% } %>
@@ -232,8 +235,8 @@ function getDeraggableElementOffsetX (layer) {
                                     position: absolute;
                                     width: <%=getAnimationContainerWidth(layer);%>;
                                     height: <%=getAnimationContainerHeight(layer);%>;
-                                    left: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialHeight) * 100) + '%'%>;"
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                     <% if (layer.settings.animateIn && !preview){ %>
                             animate-in="<%= layer.settings.animateIn %>"
                             <% } %>
@@ -277,8 +280,8 @@ function getDeraggableElementOffsetX (layer) {
                                 position: absolute;
                                 width: <%=getAnimationContainerWidth(layer);%>;
                                 height: <%=getAnimationContainerHeight(layer);%>;
-                                left: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialWidth) * 100) + '%'%>;
-                                top: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialHeight) * 100) + '%'%>;"
+                                left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                     <% if (layer.settings.animateIn && !preview){ %>
                         animate-in="<%= layer.settings.animateIn %>"
                             <% } %>
@@ -305,8 +308,8 @@ function getDeraggableElementOffsetX (layer) {
                                      width: <%=getDraggableElementWidth(layer);%>;
                                      height: <%=getDraggableElementHeight(layer);%>;
                                      transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                     left: <%=getDeraggableElementOffsetX(layer);%>;
-                                     top: <%=getDeraggableElementOffsetY(layer);%>;"
+                                     top: <%=getDeraggableElementOffsetX(layer);%>;
+                                     left: <%=getDeraggableElementOffsetY(layer);%>;"
                                 <% } %>
                         >
                             <% include layers/image.ejs %>
@@ -330,8 +333,8 @@ function getDeraggableElementOffsetX (layer) {
                                 position: absolute;
                                 width: <%=getAnimationContainerWidth(layer);%>;
                                 height: <%=getAnimationContainerHeight(layer);%>;
-                                left: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialWidth) * 100) + '%'%>;
-                                top: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialHeight) * 100) + '%'%>;"
+                                left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                             <% } %>
                     <% if (layer.settings.animateIn && !preview){ %>
                         animate-in="<%= layer.settings.animateIn %>"

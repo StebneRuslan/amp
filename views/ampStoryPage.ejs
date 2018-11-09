@@ -146,7 +146,7 @@ ampStory.cuts.map(page => { %>
                            transform: <%=getRotateValue(layer)%>;
                            "
                       <% } else { %>
-                   class="rotate-wrapper"
+                   class="rotate-wrapper contain-image"
                    style="
                            position: absolute;
                            width: <%=(100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width * Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) + Math.abs(layer.settings.layerSettings.height * Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%'%>;
