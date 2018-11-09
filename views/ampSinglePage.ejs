@@ -10,10 +10,7 @@
 <p id="dataHeight"style="display:none"><%= ampStory.initialHeight %></p>
 <script>
     window.addEventListener('message', function (event) {
-        console.log('adsdasdasdas', event.data.previousId);
-        console.log('1121212312312', event.data.currentId);
         if (event.data.previousId !== null && event.data.previousId !== undefined) {
-            console.log('22222222222');
             const previousLayer = document.getElementById(`layer${event.data.previousId}`);
             previousLayer.removeEventListener('mousedown', mouseDown, false);
             previousLayer.addEventListener('mousedown', preventImageDragging, false);
@@ -47,7 +44,6 @@
         for (let i = 0; i < path.length; i++) {
             if (path[i].classList && path[i].classList.value) {
                 if ([].includes.call(path[i].classList, 'drag-item')) {
-
                     return path[i];
                 }
             }
@@ -76,14 +72,14 @@
     function drag (event, target, moveEvent, centerX, centerY) {
         target.style.transform = 'translate(0%, 0%) rotate(90deg);';
         let divParams = event.target.getBoundingClientRect();
-        let getAmpStoryWidth = document.getElementById("dataWidth").innerText;
-        let getAmpStoryHeight = document.getElementById("dataHeight").innerText;
+        let ampStoryWidth = document.querySelector('body').clientWidth;
+        let ampStoryHeight = document.querySelector('body').clientHeight;
         if (event.screenX !== 0) {
-            let topInPx = (moveEvent.x - centerX);
-            let leftInPx = (moveEvent.y - centerY);
-            target.style.left = ((topInPx / getAmpStoryWidth) * 100) + '%';
-            target.style.top = ((leftInPx / getAmpStoryHeight) * 100) + '%';
-            drop({top: parseInt(topInPx, 10), left: parseInt(leftInPx, 10)});
+            let leftInPx = (moveEvent.x - centerX);
+            let topInPx = (moveEvent.y - centerY);
+            target.style.left = ((leftInPx / ampStoryWidth) * 100) + '%';
+            target.style.top = ((topInPx / ampStoryHeight) * 100) + '%';
+            drop({offsetX: parseInt(leftInPx, 10), offsetY: parseInt(topInPx, 10)});
         }
     };
 
