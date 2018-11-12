@@ -18,9 +18,11 @@
             previousLayer.style.border = '';
         }
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-        currentLayer.addEventListener('mousedown', mouseDown, false);
-        currentLayer.addEventListener('mouseup', mouseUp, false);
-        currentLayer.style.border = '1px dotted red';
+        if (currentLayer) {
+            currentLayer.addEventListener('mousedown', mouseDown, false);
+            currentLayer.addEventListener('mouseup', mouseUp, false);
+            currentLayer.style.border = '1px dotted red';
+        }
     });
     window.onload = () => {
         var css = '.i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
@@ -70,7 +72,6 @@
     };
 
     function drag (event, target, moveEvent, centerX, centerY) {
-        target.style.transform = 'translate(0%, 0%) rotate(90deg);';
         let divParams = event.target.getBoundingClientRect();
         let ampStoryWidth = document.querySelector('body').clientWidth;
         let ampStoryHeight = document.querySelector('body').clientHeight;
@@ -181,9 +182,11 @@ function getDeraggableElementOffsetX (layer) {
                     case 'text': %>
                     <div
                             class="drag-item animate"
+                    <% if (layer.content.value !== '') { %>
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                            <% } %>
                     <% if (layer.settings.animateIn && !preview){ %>
                             animate-in="<%= layer.settings.animateIn %>"
                             <% } %>
@@ -195,7 +198,8 @@ function getDeraggableElementOffsetX (layer) {
                             <% } %>
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
-                             style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
+                             style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
+                        >
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -231,8 +235,8 @@ function getDeraggableElementOffsetX (layer) {
                                     position: absolute;
                                     width: <%=getAnimationContainerWidth(layer);%>;
                                     height: <%=getAnimationContainerHeight(layer);%>;
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
+                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
                     <% if (layer.settings.animateIn && !preview){ %>
                             animate-in="<%= layer.settings.animateIn %>"
                             <% } %>
