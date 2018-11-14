@@ -352,7 +352,7 @@ function getDeraggableElementOffsetX (layer) {
                              class="full-screan-image"
                              style="width: 100%;height: 100%;transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
                                 <%} else {%>
-                             class="rotate-wrapper"
+                             class="rotate-wrapper drag-item"
                              style="
                                      position: absolute;
                                      width: <%=getDraggableElementWidth(layer);%>;
@@ -361,7 +361,7 @@ function getDeraggableElementOffsetX (layer) {
                                      top: <%=getDeraggableElementOffsetX(layer);%>;
                                      left: <%=getDeraggableElementOffsetY(layer);%>;"
                                 <% } %>
-                             class="drag-item">
+                        >
                             <% include layers/video.ejs %>
                         </div>
                     </div>
