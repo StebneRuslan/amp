@@ -99,9 +99,11 @@ ampStory.cuts.map(page => { %>
             case 'text': %>
             <div
                     class="drag-item animate"
+            <% if (layer.content.value !== '') { %>
                     style="
                             left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                    <% } %>
             <% if (layer.settings.animateIn && !preview){ %>
                     animate-in="<%= layer.settings.animateIn %>"
                     <% } %>
@@ -113,7 +115,8 @@ ampStory.cuts.map(page => { %>
                     <% } %>
             >
               <div draggable="true" id="layer<%=layer.position%>"
-                   style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
+                   style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
+              >
                 <% include layers/text.ejs %>
               </div>
             </div>
@@ -149,8 +152,8 @@ ampStory.cuts.map(page => { %>
                             position: absolute;
                             width: <%=getAnimationContainerWidth(layer);%>;
                             height: <%=getAnimationContainerHeight(layer);%>;
-                            left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                            top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                            left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
+                            top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
             <% if (layer.settings.animateIn && !preview){ %>
                     animate-in="<%= layer.settings.animateIn %>"
                     <% } %>
@@ -180,30 +183,29 @@ ampStory.cuts.map(page => { %>
 
             case 'image': %>
             <div
-            <%if (layer.settings.layerSettings.fullscreen) {%>
-              class="full-screan-image drag-item animate"
-              style="
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              left: 0%;
-              top: 0%"
+                    <%if (layer.settings.layerSettings.fullscreen) {%>
+                    class="full-screan-image drag-item animate"
+                    style="
+                            position: absolute;
+                            width: <%=(100 * layer.settings.layerSettings.width * (getRotateValue(layer) + 0.2)) / ampStory.initialWidth + '%'%>;
+                            height: <%=(100 * layer.settings.layerSettings.height * (getRotateValue(layer) + 0.2)) / ampStory.initialHeight + '%'%>;
+                            transform: translate(-50%, -50%);"
                     <%}%>
-              class="drag-item animate"
-              style="
-                      position: absolute;
-                      width: <%=getAnimationContainerWidth(layer);%>;
-                      height: <%=getAnimationContainerHeight(layer);%>;
-                      left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                      top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                    class="drag-item animate"
+                    style="
+                            position: absolute;
+                            width: <%=getAnimationContainerWidth(layer);%>;
+                            height: <%=getAnimationContainerHeight(layer);%>;
+                            left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                            top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
             <% if (layer.settings.animateIn && !preview){ %>
-              animate-in="<%= layer.settings.animateIn %>"
+                    animate-in="<%= layer.settings.animateIn %>"
                     <% } %>
             <% if (layer.settings.animateDuration){ %>
-              animate-in-duration="<%= layer.settings.animateDuration %>s"
+                    animate-in-duration="<%= layer.settings.animateDuration %>s"
                     <% } %>
             <% if (layer.settings.animateDelay){ %>
-              animate-in-delay="<%= layer.settings.animateDelay %>s"
+                    animate-in-delay="<%= layer.settings.animateDelay %>s"
                     <% } %>
             >
               <div draggable="true"
@@ -211,9 +213,11 @@ ampStory.cuts.map(page => { %>
                       <%if (layer.settings.layerSettings.fullscreen) {%>
                    style="
                            position: absolute;
-                           top: 50%;
-                           left: 50%;
-                           transform: <%=getRotateValue(layer)%>;
+                           top: 0%;
+                           left: 0%;
+                           width: 100%;
+                           height: 100%;
+                           transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                            "
                       <% } else { %>
                    class="rotate-wrapper"
@@ -275,7 +279,7 @@ ampStory.cuts.map(page => { %>
                            top: <%=getDeraggableElementOffsetX(layer);%>;
                            left: <%=getDeraggableElementOffsetY(layer);%>;"
                       <% } %>
-                   class="drag-item">
+              >
                 <% include layers/video.ejs %>
               </div>
             </div>
