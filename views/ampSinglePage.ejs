@@ -147,20 +147,22 @@ function getDraggableElementHeight (layer) {
                     Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
 }
 
-function getDeraggableElementOffsetY (layer) {
+function getDeraggableElementOffsetX (layer) {
     if (layer.settings.generalSettings.rotate !== '0') {
-        return (100 * layer.settings.generalSettings.innerOffsetX) / parseInt((Math.abs(layer.settings.layerSettings.width *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.height *
+        return (100 * layer.settings.generalSettings.innerOffsetX) / parseFloat((
+                Math.abs((+layer.settings.layerSettings.width + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs((+layer.settings.layerSettings.height + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
                         Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
     } else return '0';
 }
-function getDeraggableElementOffsetX (layer) {
+function getDeraggableElementOffsetY (layer) {
     if (layer.settings.generalSettings.rotate !== '0') {
-        return (100 * layer.settings.generalSettings.innerOffsetY) / parseInt((Math.abs(layer.settings.layerSettings.width *
-                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.height *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+        return (100 * layer.settings.generalSettings.innerOffsetY) / parseFloat((
+                Math.abs((+layer.settings.layerSettings.width + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs(+layer.settings.layerSettings.height + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))) + '%';
     } else return '0';
 }
 %>
@@ -168,7 +170,7 @@ function getDeraggableElementOffsetX (layer) {
 
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-    <amp-story-page  id='story' auto-advance-after="10s" class="container">
+    <amp-story-page style="background: #000000" id='story' auto-advance-after="10s" class="container">
         <% let preview = false;
         if (currentSlide) {
             currentSlide.layers.sort((first, second) => {
@@ -180,7 +182,7 @@ function getDeraggableElementOffsetX (layer) {
             })
         } %>
         <% if (currentSlide) { %>
-            <amp-story-grid-layer template="horizontal">
+            <amp-story-grid-layer style="background-color: #eeeeee" template="horizontal">
                 <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                     <% var page = null
                             switch (layer.type) {

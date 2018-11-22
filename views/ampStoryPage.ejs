@@ -76,7 +76,7 @@ ampStory.cuts.map(page => { %>
   <amp-story-page
           id="<%= page.position %>"
           auto-advance-after="10s"
-          style="background: #eeeeee">
+          style="background: #000000">
     <% page.layers.sort((first, second) => {
       var keyA = first.position,
               keyB = second.position;
@@ -85,7 +85,7 @@ ampStory.cuts.map(page => { %>
       return 0;
     }) %>
     <% page && page.layers && page.layers.map((layer, layerIndex) => { %>
-      <amp-story-grid-layer template="fill">
+      <amp-story-grid-layer style="background-color: #eeeeee" template="fill">
         <div class="grid-parent">
           <div class="grid"
           <% if (layer.type === 'image' &&

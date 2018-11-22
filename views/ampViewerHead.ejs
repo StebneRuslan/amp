@@ -35,6 +35,12 @@
         }
         %>
 
+        amp-story-grid-layer {
+            height: 177.7vw;
+            width: 100vw;
+            margin: auto;
+        }
+
         @font-face {
             font-family: 'Montserrat';
             src: url('<%=fontPath%>/src/public/fonts/Montserrat-Regular.ttf') format('truetype');
@@ -305,6 +311,23 @@
         .line .outer div:last-child,
         .line .inner div:last-child {
             transform: translateY(-1.5%);
+        }
+        @media (max-width: 1024px) {
+            @media screen and (max-device-aspect-ratio: 9/16) {
+                amp-story-grid-layer {
+                    height: 177.7vw;
+                    width: 100vw;
+                    margin: auto;
+                }
+            }
+
+            @media screen and (min-device-aspect-ratio: 9/16) {
+                amp-story-grid-layer {
+                    height: 100vh;
+                    width: 56vh;
+                    margin: auto;
+                }
+            }
         }
     </style>
 </head>
