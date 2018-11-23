@@ -121,16 +121,24 @@
 }
 
 function getAnimationContainerWidth (layer) {
-    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+    let thickness = 0;
+    if (layer.settings.layerSettings.shapeStyles) {
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+    }
+    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+            Math.abs((+layer.settings.layerSettings.height + thickness) *
                     Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10) + '%';
 }
 
 function getAnimationContainerHeight (layer) {
-    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+    let thickness = 0;
+    if (layer.settings.layerSettings.shapeStyles) {
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+    }
+    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+            Math.abs((+layer.settings.layerSettings.height + thickness) *
                     Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10) + '%';
 }
 
@@ -148,20 +156,28 @@ function getDraggableElementHeight (layer) {
 }
 
 function getDeraggableElementOffsetX (layer) {
+    let thickness = 0;
+    if (layer.settings.layerSettings.shapeStyles) {
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+    }
     if (layer.settings.generalSettings.rotate !== '0') {
         return (100 * layer.settings.generalSettings.innerOffsetX) / parseFloat((
-                Math.abs((+layer.settings.layerSettings.width + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+                Math.abs((+layer.settings.layerSettings.width + thickness) *
                         Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs((+layer.settings.layerSettings.height + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+                Math.abs((+layer.settings.layerSettings.height + thickness) *
                         Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
     } else return '0';
 }
 function getDeraggableElementOffsetY (layer) {
+    let thickness = 0;
+    if (layer.settings.layerSettings.shapeStyles) {
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+    }
     if (layer.settings.generalSettings.rotate !== '0') {
         return (100 * layer.settings.generalSettings.innerOffsetY) / parseFloat((
-                Math.abs((+layer.settings.layerSettings.width + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+                Math.abs((+layer.settings.layerSettings.width + thickness) *
                         Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(+layer.settings.layerSettings.height + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+                Math.abs(+layer.settings.layerSettings.height + thickness) *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))) + '%';
     } else return '0';
 }

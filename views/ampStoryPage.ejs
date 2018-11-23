@@ -25,16 +25,24 @@
 }
 
 function getAnimationContainerWidth (layer) {
-  return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+  let thickness = 0;
+  if (layer.settings.layerSettings.shapeStyles) {
+    thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+  }
+  return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
           Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-          Math.abs((+layer.settings.layerSettings.height + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+          Math.abs((+layer.settings.layerSettings.height + thickness) *
                   Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10) + '%';
 }
 
 function getAnimationContainerHeight (layer) {
-  return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+  let thickness = 0;
+  if (layer.settings.layerSettings.shapeStyles) {
+    thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+  }
+  return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
           Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-          Math.abs((+layer.settings.layerSettings.height + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+          Math.abs((+layer.settings.layerSettings.height + thickness) *
                   Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10) + '%';
 }
 
@@ -52,20 +60,28 @@ function getDraggableElementHeight (layer) {
 }
 
 function getDeraggableElementOffsetX (layer) {
+  let thickness = 0;
+  if (layer.settings.layerSettings.shapeStyles) {
+    thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+  }
   if (layer.settings.generalSettings.rotate !== '0') {
     return (100 * layer.settings.generalSettings.innerOffsetX) / parseFloat((
-            Math.abs((+layer.settings.layerSettings.width + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+            Math.abs((+layer.settings.layerSettings.width + thickness) *
                     Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+            Math.abs((+layer.settings.layerSettings.height + thickness) *
                     Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
   } else return '0';
 }
 function getDeraggableElementOffsetY (layer) {
+  let thickness = 0;
+  if (layer.settings.layerSettings.shapeStyles) {
+    thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+  }
   if (layer.settings.generalSettings.rotate !== '0') {
     return (100 * layer.settings.generalSettings.innerOffsetY) / parseFloat((
-            Math.abs((+layer.settings.layerSettings.width + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+            Math.abs((+layer.settings.layerSettings.width + thickness) *
                     Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs(+layer.settings.layerSettings.height + ((+layer.settings.layerSettings.shapeStyles.thickness * 2) || 0)) *
+            Math.abs(+layer.settings.layerSettings.height + thickness) *
             Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))) + '%';
   } else return '0';
 }
@@ -76,7 +92,7 @@ ampStory.cuts.map(page => { %>
   <amp-story-page
           id="<%= page.position %>"
           auto-advance-after="10s"
-          style="background: #000000">
+          style="background: #eeeeee">
     <% page.layers.sort((first, second) => {
       var keyA = first.position,
               keyB = second.position;
@@ -85,7 +101,7 @@ ampStory.cuts.map(page => { %>
       return 0;
     }) %>
     <% page && page.layers && page.layers.map((layer, layerIndex) => { %>
-      <amp-story-grid-layer style="background-color: #eeeeee" template="fill">
+      <amp-story-grid-layer template="fill">
         <div class="grid-parent">
           <div class="grid"
           <% if (layer.type === 'image' &&
@@ -100,7 +116,8 @@ ampStory.cuts.map(page => { %>
             <% switch (layer.type) {
             case 'text': %>
             <div
-                    class="drag-item animate"
+                    onclick="selectLayer(event)"
+                    class="drag-item single-page animate"
             <% if (layer.content.value !== '') { %>
                     style="
                             left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
@@ -126,7 +143,8 @@ ampStory.cuts.map(page => { %>
 
             case 'html': %>
             <div
-                    class="drag-item animate"
+                    onclick="selectLayer(event)"
+                    class="drag-item single-page animate"
                     style="
                             left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
@@ -149,7 +167,8 @@ ampStory.cuts.map(page => { %>
 
             case 'shape': %>
             <div
-                    class="drag-item animate"
+                    onclick="selectLayer(event)"
+                    class="drag-item single-page animate"
                     style="
                             position: absolute;
                             width: <%=getAnimationContainerWidth(layer);%>;
@@ -192,14 +211,16 @@ ampStory.cuts.map(page => { %>
                             width: <%=(100 * layer.settings.layerSettings.width * (getRotateValue(layer) + 0.2)) / ampStory.initialWidth + '%'%>;
                             height: <%=(100 * layer.settings.layerSettings.height * (getRotateValue(layer) + 0.2)) / ampStory.initialHeight + '%'%>;
                             transform: translate(-50%, -50%);"
-                    <%}%>
-                    class="drag-item animate"
+                    <%} else {%>
+                    onclick="selectLayer(event)"
+                    class="drag-item single-page animate"
                     style="
                             position: absolute;
                             width: <%=getAnimationContainerWidth(layer);%>;
                             height: <%=getAnimationContainerHeight(layer);%>;
                             left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                    <% } %>
             <% if (layer.settings.animateIn && !preview){ %>
                     animate-in="<%= layer.settings.animateIn %>"
                     <% } %>
@@ -248,7 +269,8 @@ ampStory.cuts.map(page => { %>
               left: 0%;
               top: 0%"
                     <%} else {%>
-              class="drag-item animate"
+              onclick="selectLayer(event)"
+              class="drag-item single-page animate"
               style="
                       position: absolute;
                       width: <%=getAnimationContainerWidth(layer);%>;
