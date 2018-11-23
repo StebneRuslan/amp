@@ -186,7 +186,7 @@ function getDeraggableElementOffsetY (layer) {
 
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-    <amp-story-page style="background: #000000" id='story' auto-advance-after="10s" class="container">
+    <amp-story-page style="background: #eeeeee" id='story' auto-advance-after="10s" class="container">
         <% let preview = false;
         if (currentSlide) {
             currentSlide.layers.sort((first, second) => {
@@ -198,14 +198,14 @@ function getDeraggableElementOffsetY (layer) {
             })
         } %>
         <% if (currentSlide) { %>
-            <amp-story-grid-layer style="background-color: #eeeeee" template="horizontal">
+            <amp-story-grid-layer template="horizontal">
                 <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                     <% var page = null
                             switch (layer.type) {
                     case 'text': %>
                     <div
                             onclick="selectLayer(event)"
-                            class="drag-item single-page animate"
+                            class="drag-item single-page-item animate"
                     <% if (layer.content.value !== '') { %>
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
@@ -232,7 +232,7 @@ function getDeraggableElementOffsetY (layer) {
                     case 'html': %>
                     <div
                             onclick="selectLayer(event)"
-                            class="drag-item single-page animate"
+                            class="drag-item single-page-item animate"
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
@@ -256,7 +256,7 @@ function getDeraggableElementOffsetY (layer) {
                     case 'shape': %>
                     <div
                             onclick="selectLayer(event)"
-                            class="drag-item single-page animate"
+                            class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
                                     width: <%=getAnimationContainerWidth(layer);%>;
@@ -301,7 +301,7 @@ function getDeraggableElementOffsetY (layer) {
                                     transform: translate(-50%, -50%);"
                             <%} else {%>
                             onclick="selectLayer(event)"
-                            class="drag-item single-page animate"
+                            class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
                                     width: <%=getAnimationContainerWidth(layer);%>;
@@ -358,7 +358,7 @@ function getDeraggableElementOffsetY (layer) {
               top: 0%"
                             <%} else {%>
                         onclick="selectLayer(event)"
-                        class="drag-item single-page animate"
+                        class="drag-item single-page-item animate"
                         style="
                                 position: absolute;
                                 width: <%=getAnimationContainerWidth(layer);%>;

@@ -19,7 +19,7 @@
           for (let layerIndex = 0; layerIndex < ampStory.cuts[cutIndex].layers.length; layerIndex++) {
             let layer = ampStory.cuts[cutIndex].layers[layerIndex]
             if (layer.type === 'shape') { %>
-        .<%= layer.content.value + layer.position %> {
+        .<%= layer.content.value + ampStory.cuts[cutIndex].position + layer.position %> {
             width: 100%;
             height: 100%;
             transform: scale(1.4);
@@ -208,7 +208,7 @@
             user-select: none;
         }
 
-        .single-page:hover {
+        .single-page-item:hover {
             box-shadow: 0 0 0 2px #28b9ff;
         }
 
