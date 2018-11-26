@@ -12,14 +12,12 @@
     window.addEventListener('message', function (event) {
         if (event.data.previousId !== null && event.data.previousId !== undefined) {
             const previousLayer = document.getElementById(`layer${event.data.previousId}`);
-            previousLayer.removeEventListener('mousedown', mouseDown, false);
             previousLayer.addEventListener('mousedown', preventImageDragging, false);
             previousLayer.removeEventListener('mouseup', mouseUp, false);
             previousLayer.parentNode.style.boxShadow = '';
         }
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
         if (currentLayer) {
-            currentLayer.addEventListener('mousedown', mouseDown, false);
             currentLayer.addEventListener('mouseup', mouseUp, false);
             currentLayer.parentNode.style.boxShadow = '0 0 0 2px red';
         }
@@ -43,6 +41,7 @@
     }
 
     function selectLayer (event) {
+        console.log('asdasdsadasda');
         const position = getDraggableNode(event.path).children[0].id.toString().slice(5);
         window.parent.postMessage({event: 'selectLayer', position: position}, 'http://127.0.0.1:3978/#/edit');
     }
@@ -58,6 +57,7 @@
     }
 
     function mouseDown(event) {
+        selectLayer(event);
         event.preventDefault();
         const target = getDraggableNode(event.path);
         const divParams = target.getBoundingClientRect();
@@ -96,11 +96,10 @@
 
 <% function getRotateValue (layer) {
     if (layer.settings.layerSettings.fullscreen) {
-        var dist = Math.sqrt((Math.pow(ampStory.initialWidth, 2) || Math.pow(400, 2)) + (Math.pow(ampStory.initialHeight, 2) || Math.pow(711, 2)));
-        var diagAngle = Math.asin((ampStory.initialHeight || 711) / dist);
+        var dist = Math.sqrt((Math.pow(ampStory.initialWidth, 2)) + (Math.pow(ampStory.initialHeight, 2)));
+        var diagAngle = Math.asin((ampStory.initialHeight) / dist);
 
         var a1 = (((layer.settings.generalSettings.rotate * Math.PI / 180) % (Math.PI * 2)) + Math.PI * 4) % (Math.PI * 2);
-        console.log('a1', a1)
         if (a1 > Math.PI) {
             a1 -= Math.PI;
         }
@@ -111,9 +110,10 @@
         var ang1 = Math.PI / 2 - diagAngle - Math.abs(a1)
         var ang2 = Math.abs(diagAngle - Math.abs(a1))
 
-        var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.height
-        var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.width
+        var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.originalHeight
+        var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.originalWidth
         var scale = Math.max(scale1, scale2)
+        console.log('11111121212121', scale);
         return scale
     } else {
         return scale
@@ -183,8 +183,6 @@ function getDeraggableElementOffsetY (layer) {
 }
 %>
 
-
-
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
     <amp-story-page style="background: #eeeeee" id='story' auto-advance-after="10s" class="container">
         <% let preview = false;
@@ -204,7 +202,7 @@ function getDeraggableElementOffsetY (layer) {
                             switch (layer.type) {
                     case 'text': %>
                     <div
-                            onclick="selectLayer(event)"
+                            onmousedown="mouseDown(event)"
                             class="drag-item single-page-item animate"
                     <% if (layer.content.value !== '') { %>
                             style="
@@ -231,7 +229,7 @@ function getDeraggableElementOffsetY (layer) {
 
                     case 'html': %>
                     <div
-                            onclick="selectLayer(event)"
+                            onmousedown="mouseDown(event)"
                             class="drag-item single-page-item animate"
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
@@ -255,7 +253,7 @@ function getDeraggableElementOffsetY (layer) {
 
                     case 'shape': %>
                     <div
-                            onclick="selectLayer(event)"
+                            onmousedown="mouseDown(event)"
                             class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
@@ -282,8 +280,8 @@ function getDeraggableElementOffsetY (layer) {
                                         width: <%=getDraggableElementWidth(layer);%>;
                                         height: <%=getDraggableElementHeight(layer);%>;
                                         transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                        top: <%=getDeraggableElementOffsetX(layer);%>;
-                                        left: <%=getDeraggableElementOffsetY(layer);%>;"
+                                        top: <%=getDeraggableElementOffsetY(layer);%>;
+                                        left: <%=getDeraggableElementOffsetX(layer);%>;"
                         >
                             <% include layers/shape.ejs %>
                         </div>
@@ -296,11 +294,11 @@ function getDeraggableElementOffsetY (layer) {
                             class="full-screan-image drag-item animate"
                             style="
                                     position: absolute;
-                                    width: <%=(100 * layer.settings.layerSettings.width * (getRotateValue(layer) + 0.2)) / ampStory.initialWidth + '%'%>;
-                                    height: <%=(100 * layer.settings.layerSettings.height * (getRotateValue(layer) + 0.2)) / ampStory.initialHeight + '%'%>;
+                                    width: <%=(100 * (layer.settings.layerSettings.originalWidth * (+getRotateValue(layer)))) / ampStory.initialWidth + '%'%>;
+                                    height: <%=(100 * (layer.settings.layerSettings.originalHeight * (+getRotateValue(layer)))) / ampStory.initialHeight + '%'%>;
                                     transform: translate(-50%, -50%);"
                             <%} else {%>
-                            onclick="selectLayer(event)"
+                            onmousedown="mouseDown(event)"
                             class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
@@ -337,8 +335,8 @@ function getDeraggableElementOffsetY (layer) {
                                      width: <%=getDraggableElementWidth(layer);%>;
                                      height: <%=getDraggableElementHeight(layer);%>;
                                      transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                     top: <%=getDeraggableElementOffsetX(layer);%>;
-                                     left: <%=getDeraggableElementOffsetY(layer);%>;"
+                                     top: <%=getDeraggableElementOffsetY(layer);%>;
+                                     left: <%=getDeraggableElementOffsetX(layer);%>;"
                                 <% } %>
                         >
                             <% include layers/image.ejs %>
@@ -357,7 +355,7 @@ function getDeraggableElementOffsetY (layer) {
               left: 0%;
               top: 0%"
                             <%} else {%>
-                        onclick="selectLayer(event)"
+                        onmousedown="mouseDown(event)"
                         class="drag-item single-page-item animate"
                         style="
                                 position: absolute;
@@ -388,8 +386,8 @@ function getDeraggableElementOffsetY (layer) {
                                      width: <%=getDraggableElementWidth(layer);%>;
                                      height: <%=getDraggableElementHeight(layer);%>;
                                      transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                     top: <%=getDeraggableElementOffsetX(layer);%>;
-                                     left: <%=getDeraggableElementOffsetY(layer);%>;"
+                                     top: <%=getDeraggableElementOffsetY(layer);%>;
+                                     left: <%=getDeraggableElementOffsetX(layer);%>;"
                                 <% } %>
                         >
                             <% include layers/video.ejs %>

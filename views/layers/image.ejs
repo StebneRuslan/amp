@@ -56,8 +56,8 @@ function getImageUrl (content) {
 if (layer.settings.layerSettings.fullscreen) { %>
   <amp-img
           src="<%= getImageUrl(layer.content) %>"
-          width="<%= layer.settings.layerSettings.width %>px"
-          height="<%= layer.settings.layerSettings.height %>px"
+          width="<%= layer.settings.layerSettings.originalWidth %>px"
+          height="<%= layer.settings.layerSettings.originalHeight %>px"
           class=""
           layout="fixed"
           alt="an image"

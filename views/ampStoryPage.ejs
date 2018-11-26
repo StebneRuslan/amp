@@ -1,27 +1,27 @@
 <% function getRotateValue (layer) {
-  if (layer.settings.layerSettings.fullscreen) {
-    var dist = Math.sqrt((Math.pow(ampStory.initialWidth, 2) || Math.pow(400, 2)) + (Math.pow(ampStory.initialHeight, 2) || Math.pow(711, 2)));
-    var diagAngle = Math.asin((ampStory.initialHeight || 711) / dist);
+    if (layer.settings.layerSettings.fullscreen) {
+        var dist = Math.sqrt((Math.pow(ampStory.initialWidth, 2)) + (Math.pow(ampStory.initialHeight, 2)));
+        var diagAngle = Math.asin((ampStory.initialHeight) / dist);
 
-    var a1 = (((layer.settings.generalSettings.rotate * Math.PI / 180) % (Math.PI * 2)) + Math.PI * 4) % (Math.PI * 2);
-    console.log('a1', a1)
-    if (a1 > Math.PI) {
-      a1 -= Math.PI;
+        var a1 = (((layer.settings.generalSettings.rotate * Math.PI / 180) % (Math.PI * 2)) + Math.PI * 4) % (Math.PI * 2);
+        if (a1 > Math.PI) {
+            a1 -= Math.PI;
+        }
+        if (a1 > Math.PI / 2 && a1 <= Math.PI) {
+            a1 = (Math.PI / 2) - (a1 - (Math.PI / 2));
+        }
+
+        var ang1 = Math.PI / 2 - diagAngle - Math.abs(a1)
+        var ang2 = Math.abs(diagAngle - Math.abs(a1))
+
+        var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.originalHeight
+        var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.originalWidth
+        var scale = Math.max(scale1, scale2)
+        console.log('11111121212121', scale);
+        return scale
+    } else {
+        return scale
     }
-    if (a1 > Math.PI / 2 && a1 <= Math.PI) {
-      a1 = (Math.PI / 2) - (a1 - (Math.PI / 2));
-    }
-
-    var ang1 = Math.PI / 2 - diagAngle - Math.abs(a1)
-    var ang2 = Math.abs(diagAngle - Math.abs(a1))
-
-    var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.height
-    var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.width
-    var scale = Math.max(scale1, scale2)
-    return ` translate(-50%, -50%) rotate(${layer.settings.generalSettings.rotate}deg) scale(${scale});`
-  } else {
-    return ` translate(-50%, -50%) rotate(${layer.settings.generalSettings.rotate}deg);`
-  }
 }
 
 function getAnimationContainerWidth (layer) {
@@ -205,11 +205,12 @@ ampStory.cuts.map(currentSlide => { %>
                     class="full-screan-image drag-item animate"
                     style="
                             position: absolute;
-                            width: <%=(100 * layer.settings.layerSettings.width * (getRotateValue(layer) + 0.2)) / ampStory.initialWidth + '%'%>;
-                            height: <%=(100 * layer.settings.layerSettings.height * (getRotateValue(layer) + 0.2)) / ampStory.initialHeight + '%'%>;
+                            width: <%=(100 * (layer.settings.layerSettings.originalWidth * (+getRotateValue(layer)))) / ampStory.initialWidth + '%'%>;
+                            height: <%=(100 * (layer.settings.layerSettings.originalHeight * (+getRotateValue(layer)))) / ampStory.initialHeight + '%'%>;
                             transform: translate(-50%, -50%);"
                     <%} else {%>
-                    class="drag-item animate"
+                    onclick="selectLayer(event)"
+                    class="drag-item single-page-item animate"
                     style="
                             position: absolute;
                             width: <%=getAnimationContainerWidth(layer);%>;
@@ -245,8 +246,8 @@ ampStory.cuts.map(currentSlide => { %>
                            width: <%=getDraggableElementWidth(layer);%>;
                            height: <%=getDraggableElementHeight(layer);%>;
                            transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                           top: <%=getDeraggableElementOffsetX(layer);%>;
-                           left: <%=getDeraggableElementOffsetY(layer);%>;"
+                           top: <%=getDeraggableElementOffsetY(layer);%>;
+                           left: <%=getDeraggableElementOffsetX(layer);%>;"
                       <% } %>
               >
                 <% include layers/image.ejs %>
