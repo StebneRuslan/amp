@@ -26,9 +26,6 @@
         <% if (layer.content.value) { %>
             background: url(<%- include('shapes/' + layer.content.value, {layer: layer}) %>) no-repeat;
         <% } %>
-        <% if (layer.content.value === 'circle' && layer.settings.layerSettings.width !== layer.settings.layerSettings.height) { %>
-            background: url(<%- include('shapes/oval', {layer: layer}) %>) no-repeat;
-        <% } %>
         }
         <% }}
           }
@@ -209,7 +206,7 @@
         }
 
         .single-page-item:hover {
-            box-shadow: 0 0 0 2px #28b9ff;
+            box-shadow: 0 0 0 1px #28b9ff;
         }
 
         .drag-item {
@@ -246,7 +243,6 @@
 
         .single-text div {
             font-family: Montserrat;
-            font-size: 3.1vh;
             font-weight: 500;
             white-space: nowrap;
         }
@@ -306,12 +302,15 @@
         .line .inner div:last-child {
             transform: translateY(-1.5%);
         }
-        @media (max-width: 1024px) {
+        @media (max-width: 1023px) {
             @media screen and (max-device-aspect-ratio: 9/16) {
                 amp-story-grid-layer {
                     height: 177.7vw;
                     width: 100vw;
                     margin: auto;
+                }
+                .single-text {
+                    font-size: 3.1vw;
                 }
             }
 
@@ -321,6 +320,14 @@
                     width: 56vh;
                     margin: auto;
                 }
+                .single-text {
+                    font-size: 1.7vh;
+                }
+            }
+        }
+        @media screen and (min-width: 1024px) {
+            .single-text {
+                font-size: 1.8vh;
             }
         }
 

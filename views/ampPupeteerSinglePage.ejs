@@ -202,21 +202,11 @@ function getDeraggableElementOffsetY (layer) {
                             switch (layer.type) {
                     case 'text': %>
                     <div
-                            onmousedown="mouseDown(event)"
                             class="drag-item single-page-item animate"
                     <% if (layer.content.value !== '') { %>
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                            <% } %>
-                    <% if (layer.settings.animateIn && !preview){ %>
-                            animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
@@ -229,20 +219,10 @@ function getDeraggableElementOffsetY (layer) {
 
                     case 'html': %>
                     <div
-                            onmousedown="mouseDown(event)"
                             class="drag-item single-page-item animate"
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                    <% if (layer.settings.animateIn && !preview){ %>
-                            animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
@@ -253,7 +233,6 @@ function getDeraggableElementOffsetY (layer) {
 
                     case 'shape': %>
                     <div
-                            onmousedown="mouseDown(event)"
                             class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
@@ -261,15 +240,6 @@ function getDeraggableElementOffsetY (layer) {
                                     height: <%=getAnimationContainerHeight(layer);%>;
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
-                    <% if (layer.settings.animateIn && !preview){ %>
-                            animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>
                     >
                         <div
                                 id="layer<%=layer.position%>"
@@ -298,7 +268,6 @@ function getDeraggableElementOffsetY (layer) {
                                     height: <%=(100 * (layer.settings.layerSettings.originalHeight * (+getRotateValue(layer)))) / ampStory.initialHeight + '%'%>;
                                     transform: translate(-50%, -50%);"
                             <%} else {%>
-                            onmousedown="mouseDown(event)"
                             class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
@@ -306,15 +275,6 @@ function getDeraggableElementOffsetY (layer) {
                                     height: <%=getAnimationContainerHeight(layer);%>;
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                            <% } %>
-                    <% if (layer.settings.animateIn && !preview){ %>
-                            animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
                         <div draggable="true"
@@ -355,7 +315,6 @@ function getDeraggableElementOffsetY (layer) {
               left: 0%;
               top: 0%"
                             <%} else {%>
-                        onmousedown="mouseDown(event)"
                         class="drag-item single-page-item animate"
                         style="
                                 position: absolute;
@@ -363,15 +322,6 @@ function getDeraggableElementOffsetY (layer) {
                                 height: <%=getAnimationContainerHeight(layer);%>;
                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                            <% } %>
-                    <% if (layer.settings.animateIn && !preview){ %>
-                        animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                        animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                        animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
                         <div draggable="true"

@@ -10,16 +10,15 @@
 <p id="dataHeight"style="display:none"><%= ampStory.initialHeight %></p>
 <script>
     window.addEventListener('message', function (event) {
-        if (event.data.previousId !== null && event.data.previousId !== undefined) {
-            const previousLayer = document.getElementById(`layer${event.data.previousId}`);
-            previousLayer.addEventListener('mousedown', preventImageDragging, false);
-            previousLayer.removeEventListener('mouseup', mouseUp, false);
-            previousLayer.parentNode.style.boxShadow = '';
-        }
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
         if (currentLayer) {
-            currentLayer.addEventListener('mouseup', mouseUp, false);
-            currentLayer.parentNode.style.boxShadow = '0 0 0 2px red';
+            currentLayer.parentNode.style.boxShadow = '0 0 6px 2px white';
+            currentLayer.parentNode.style.outline = '1px solid black';
+        }
+        if (event.data.previousId !== null && event.data.previousId !== undefined) {
+            const previousLayer = document.getElementById(`layer${event.data.previousId}`);
+            previousLayer.parentNode.style.boxShadow = '';
+            previousLayer.parentNode.style.outline = '';
         }
     });
     window.onload = () => {
@@ -41,7 +40,6 @@
     }
 
     function selectLayer (event) {
-        console.log('asdasdsadasda');
         const position = getDraggableNode(event.path).children[0].id.toString().slice(5);
         window.parent.postMessage({event: 'selectLayer', position: position}, 'http://127.0.0.1:3978/#/edit');
     }
@@ -57,14 +55,23 @@
     }
 
     function mouseDown(event) {
-        selectLayer(event);
         event.preventDefault();
+        selectLayer(event);
+        const ampStoryWidth = document.querySelector('body').clientWidth;
+        const ampStoryHeight = document.querySelector('body').clientHeight;
         const target = getDraggableNode(event.path);
         const divParams = target.getBoundingClientRect();
         let centerX = event.x - divParams.left;
         let centerY = event.y - divParams.top;
         document.onmousemove = (moveEvent) => {
-            drag(event, getDraggableNode(event.path), moveEvent, centerX, centerY);
+            drag(event,
+                getDraggableNode(event.path),
+                moveEvent, centerX, centerY,
+                iframeParams = {ampStoryWidth: ampStoryWidth, ampStoryHeight: ampStoryHeight}
+            );
+        };
+        document.onmouseleave = (moveEvent) => {
+            mouseUp(event);
         };
         document.onmousedovn = (moveEvent) => {
             mouseUp(event);
@@ -74,17 +81,15 @@
     function mouseUp (event) {
         event.preventDefault();
         document.onmousemove = null;
+        document.onmouseleave = null;
     };
 
     function drag (event, target, moveEvent, centerX, centerY) {
-        let divParams = event.target.getBoundingClientRect();
-        let ampStoryWidth = document.querySelector('body').clientWidth;
-        let ampStoryHeight = document.querySelector('body').clientHeight;
         if (event.screenX !== 0) {
             let leftInPx = (moveEvent.x - centerX);
             let topInPx = (moveEvent.y - centerY);
-            target.style.left = ((leftInPx / ampStoryWidth) * 100) + '%';
-            target.style.top = ((topInPx / ampStoryHeight) * 100) + '%';
+            target.style.left = ((leftInPx / iframeParams.ampStoryWidth) * 100) + '%';
+            target.style.top = ((topInPx / iframeParams.ampStoryHeight) * 100) + '%';
             drop({offsetX: parseInt(leftInPx, 10), offsetY: parseInt(topInPx, 10)});
         }
     };
@@ -113,7 +118,6 @@
         var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.originalHeight
         var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.originalWidth
         var scale = Math.max(scale1, scale2)
-        console.log('11111121212121', scale);
         return scale
     } else {
         return scale
@@ -203,6 +207,7 @@ function getDeraggableElementOffsetY (layer) {
                     case 'text': %>
                     <div
                             onmousedown="mouseDown(event)"
+                            onmouseup="mouseUp(event)"
                             class="drag-item single-page-item animate"
                     <% if (layer.content.value !== '') { %>
                             style="
@@ -230,6 +235,7 @@ function getDeraggableElementOffsetY (layer) {
                     case 'html': %>
                     <div
                             onmousedown="mouseDown(event)"
+                            onmouseup="mouseUp(event)"
                             class="drag-item single-page-item animate"
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
@@ -254,6 +260,7 @@ function getDeraggableElementOffsetY (layer) {
                     case 'shape': %>
                     <div
                             onmousedown="mouseDown(event)"
+                            onmouseup="mouseUp(event)"
                             class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
@@ -299,6 +306,7 @@ function getDeraggableElementOffsetY (layer) {
                                     transform: translate(-50%, -50%);"
                             <%} else {%>
                             onmousedown="mouseDown(event)"
+                            onmouseup="mouseUp(event)"
                             class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
@@ -356,6 +364,7 @@ function getDeraggableElementOffsetY (layer) {
               top: 0%"
                             <%} else {%>
                         onmousedown="mouseDown(event)"
+                        onmouseup="mouseUp(event)"
                         class="drag-item single-page-item animate"
                         style="
                                 position: absolute;

@@ -17,7 +17,6 @@
         var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.originalHeight
         var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.originalWidth
         var scale = Math.max(scale1, scale2)
-        console.log('11111121212121', scale);
         return scale
     } else {
         return scale
@@ -209,8 +208,7 @@ ampStory.cuts.map(currentSlide => { %>
                             height: <%=(100 * (layer.settings.layerSettings.originalHeight * (+getRotateValue(layer)))) / ampStory.initialHeight + '%'%>;
                             transform: translate(-50%, -50%);"
                     <%} else {%>
-                    onclick="selectLayer(event)"
-                    class="drag-item single-page-item animate"
+                    class="drag-item animate"
                     style="
                             position: absolute;
                             width: <%=getAnimationContainerWidth(layer);%>;
