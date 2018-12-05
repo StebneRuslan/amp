@@ -41,7 +41,6 @@
     }
 
     function selectLayer (event) {
-        console.log('asdasdsadasda');
         const position = getDraggableNode(event.path).children[0].id.toString().slice(5);
         window.parent.postMessage({event: 'selectLayer', position: position}, 'http://127.0.0.1:3978/#/edit');
     }
@@ -113,7 +112,6 @@
         var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.originalHeight
         var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.originalWidth
         var scale = Math.max(scale1, scale2)
-        console.log('11111121212121', scale);
         return scale
     } else {
         return scale
