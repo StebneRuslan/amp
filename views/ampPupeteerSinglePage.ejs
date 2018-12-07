@@ -175,8 +175,8 @@ function getDeraggableElementOffsetY (layer) {
         return (100 * layer.settings.generalSettings.innerOffsetY) / parseFloat((
                 Math.abs((+layer.settings.layerSettings.width + thickness) *
                         Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(+layer.settings.layerSettings.height + thickness) *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))) + '%';
+                Math.abs((+layer.settings.layerSettings.height + thickness) *
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
     } else return '0';
 }
 %>
@@ -231,6 +231,8 @@ function getDeraggableElementOffsetY (layer) {
 
                     case 'shape': %>
                     <div
+                            onmousedown="mouseDown(event)"
+                            onmouseup="mouseUp(event)"
                             class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
@@ -238,6 +240,15 @@ function getDeraggableElementOffsetY (layer) {
                                     height: <%=getAnimationContainerHeight(layer);%>;
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
+                    <% if (layer.settings.animateIn && !preview){ %>
+                            animate-in="<%= layer.settings.animateIn %>"
+                            <% } %>
+                    <% if (layer.settings.animateDuration){ %>
+                            animate-in-duration="<%= layer.settings.animateDuration %>s"
+                            <% } %>
+                    <% if (layer.settings.animateDelay){ %>
+                            animate-in-delay="<%= layer.settings.animateDelay %>s"
+                            <% } %>
                     >
                         <div
                                 id="layer<%=layer.position%>"

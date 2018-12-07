@@ -21,7 +21,7 @@
     window.addEventListener('message', function (event) {
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
         if (currentLayer) {
-            currentLayer.parentNode.style.boxShadow = '0 0 6px 2px white';
+            currentLayer.parentNode.style.boxShadow = '0 0 1px 1px white';
             currentLayer.parentNode.style.outline = '1px solid black';
         }
         if (event.data.previousId !== null && event.data.previousId !== undefined) {
@@ -190,8 +190,8 @@ function getDeraggableElementOffsetY (layer) {
         return (100 * layer.settings.generalSettings.innerOffsetY) / parseFloat((
                 Math.abs((+layer.settings.layerSettings.width + thickness) *
                         Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(+layer.settings.layerSettings.height + thickness) *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))) + '%';
+                Math.abs((+layer.settings.layerSettings.height + thickness) *
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
     } else return '0';
 }
 %>

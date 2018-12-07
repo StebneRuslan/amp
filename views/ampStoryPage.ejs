@@ -59,30 +59,30 @@ function getDraggableElementHeight (layer) {
 }
 
 function getDeraggableElementOffsetX (layer) {
-  let thickness = 0;
-  if (layer.settings.layerSettings.shapeStyles) {
-    thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-  }
-  if (layer.settings.generalSettings.rotate !== '0') {
-    return (100 * layer.settings.generalSettings.innerOffsetX) / parseFloat((
-            Math.abs((+layer.settings.layerSettings.width + thickness) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
-  } else return '0';
+    let thickness = 0;
+    if (layer.settings.layerSettings.shapeStyles) {
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+    }
+    if (layer.settings.generalSettings.rotate !== '0') {
+        return (100 * layer.settings.generalSettings.innerOffsetX) / parseFloat((
+                Math.abs((+layer.settings.layerSettings.width + thickness) *
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs((+layer.settings.layerSettings.height + thickness) *
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+    } else return '0';
 }
 function getDeraggableElementOffsetY (layer) {
-  let thickness = 0;
-  if (layer.settings.layerSettings.shapeStyles) {
-    thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-  }
-  if (layer.settings.generalSettings.rotate !== '0') {
-    return (100 * layer.settings.generalSettings.innerOffsetY) / parseFloat((
-            Math.abs((+layer.settings.layerSettings.width + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs(+layer.settings.layerSettings.height + thickness) *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))) + '%';
-  } else return '0';
+    let thickness = 0;
+    if (layer.settings.layerSettings.shapeStyles) {
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+    }
+    if (layer.settings.generalSettings.rotate !== '0') {
+        return (100 * layer.settings.generalSettings.innerOffsetY) / parseFloat((
+                Math.abs((+layer.settings.layerSettings.width + thickness) *
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs((+layer.settings.layerSettings.height + thickness) *
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+    } else return '0';
 }
 %>
 
@@ -163,40 +163,42 @@ ampStory.cuts.map(currentSlide => { %>
             <% break;
 
             case 'shape': %>
-            <div
-                    class="drag-item animate"
-                    style="
-                            position: absolute;
-                            width: <%=getAnimationContainerWidth(layer);%>;
-                            height: <%=getAnimationContainerHeight(layer);%>;
-                            left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
-                            top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
-            <% if (layer.settings.animateIn && !preview){ %>
-                    animate-in="<%= layer.settings.animateIn %>"
-                    <% } %>
-            <% if (layer.settings.animateDuration){ %>
-                    animate-in-duration="<%= layer.settings.animateDuration %>s"
-                    <% } %>
-            <% if (layer.settings.animateDelay){ %>
-                    animate-in-delay="<%= layer.settings.animateDelay %>s"
-                    <% } %>
-            >
               <div
-                      id="layer<%=layer.position%>"
-                      draggable="true"
-                      class="rotate-wrapper"
+                      onmousedown="mouseDown(event)"
+                      onmouseup="mouseUp(event)"
+                      class="drag-item single-page-item animate"
                       style="
                               position: absolute;
-                              width: <%=getDraggableElementWidth(layer);%>;
-                              height: <%=getDraggableElementHeight(layer);%>;
-                              transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                              top: <%=getDeraggableElementOffsetX(layer);%>;
-                              left: <%=getDeraggableElementOffsetY(layer);%>;"
+                              width: <%=getAnimationContainerWidth(layer);%>;
+                              height: <%=getAnimationContainerHeight(layer);%>;
+                              left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
+                              top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
+              <% if (layer.settings.animateIn && !preview){ %>
+                      animate-in="<%= layer.settings.animateIn %>"
+                      <% } %>
+              <% if (layer.settings.animateDuration){ %>
+                      animate-in-duration="<%= layer.settings.animateDuration %>s"
+                      <% } %>
+              <% if (layer.settings.animateDelay){ %>
+                      animate-in-delay="<%= layer.settings.animateDelay %>s"
+                      <% } %>
               >
-                <% include layers/shape.ejs %>
+                  <div
+                          id="layer<%=layer.position%>"
+                          draggable="true"
+                          class="rotate-wrapper"
+                          style="
+                                  position: absolute;
+                                  width: <%=getDraggableElementWidth(layer);%>;
+                                  height: <%=getDraggableElementHeight(layer);%>;
+                                  transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
+                                  top: <%=getDeraggableElementOffsetY(layer);%>;
+                                  left: <%=getDeraggableElementOffsetX(layer);%>;"
+                  >
+                      <% include layers/shape.ejs %>
+                  </div>
               </div>
-            </div>
-            <% break;
+              <% break;
 
             case 'image': %>
             <div
