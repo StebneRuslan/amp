@@ -230,6 +230,21 @@ function getDeraggableElementOffsetY (layer) {
                         Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
     } else return '0';
 }
+
+function getFullScreenElementOffsetY (layer) {
+    const heightContainerPx = ampStory.initialHeight * getFullScreenAnimationContainerHeight(layer) / 100;
+    const heightContentPx = ampStory.initialHeight * getDraggableElementHeight(layer) / 100;
+    console.log('13123121212312312', getDraggableElementHeight(layer))
+    console.log('13123121212312312', heightContainerPx)
+    console.log('13123121212312312', heightContentPx)
+    return (100 * ((heightContainerPx - heightContentPx) / 2) / ampStory.initialHeight) / 2
+}
+
+function getFullScreenElementOffsetX (layer) {
+    const widthContainerPx = ampStory.initialWidth * getFullScreenAnimationContainerWidth(layer) / 100;
+    const widthContentPx = ampStory.initialWidth * getDraggableElementWidth(layer) / 100;
+    return (100 * ((widthContainerPx - widthContentPx) / 2) / ampStory.initialWidth) / 2
+}
 %>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
@@ -376,8 +391,8 @@ function getDeraggableElementOffsetY (layer) {
                                 <%if (layer.settings.layerSettings.fullscreen) {%>
                              style="
                                      position: absolute;
-                                     top: <%=getFullScreenAnimationContainerHeight(layer) / getDraggableElementHeight(layer) + '%';%>;
-                                     left: <%=getFullScreenAnimationContainerWidth(layer) / getDraggableElementWidth(layer) + '%';%>;
+                                     left: <%=getFullScreenElementOffsetX(layer) + '%'%>;
+                                     top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
                                      width: <%=getDraggableElementWidth(layer) + '%'%>;
                                      height: <%=getDraggableElementHeight(layer) + '%';%>;
                                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
