@@ -233,17 +233,14 @@ function getDeraggableElementOffsetY (layer) {
 
 function getFullScreenElementOffsetY (layer) {
     const heightContainerPx = ampStory.initialHeight * getFullScreenAnimationContainerHeight(layer) / 100;
-    const heightContentPx = ampStory.initialHeight * getDraggableElementHeight(layer) / 100;
-    console.log('13123121212312312', getDraggableElementHeight(layer))
-    console.log('13123121212312312', heightContainerPx)
-    console.log('13123121212312312', heightContentPx)
-    return (100 * ((heightContainerPx - heightContentPx) / 2) / ampStory.initialHeight) / 2
+    const heightContentPx = heightContainerPx * getDraggableElementHeight(layer) / 100;
+    return (100 * ((heightContainerPx - heightContentPx) / 2) / heightContainerPx)
 }
 
 function getFullScreenElementOffsetX (layer) {
     const widthContainerPx = ampStory.initialWidth * getFullScreenAnimationContainerWidth(layer) / 100;
-    const widthContentPx = ampStory.initialWidth * getDraggableElementWidth(layer) / 100;
-    return (100 * ((widthContainerPx - widthContentPx) / 2) / ampStory.initialWidth) / 2
+    const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
+    return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
 }
 %>
 
