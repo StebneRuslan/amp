@@ -164,8 +164,6 @@ ampStory.cuts.map(currentSlide => { %>
 
             case 'shape': %>
               <div
-                      onmousedown="mouseDown(event)"
-                      onmouseup="mouseUp(event)"
                       class="drag-item single-page-item animate"
                       style="
                               position: absolute;
@@ -210,7 +208,7 @@ ampStory.cuts.map(currentSlide => { %>
                             height: <%=(100 * (layer.settings.layerSettings.originalHeight * (+getRotateValue(layer)))) / ampStory.initialHeight + '%'%>;
                             transform: translate(-50%, -50%);"
                     <%} else {%>
-                    class="drag-item animate"
+                    class="small-image drag-item animate"
                     style="
                             position: absolute;
                             width: <%=getAnimationContainerWidth(layer);%>;
