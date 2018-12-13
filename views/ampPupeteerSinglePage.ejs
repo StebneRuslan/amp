@@ -8,90 +8,6 @@
 <body>
 <p id="dataWidth"style="display:none"><%= ampStory.initialWidth %></p>
 <p id="dataHeight"style="display:none"><%= ampStory.initialHeight %></p>
-<script>
-    window.addEventListener('message', function (event) {
-        if (event.data.previousId !== null && event.data.previousId !== undefined) {
-            const previousLayer = document.getElementById(`layer${event.data.previousId}`);
-            previousLayer.addEventListener('mousedown', preventImageDragging, false);
-            previousLayer.removeEventListener('mouseup', mouseUp, false);
-            previousLayer.parentNode.style.boxShadow = '';
-        }
-        const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-        if (currentLayer) {
-            currentLayer.addEventListener('mouseup', mouseUp, false);
-            currentLayer.parentNode.style.boxShadow = '0 0 0 2px red';
-        }
-    });
-    window.onload = () => {
-        var css = '.i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
-            head = document.head || document.getElementsByTagName('head')[0],
-            style = document.createElement('style');
-        style.type = 'text/css';
-        if (style.styleSheet){
-            style.styleSheet.cssText = css;
-        } else {
-            style.appendChild(document.createTextNode(css));
-        };
-        head.appendChild(style);
-    };
-    const element = null;
-
-    function preventImageDragging (event) {
-        event.preventDefault();
-    }
-
-    function selectLayer (event) {
-        const position = getDraggableNode(event.path).children[0].id.toString().slice(5);
-        window.parent.postMessage({event: 'selectLayer', position: position}, 'http://127.0.0.1:3978/#/edit');
-    }
-
-    function getDraggableNode (path) {
-        for (let i = 0; i < path.length; i++) {
-            if (path[i].classList && path[i].classList.value) {
-                if ([].includes.call(path[i].classList, 'drag-item')) {
-                    return path[i];
-                }
-            }
-        }
-    }
-
-    function mouseDown(event) {
-        selectLayer(event);
-        event.preventDefault();
-        const target = getDraggableNode(event.path);
-        const divParams = target.getBoundingClientRect();
-        let centerX = event.x - divParams.left;
-        let centerY = event.y - divParams.top;
-        document.onmousemove = (moveEvent) => {
-            drag(event, getDraggableNode(event.path), moveEvent, centerX, centerY);
-        };
-        document.onmousedovn = (moveEvent) => {
-            mouseUp(event);
-        };
-    };
-
-    function mouseUp (event) {
-        event.preventDefault();
-        document.onmousemove = null;
-    };
-
-    function drag (event, target, moveEvent, centerX, centerY) {
-        let divParams = event.target.getBoundingClientRect();
-        let ampStoryWidth = document.querySelector('body').clientWidth;
-        let ampStoryHeight = document.querySelector('body').clientHeight;
-        if (event.screenX !== 0) {
-            let leftInPx = (moveEvent.x - centerX);
-            let topInPx = (moveEvent.y - centerY);
-            target.style.left = ((leftInPx / ampStoryWidth) * 100) + '%';
-            target.style.top = ((topInPx / ampStoryHeight) * 100) + '%';
-            drop({offsetX: parseInt(leftInPx, 10), offsetY: parseInt(topInPx, 10)});
-        }
-    };
-
-    function drop (coordinates) {
-        window.parent.postMessage({event: 'move', coordinates: coordinates}, 'http://127.0.0.1:3978/#/edit');
-    }
-</script>
 
 <% function getRotateValue (layer) {
     if (layer.settings.layerSettings.fullscreen) {
@@ -118,15 +34,33 @@
     }
 }
 
+function getFullScreenAnimationContainerWidth (layer) {
+    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
+            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+            Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
+                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10)
+}
+
+function getFullScreenAnimationContainerHeight (layer) {
+    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
+            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+            Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
+                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10)
+}
+
 function getAnimationContainerWidth (layer) {
     let thickness = 0;
     if (layer.settings.layerSettings.shapeStyles) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
-    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10) + '%';
+    if (layer.settings.layerSettings.fullscreen) {
+        return getFullScreenAnimationContainerWidth(layer) + '%';
+    } else {
+        return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
+                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs((+layer.settings.layerSettings.height + thickness) *
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10) + '%';
+    }
 }
 
 function getAnimationContainerHeight (layer) {
@@ -134,23 +68,41 @@ function getAnimationContainerHeight (layer) {
     if (layer.settings.layerSettings.shapeStyles) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
-    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10) + '%';
+    if (layer.settings.layerSettings.fullscreen) {
+        return getFullScreenAnimationContainerHeight(layer) + '%'
+    } else {
+        return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
+                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs((+layer.settings.layerSettings.height + thickness) *
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10) + '%';
+    }
 }
 
 function getDraggableElementWidth (layer) {
-    return (100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs(layer.settings.layerSettings.height *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+    if (layer.settings.layerSettings.fullscreen) {
+        return (100 * layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
+                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))));
+    } else {
+        return (100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
+                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs(layer.settings.layerSettings.height *
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+    }
 }
 function getDraggableElementHeight (layer) {
-    return (100 * layer.settings.layerSettings.height) / parseInt((Math.abs(layer.settings.layerSettings.width *
-            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs(layer.settings.layerSettings.height *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+    if (layer.settings.layerSettings.fullscreen) {
+        return (100 * layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
+                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))));
+    } else {
+        return (100 * layer.settings.layerSettings.height) / parseInt((Math.abs(layer.settings.layerSettings.width *
+                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs(layer.settings.layerSettings.height *
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+    }
 }
 
 function getDeraggableElementOffsetX (layer) {
@@ -179,6 +131,18 @@ function getDeraggableElementOffsetY (layer) {
                         Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
     } else return '0';
 }
+
+function getFullScreenElementOffsetY (layer) {
+    const heightContainerPx = ampStory.initialHeight * getFullScreenAnimationContainerHeight(layer) / 100;
+    const heightContentPx = heightContainerPx * getDraggableElementHeight(layer) / 100;
+    return (100 * ((heightContainerPx - heightContentPx) / 2) / heightContainerPx)
+}
+
+function getFullScreenElementOffsetX (layer) {
+    const widthContainerPx = ampStory.initialWidth * getFullScreenAnimationContainerWidth(layer) / 100;
+    const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
+    return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
+}
 %>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
@@ -201,10 +165,8 @@ function getDeraggableElementOffsetY (layer) {
                     case 'text': %>
                     <div
                             class="drag-item single-page-item animate"
-                    <% if (layer.content.value !== '') { %>
-                            style="
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                    <% if (layer.settings.animateDelay){ %>
+                            animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
@@ -231,8 +193,7 @@ function getDeraggableElementOffsetY (layer) {
 
                     case 'shape': %>
                     <div
-                            onmousedown="mouseDown(event)"
-                            onmouseup="mouseUp(event)"
+
                             class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
@@ -240,15 +201,6 @@ function getDeraggableElementOffsetY (layer) {
                                     height: <%=getAnimationContainerHeight(layer);%>;
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
-                    <% if (layer.settings.animateIn && !preview){ %>
-                            animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>
                     >
                         <div
                                 id="layer<%=layer.position%>"
@@ -272,10 +224,11 @@ function getDeraggableElementOffsetY (layer) {
                             <%if (layer.settings.layerSettings.fullscreen) {%>
                             class="full-screan-image drag-item animate"
                             style="
+                                    top: <%=(getFullScreenAnimationContainerHeight(layer) - 100) / -2 + '%'%>;
+                                    left: <%=(getFullScreenAnimationContainerWidth(layer) - 100) / -2 + '%'%>;
                                     position: absolute;
-                                    width: <%=(100 * (layer.settings.layerSettings.originalWidth * (+getRotateValue(layer)))) / ampStory.initialWidth + '%'%>;
-                                    height: <%=(100 * (layer.settings.layerSettings.originalHeight * (+getRotateValue(layer)))) / ampStory.initialHeight + '%'%>;
-                                    transform: translate(-50%, -50%);"
+                                    width: <%=getAnimationContainerWidth(layer);%>;
+                                    height: <%=getAnimationContainerHeight(layer);%>;"
                             <%} else {%>
                             class="drag-item single-page-item animate"
                             style="
@@ -291,10 +244,10 @@ function getDeraggableElementOffsetY (layer) {
                                 <%if (layer.settings.layerSettings.fullscreen) {%>
                              style="
                                      position: absolute;
-                                     top: 0%;
-                                     left: 0%;
-                                     width: 100%;
-                                     height: 100%;
+                                     left: <%=getFullScreenElementOffsetX(layer) + '%'%>;
+                                     top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
+                                     width: <%=getDraggableElementWidth(layer) + '%'%>;
+                                     height: <%=getDraggableElementHeight(layer) + '%';%>;
                                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                      "
                                 <% } else { %>
