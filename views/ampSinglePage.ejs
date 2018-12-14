@@ -2,13 +2,13 @@
 <html lang="en">
 <% include ampViewerHead.ejs %>
 <% let currentSlide = ampStory.cuts.find(cut => {
-    return cut.position === +current
+  return cut.position === +current
 })
 %>
-<body>
-<p id="dataWidth"style="display:none"><%= ampStory.initialWidth %></p>
-<p id="dataHeight"style="display:none"><%= ampStory.initialHeight %></p>
-<script>
+    <body>
+        <p id="dataWidth"style="display:none"><%= ampStory.initialWidth %></p>
+        <p id="dataHeight"style="display:none"><%= ampStory.initialHeight %></p>
+        <script>
     document.addEventListener('dragover', function (event) {
         event.preventDefault();
         return false;
@@ -147,6 +147,27 @@ function getFullScreenAnimationContainerHeight (layer) {
                     Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10)
 }
 
+function getAnimationWidthEm (layer) {
+    let thickness = 0;
+    if (layer.settings.layerSettings.shapeStyles) {
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+    }
+    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
+            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+            Math.abs((+layer.settings.layerSettings.height + thickness) *
+                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / 16 + 'em';
+}
+function getAnimationHeightEm (layer) {
+    let thickness = 0;
+    if (layer.settings.layerSettings.shapeStyles) {
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+    }
+    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
+            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+            Math.abs((+layer.settings.layerSettings.height + thickness) *
+                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / 16 + 'em';
+}
+
 function getAnimationContainerWidth (layer) {
     let thickness = 0;
     if (layer.settings.layerSettings.shapeStyles) {
@@ -178,12 +199,16 @@ function getAnimationContainerHeight (layer) {
 }
 
 function getDraggableElementWidth (layer) {
-    if (layer.settings.layerSettings.fullscreen) {
+    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
         return (100 * layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
                         Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))));
     } else {
+        console.log((100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
+                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs(layer.settings.layerSettings.height *
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%');
         return (100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.height *
@@ -191,7 +216,7 @@ function getDraggableElementWidth (layer) {
     }
 }
 function getDraggableElementHeight (layer) {
-    if (layer.settings.layerSettings.fullscreen) {
+    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
         return (100 * layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
                 Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
@@ -321,8 +346,8 @@ function getFullScreenElementOffsetX (layer) {
                             class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
-                                    width: <%=getAnimationContainerWidth(layer);%>;
-                                    height: <%=getAnimationContainerHeight(layer);%>;
+                                    width: <%=getAnimationWidthEm(layer)%>;
+                                    height: <%=getAnimationHeightEm(layer)%>;
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
                     <% if (layer.settings.animateIn && !preview){ %>
@@ -368,8 +393,8 @@ function getFullScreenElementOffsetX (layer) {
                             class="drag-item single-page-item animate small-image"
                             style="
                                     position: absolute;
-                                    width: <%=getAnimationContainerWidth(layer);%>;
-                                    height: <%=getAnimationContainerHeight(layer);%>;
+                                    width: <%=getAnimationWidthEm(layer)%>;
+                                    height: <%=getAnimationHeightEm(layer)%>;
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                             <% } %>
@@ -426,8 +451,8 @@ function getFullScreenElementOffsetX (layer) {
                         class="drag-item single-page-item animate"
                         style="
                                 position: absolute;
-                                width: <%=getAnimationContainerWidth(layer);%>;
-                                height: <%=getAnimationContainerHeight(layer);%>;
+                                width: <%=getAnimationWidthEm(layer)%>;
+                                height: <%=getAnimationHeightEm(layer)%>;
                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                             <% } %>

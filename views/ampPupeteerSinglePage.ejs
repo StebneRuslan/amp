@@ -48,6 +48,27 @@ function getFullScreenAnimationContainerHeight (layer) {
                     Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10)
 }
 
+function getAnimationWidthEm (layer) {
+    let thickness = 0;
+    if (layer.settings.layerSettings.shapeStyles) {
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+    }
+    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
+            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+            Math.abs((+layer.settings.layerSettings.height + thickness) *
+                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / 16 + 'em';
+}
+function getAnimationHeightEm (layer) {
+    let thickness = 0;
+    if (layer.settings.layerSettings.shapeStyles) {
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+    }
+    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
+            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+            Math.abs((+layer.settings.layerSettings.height + thickness) *
+                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / 16 + 'em';
+}
+
 function getAnimationContainerWidth (layer) {
     let thickness = 0;
     if (layer.settings.layerSettings.shapeStyles) {
@@ -79,12 +100,16 @@ function getAnimationContainerHeight (layer) {
 }
 
 function getDraggableElementWidth (layer) {
-    if (layer.settings.layerSettings.fullscreen) {
+    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
         return (100 * layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
                         Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))));
     } else {
+        console.log((100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
+                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+                Math.abs(layer.settings.layerSettings.height *
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%');
         return (100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.height *
@@ -92,7 +117,7 @@ function getDraggableElementWidth (layer) {
     }
 }
 function getDraggableElementHeight (layer) {
-    if (layer.settings.layerSettings.fullscreen) {
+    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
         return (100 * layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
                 Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
@@ -165,8 +190,10 @@ function getFullScreenElementOffsetX (layer) {
                     case 'text': %>
                     <div
                             class="drag-item single-page-item animate"
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
+                    <% if (layer.content.value !== '') { %>
+                            style="
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                             <% } %>
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
@@ -193,12 +220,11 @@ function getFullScreenElementOffsetX (layer) {
 
                     case 'shape': %>
                     <div
-
                             class="drag-item single-page-item animate"
                             style="
                                     position: absolute;
-                                    width: <%=getAnimationContainerWidth(layer);%>;
-                                    height: <%=getAnimationContainerHeight(layer);%>;
+                                    width: <%=getAnimationWidthEm(layer)%>;
+                                    height: <%=getAnimationHeightEm(layer)%>;
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
                     >
@@ -230,24 +256,13 @@ function getFullScreenElementOffsetX (layer) {
                                     width: <%=getAnimationContainerWidth(layer);%>;
                                     height: <%=getAnimationContainerHeight(layer);%>;"
                             <%} else {%>
-                            onmousedown="mouseDown(event)"
-                            onmouseup="mouseUp(event)"
                             class="drag-item single-page-item animate small-image"
                             style="
                                     position: absolute;
-                                    width: <%=getAnimationContainerWidth(layer);%>;
-                                    height: <%=getAnimationContainerHeight(layer);%>;
+                                    width: <%=getAnimationWidthEm(layer)%>;
+                                    height: <%=getAnimationHeightEm(layer)%>;
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                            <% } %>
-                    <% if (layer.settings.animateIn && !preview){ %>
-                            animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
                         <div draggable="true"
@@ -291,8 +306,8 @@ function getFullScreenElementOffsetX (layer) {
                         class="drag-item single-page-item animate"
                         style="
                                 position: absolute;
-                                width: <%=getAnimationContainerWidth(layer);%>;
-                                height: <%=getAnimationContainerHeight(layer);%>;
+                                width: <%=getAnimationWidthEm(layer)%>;
+                                height: <%=getAnimationHeightEm(layer)%>;
                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                             <% } %>
