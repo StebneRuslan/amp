@@ -230,13 +230,24 @@ function getFullScreenElementOffsetX (layer) {
                                     width: <%=getAnimationContainerWidth(layer);%>;
                                     height: <%=getAnimationContainerHeight(layer);%>;"
                             <%} else {%>
-                            class="drag-item single-page-item animate"
+                            onmousedown="mouseDown(event)"
+                            onmouseup="mouseUp(event)"
+                            class="drag-item single-page-item animate small-image"
                             style="
                                     position: absolute;
                                     width: <%=getAnimationContainerWidth(layer);%>;
                                     height: <%=getAnimationContainerHeight(layer);%>;
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                            <% } %>
+                    <% if (layer.settings.animateIn && !preview){ %>
+                            animate-in="<%= layer.settings.animateIn %>"
+                            <% } %>
+                    <% if (layer.settings.animateDuration){ %>
+                            animate-in-duration="<%= layer.settings.animateDuration %>s"
+                            <% } %>
+                    <% if (layer.settings.animateDelay){ %>
+                            animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
                         <div draggable="true"
