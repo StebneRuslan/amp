@@ -2,110 +2,110 @@
 <html lang="en">
 <% include ampViewerHead.ejs %>
 <% let currentSlide = ampStory.cuts.find(cut => {
-  return cut.position === +current
+    return cut.position === +current
 })
 %>
-    <body>
-        <p id="dataWidth"style="display:none"><%= ampStory.initialWidth %></p>
-        <p id="dataHeight"style="display:none"><%= ampStory.initialHeight %></p>
-        <script>
-    document.addEventListener('dragover', function (event) {
-        event.preventDefault();
-        return false;
-    }, false);
+<body>
+<p id="dataWidth"style="display:none"><%= ampStory.initialWidth %></p>
+<p id="dataHeight"style="display:none"><%= ampStory.initialHeight %></p>
+<script>
+  document.addEventListener('dragover', function (event) {
+    event.preventDefault();
+    return false;
+  }, false);
 
-    document.addEventListener('drop', function (event) {
-        event.preventDefault();
-        return false;
-    }, false);
-    window.addEventListener('message', function (event) {
-        const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-        if (currentLayer) {
-            currentLayer.parentNode.style.boxShadow = '0 0 1px 1px white';
-            currentLayer.parentNode.style.outline = '1px solid black';
-        }
-        if (event.data.previousId !== null && event.data.previousId !== undefined) {
-            const previousLayer = document.getElementById(`layer${event.data.previousId}`);
-            previousLayer.parentNode.style.boxShadow = '';
-            previousLayer.parentNode.style.outline = '';
-        }
-    });
-    window.onload = () => {
-        var css = '.i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
-            head = document.head || document.getElementsByTagName('head')[0],
-            style = document.createElement('style');
-        style.type = 'text/css';
-        if (style.styleSheet){
-            style.styleSheet.cssText = css;
-        } else {
-            style.appendChild(document.createTextNode(css));
-        };
-        head.appendChild(style);
-    };
-    const element = null;
-
-    function preventImageDragging (event) {
-        event.preventDefault();
+  document.addEventListener('drop', function (event) {
+    event.preventDefault();
+    return false;
+  }, false);
+  window.addEventListener('message', function (event) {
+    const currentLayer = document.getElementById(`layer${event.data.currentId}`);
+    if (currentLayer) {
+      currentLayer.parentNode.style.boxShadow = '0 0 1px 1px white';
+      currentLayer.parentNode.style.outline = '1px solid black';
     }
-
-    function selectLayer (event) {
-        const position = getDraggableNode(event.path).children[0].id.toString().slice(5);
-        window.parent.postMessage({event: 'selectLayer', position: position}, 'http://127.0.0.1:3978/#/edit');
+    if (event.data.previousId !== null && event.data.previousId !== undefined) {
+      const previousLayer = document.getElementById(`layer${event.data.previousId}`);
+      previousLayer.parentNode.style.boxShadow = '';
+      previousLayer.parentNode.style.outline = '';
     }
+  });
+  window.onload = () => {
+    var css = '.i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
+      head = document.head || document.getElementsByTagName('head')[0],
+      style = document.createElement('style');
+    style.type = 'text/css';
+    if (style.styleSheet){
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    };
+    head.appendChild(style);
+  };
+  const element = null;
 
-    function getDraggableNode (path) {
-        for (let i = 0; i < path.length; i++) {
-            if (path[i].classList && path[i].classList.value) {
-                if ([].includes.call(path[i].classList, 'drag-item')) {
-                    return path[i];
-                }
-            }
+  function preventImageDragging (event) {
+    event.preventDefault();
+  }
+
+  function selectLayer (event) {
+    const position = getDraggableNode(event.path).children[0].id.toString().slice(5);
+    window.parent.postMessage({event: 'selectLayer', position: position}, 'http://127.0.0.1:3978/#/edit');
+  }
+
+  function getDraggableNode (path) {
+    for (let i = 0; i < path.length; i++) {
+      if (path[i].classList && path[i].classList.value) {
+        if ([].includes.call(path[i].classList, 'drag-item')) {
+          return path[i];
         }
+      }
     }
+  }
 
-    function mouseDown(event) {
-        event.preventDefault();
-        selectLayer(event);
-        const ampStoryWidth = document.querySelector('body').clientWidth;
-        const ampStoryHeight = document.querySelector('body').clientHeight;
-        const target = getDraggableNode(event.path);
-        const divParams = target.getBoundingClientRect();
-        let centerX = event.x - divParams.left;
-        let centerY = event.y - divParams.top;
-        document.onmousemove = (moveEvent) => {
-            drag(event,
-                getDraggableNode(event.path),
-                moveEvent, centerX, centerY,
-                iframeParams = {ampStoryWidth: ampStoryWidth, ampStoryHeight: ampStoryHeight}
-            );
-        };
-        document.onmouseleave = (moveEvent) => {
-            mouseUp(event);
-        };
-        document.onmousedovn = (moveEvent) => {
-            mouseUp(event);
-        };
+  function mouseDown(event) {
+    event.preventDefault();
+    selectLayer(event);
+    const ampStoryWidth = document.querySelector('body').clientWidth;
+    const ampStoryHeight = document.querySelector('body').clientHeight;
+    const target = getDraggableNode(event.path);
+    const divParams = target.getBoundingClientRect();
+    let centerX = event.x - divParams.left;
+    let centerY = event.y - divParams.top;
+    document.onmousemove = (moveEvent) => {
+      drag(event,
+        getDraggableNode(event.path),
+        moveEvent, centerX, centerY,
+        iframeParams = {ampStoryWidth: ampStoryWidth, ampStoryHeight: ampStoryHeight}
+      );
     };
-
-    function mouseUp (event) {
-        event.preventDefault();
-        document.onmousemove = null;
-        document.onmouseleave = null;
+    document.onmouseleave = (moveEvent) => {
+      mouseUp(event);
     };
-
-    function drag (event, target, moveEvent, centerX, centerY) {
-        if (event.screenX !== 0) {
-            let leftInPx = (moveEvent.x - centerX);
-            let topInPx = (moveEvent.y - centerY);
-            target.style.left = ((leftInPx / iframeParams.ampStoryWidth) * 100) + '%';
-            target.style.top = ((topInPx / iframeParams.ampStoryHeight) * 100) + '%';
-            drop({offsetX: parseInt(leftInPx, 10), offsetY: parseInt(topInPx, 10)});
-        }
+    document.onmousedovn = (moveEvent) => {
+      mouseUp(event);
     };
+  };
 
-    function drop (coordinates) {
-        window.parent.postMessage({event: 'move', coordinates: coordinates}, 'http://127.0.0.1:3978/#/edit');
+  function mouseUp (event) {
+    event.preventDefault();
+    document.onmousemove = null;
+    document.onmouseleave = null;
+  };
+
+  function drag (event, target, moveEvent, centerX, centerY) {
+    if (event.screenX !== 0) {
+      let leftInPx = (moveEvent.x - centerX);
+      let topInPx = (moveEvent.y - centerY);
+      target.style.left = ((leftInPx / iframeParams.ampStoryWidth) * 100) + '%';
+      target.style.top = ((topInPx / iframeParams.ampStoryHeight) * 100) + '%';
+      drop({offsetX: parseInt(leftInPx, 10), offsetY: parseInt(topInPx, 10)});
     }
+  };
+
+  function drop (coordinates) {
+    window.parent.postMessage({event: 'move', coordinates: coordinates}, 'http://127.0.0.1:3978/#/edit');
+  }
 </script>
 
 <% function getRotateValue (layer) {
@@ -134,14 +134,14 @@
 }
 
 function getFullScreenAnimationContainerWidth (layer) {
-    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
+    return parseFloat((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
             Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
                     Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10)
 }
 
 function getFullScreenAnimationContainerHeight (layer) {
-    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
+    return parseFloat((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
             Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
                     Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10)
@@ -235,11 +235,7 @@ function getDeraggableElementOffsetX (layer) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
     if (layer.settings.generalSettings.rotate !== '0') {
-        return (100 * layer.settings.generalSettings.innerOffsetX) / parseFloat((
-                Math.abs((+layer.settings.layerSettings.width + thickness) *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs((+layer.settings.layerSettings.height + thickness) *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+        return layer.settings.generalSettings.innerOffsetX / (3.434 * (ampStory.initialWidth / 100)) + 'em';
     } else return '0';
 }
 function getDeraggableElementOffsetY (layer) {
@@ -248,11 +244,7 @@ function getDeraggableElementOffsetY (layer) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
     if (layer.settings.generalSettings.rotate !== '0') {
-        return (100 * layer.settings.generalSettings.innerOffsetY) / parseFloat((
-                Math.abs((+layer.settings.layerSettings.width + thickness) *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs((+layer.settings.layerSettings.height + thickness) *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+        return layer.settings.generalSettings.innerOffsetY / (3.434 * (ampStory.initialWidth / 100)) + 'em';
     } else return '0';
 }
 
@@ -387,6 +379,7 @@ function getFullScreenElementOffsetX (layer) {
                                     position: absolute;
                                     width: <%=getAnimationContainerWidth(layer);%>;
                                     height: <%=getAnimationContainerHeight(layer);%>;"
+                            onmousedown="selectLayer(event)"
                             <%} else {%>
                             onmousedown="mouseDown(event)"
                             onmouseup="mouseUp(event)"
@@ -445,6 +438,7 @@ function getFullScreenElementOffsetX (layer) {
               height: 100%;
               left: 0%;
               top: 0%"
+                        onmousedown="selectLayer(event)"
                             <%} else {%>
                         onmousedown="mouseDown(event)"
                         onmouseup="mouseUp(event)"

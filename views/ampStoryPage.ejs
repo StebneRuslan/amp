@@ -24,14 +24,14 @@
 }
 
 function getFullScreenAnimationContainerWidth (layer) {
-    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
+    return parseFloat((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
             Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
                     Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10)
 }
 
 function getFullScreenAnimationContainerHeight (layer) {
-    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
+    return parseFloat((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
             Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
                     Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10)
@@ -125,11 +125,7 @@ function getDeraggableElementOffsetX (layer) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
     if (layer.settings.generalSettings.rotate !== '0') {
-        return (100 * layer.settings.generalSettings.innerOffsetX) / parseFloat((
-                Math.abs((+layer.settings.layerSettings.width + thickness) *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs((+layer.settings.layerSettings.height + thickness) *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+        return layer.settings.generalSettings.innerOffsetX / (3.434 * (ampStory.initialWidth / 100)) + 'em';
     } else return '0';
 }
 function getDeraggableElementOffsetY (layer) {
@@ -138,11 +134,7 @@ function getDeraggableElementOffsetY (layer) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
     if (layer.settings.generalSettings.rotate !== '0') {
-        return (100 * layer.settings.generalSettings.innerOffsetY) / parseFloat((
-                Math.abs((+layer.settings.layerSettings.width + thickness) *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs((+layer.settings.layerSettings.height + thickness) *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
+        return layer.settings.generalSettings.innerOffsetY / (3.434 * (ampStory.initialWidth / 100)) + 'em';
     } else return '0';
 }
 

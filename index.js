@@ -5,7 +5,7 @@
 const path = require('path')
 const express = require('express')
 const app = express()
-let amp = class Amp {
+let Amp = class Amp {
     constructor(type, configPaths) {
         this.type = type;
         this.configPaths = configPaths
@@ -64,7 +64,7 @@ let amp = class Amp {
     }
 }
 
-module.exports = {amp}
+module.exports = Amp
 // const amp = new Amp('cdn', {
 //     v0Path: '/assets/libs/v0.js',
 //     ampStoryPath: '/assets/libs/amp-story-0.1.js',
