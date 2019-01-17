@@ -72,13 +72,13 @@ if (layer.settings.layerSettings.fullscreen) {%>
             id="full-screen"
             layout="responsive"
     <% if (ampStory.fromPreview) { %>
-            src="<%= getVideoUrl(layer.content.value)%>"
+            src="<%= getVideoUrl(layer.content)%>"
             <% }%>
             width="<%= layer.settings.layerSettings.width %>"
             height="<%= layer.settings.layerSettings.height %>"
             poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
             style="z-index:<%= layer.position %>;<%= getStyles(layer.settings.generalSettings) %>">
-      <source src="<%= getVideoUrl(layer.content.value)%>"
+      <source src="<%= getVideoUrl(layer.content)%>"
               type="video/mp4">
       <div fallback>
         <p>This browser does not support the video element.</p>
