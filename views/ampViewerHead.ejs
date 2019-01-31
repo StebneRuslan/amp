@@ -34,63 +34,98 @@
 
         @font-face {
             font-family: 'Montserrat';
-            src: url('<%=fontPath%>/src/public/fonts/Montserrat-Regular.ttf') format('truetype');
+            <% if (fontPath.includes('/fonts')) { %>
+                src: url('<%=fontPath%>/Montserrat-Regular.ttf') format('truetype');
+            <% } else { %>
+                src: url('<%=fontPath%>/src/public/fonts/Montserrat-Regular.ttf') format('truetype');
+            <% } %>
             font-weight: 400;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Montserrat';
-            src: url('<%=fontPath%>/src/public/fonts/Montserrat-Light.ttf') format('truetype');
+            <% if (fontPath.includes('/fonts')) { %>
+                src: url('<%=fontPath%>/Montserrat-Light.ttf') format('truetype');
+            <% } else { %>
+                src: url('<%=fontPath%>/src/public/fonts/Montserrat-Light.ttf') format('truetype');
+            <% } %>
             font-weight: 300;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Montserrat';
-            src: url('<%=fontPath%>/src/public/fonts/Montserrat-LightItalic.ttf');
+            <% if (fontPath.includes('/fonts')) { %>
+                src: url('<%=fontPath%>/Montserrat-LightItalic.ttf');
+            <% } else { %>
+                src: url('<%=fontPath%>/src/public/fonts/Montserrat-LightItalic.ttf');
+            <% } %>
             font-weight: 300;
             font-style: italic;
         }
 
         @font-face {
             font-family: 'Montserrat';
-            src: url('<%=fontPath%>/src/public/fonts/Montserrat-Medium.ttf');
+            <% if (fontPath.includes('/fonts')) { %>
+                src: url('<%=fontPath%>/Montserrat-Medium.ttf');
+            <% } else { %>
+                src: url('<%=fontPath%>/src/public/fonts/Montserrat-Medium.ttf');
+            <% } %>
             font-weight: 500;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Montserrat';
-            src: url('<%=fontPath%>/src/public/fonts/Montserrat-MediumItalic.ttf');
+            <% if (fontPath.includes('/fonts')) { %>
+                src: url('<%=fontPath%>/Montserrat-MediumItalic.ttf');
+            <% } else { %>
+                src: url('<%=fontPath%>/src/public/fonts/Montserrat-MediumItalic.ttf');
+            <% } %>
             font-weight: 500;
             font-style: italic;
         }
 
         @font-face {
             font-family: 'Helvetica Neue';
-            src: url('<%=fontPath%>/src/public/fonts/HelveticaNeue-Medium.ttf');
+            <% if (fontPath.includes('/fonts')) { %>
+                src: url('<%=fontPath%>/HelveticaNeue-Medium.ttf');
+            <% } else { %>
+                src: url('<%=fontPath%>/src/public/fonts/HelveticaNeue-Medium.ttf');
+            <% } %>
             font-weight: 500;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Helvetica Neue';
-            src: url('<%=fontPath%>/src/public/fonts/HelveticaNeue-Light.ttf');
+            <% if (fontPath.includes('/fonts')) { %>
+                src: url('<%=fontPath%>/HelveticaNeue-Light.ttf');
+            <% } else { %>
+                src: url('<%=fontPath%>/src/public/fonts/HelveticaNeue-Light.ttf');
+            <% } %>
             font-weight: 400;
-
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Montserrat';
-            src: url('<%=fontPath%>/src/public/fonts/Montserrat-Bold.ttf');
+            <% if (fontPath.includes('/fonts')) { %>
+                src: url('<%=fontPath%>/Montserrat-Bold.ttf');
+            <% } else { %>
+                src: url('<%=fontPath%>/src/public/fonts/Montserrat-Bold.ttf');
+            <% } %>
             font-weight: 700;
             font-style: normal;
         }
         @font-face {
             font-family: 'Montserrat';
-            src: url('<%=fontPath%>/src/public/fonts/Montserrat-BoldItalic.ttf');
+            <% if (fontPath.includes('/fonts')) { %>
+                src: url('<%=fontPath%>/Montserrat-BoldItalic.ttf');
+            <% } else { %>
+                src: url('<%=fontPath%>/src/public/fonts/Montserrat-BoldItalic.ttf');
+            <% } %>
             font-weight: 700;
             font-style: italic;
         }

@@ -163,6 +163,10 @@ function getFullScreenElementOffsetX (layer) {
 %>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
+    <amp-story-page style="background: #eeeeee" id='story0' class="container">
+        <amp-story-grid-layer template="horizontal">
+        </amp-story-grid-layer>
+    </amp-story-page>
     <amp-story-page style="background: #eeeeee" id='story' auto-advance-after="10s" class="container">
         <% let preview = false;
         if (currentSlide) {
@@ -193,8 +197,8 @@ function getFullScreenElementOffsetX (layer) {
                     <% if (layer.settings.animateDuration){ %>
                             animate-in-duration="<%= layer.settings.animateDuration %>s"
                             <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
+                    <% if (layer.settings.animateIn){ %>
+                            animate-in-delay="<%= +layer.settings.animateDelay + 1.1 %>s"
                             <% } %>
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
@@ -217,8 +221,8 @@ function getFullScreenElementOffsetX (layer) {
                     <% if (layer.settings.animateDuration){ %>
                             animate-in-duration="<%= layer.settings.animateDuration %>s"
                             <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
+                    <% if (layer.settings.animateIn){ %>
+                            animate-in-delay="<%= +layer.settings.animateDelay + 1.1 %>s"
                             <% } %>
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
@@ -243,8 +247,8 @@ function getFullScreenElementOffsetX (layer) {
                     <% if (layer.settings.animateDuration){ %>
                             animate-in-duration="<%= layer.settings.animateDuration %>s"
                             <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
+                    <% if (layer.settings.animateIn){ %>
+                            animate-in-delay="<%= +layer.settings.animateDelay + 1.1 %>s"
                             <% } %>
                     >
                         <div
@@ -289,8 +293,8 @@ function getFullScreenElementOffsetX (layer) {
                     <% if (layer.settings.animateDuration){ %>
                             animate-in-duration="<%= layer.settings.animateDuration %>s"
                             <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
+                    <% if (layer.settings.animateIn){ %>
+                            animate-in-delay="<%= +layer.settings.animateDelay + 1.1 %>s"
                             <% } %>
                     >
                         <div draggable="true"
@@ -346,7 +350,7 @@ function getFullScreenElementOffsetX (layer) {
                         animate-in-duration="<%= layer.settings.animateDuration %>s"
                             <% } %>
                     <% if (layer.settings.animateDelay){ %>
-                        animate-in-delay="<%= layer.settings.animateDelay %>s"
+                        animate-in-delay="<%= +layer.settings.animateDelay + 1.1 %>s"
                             <% } %>
                     >
                         <div draggable="true"
