@@ -54,16 +54,12 @@ function getVideoUrl (content) {
 }
 if (layer.settings.layerSettings.fullscreen) {%>
   <div
-  <% if (layer.settings.animateIn && !preview){ %>
-    animate-in="<%= layer.settings.animateIn %>"
+  <% if (!['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
+    style="position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden;"
+  <% } else if (['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
+    style="position:absolute;top:0;right:0;bottom:0;width:100%;overflow:hidden;"
           <% } %>
-  <% if (layer.settings.animateDuration){ %>
-    animate-in-duration="<%= layer.settings.animateDuration %>s"
-          <% } %>
-  <% if (layer.settings.animateDelay){ %>
-    animate-in-delay="<%= layer.settings.animateDelay %>s"
-          <% } %>
-    style="position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden;">
+  >
     <amp-video
             autoplay
     <% if (layer.settings.layerSettings.mute) {%>
