@@ -17,9 +17,9 @@
       true, true,
       window, null,
       x, y, x, y,
-    false, false, false, false,
-    0, null
-  );
+      false, false, false, false,
+      0, null
+    );
     el.dispatchEvent(ev);
   }
 </script>
@@ -180,21 +180,18 @@ function getFullScreenElementOffsetX (layer) {
 %>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-    <amp-story-page style="background: #eeeeee" id='story0' class="container">
-        <amp-story-grid-layer template="horizontal">
-        </amp-story-grid-layer>
-    </amp-story-page>
-    <amp-story-page style="background: #eeeeee" id='story' auto-advance-after="10s" class="container">
+    <%for (let i = 0; i <= 2; i++) { %>
+    <amp-story-page style="background: #eeeeee" id='<%='story' + i%>' auto-advance-after="<%= i === 0 ? '' : '10s'%>" class="container">
         <% let preview = false;
-        if (currentSlide) {
-            currentSlide.layers.sort((first, second) => {
-                var keyA = first.position,
-                        keyB = second.position;
-                if(keyA < keyB) return -1;
-                if(keyA > keyB) return 1;
-                return 0;
-            })
-        } %>
+            if (currentSlide) {
+                currentSlide.layers.sort((first, second) => {
+                    var keyA = first.position,
+                            keyB = second.position;
+                    if(keyA < keyB) return -1;
+                    if(keyA > keyB) return 1;
+                    return 0;
+                })
+            } %>
         <% if (currentSlide) { %>
             <amp-story-grid-layer template="horizontal">
                 <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
@@ -418,6 +415,7 @@ function getFullScreenElementOffsetX (layer) {
             </amp-story-grid-layer>
         <% } %>
     </amp-story-page>
+    <% } %>
 </amp-story>
 </body>
 
