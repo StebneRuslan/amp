@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Cormorant';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cormorant-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cormorant-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Cormorant';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cormorant-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cormorant-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Cormorant';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cormorant-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cormorant-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'Cormorant';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cormorant-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cormorant-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

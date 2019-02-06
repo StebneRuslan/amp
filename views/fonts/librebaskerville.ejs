@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'LibreBaskerville';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/LibreBaskerville-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/LibreBaskerville-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'LibreBaskerville';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/LibreBaskerville-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/LibreBaskerville-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'LibreBaskerville';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/LibreBaskerville-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/LibreBaskerville-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'LibreBaskerville';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/LibreBaskerville-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/LibreBaskerville-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

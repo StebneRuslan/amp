@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'BioRhyme';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/BioRhyme-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/BioRhyme-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'BioRhyme';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/BioRhyme-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/BioRhyme-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}

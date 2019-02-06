@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Raleway';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Raleway-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Raleway-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Raleway';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Raleway-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Raleway-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Raleway';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Raleway-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Raleway-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'Raleway';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Raleway-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Raleway-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

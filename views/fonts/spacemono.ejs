@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'SpaceMono';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/SpaceMono-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/SpaceMono-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SpaceMono';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/SpaceMono-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/SpaceMono-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'SpaceMono';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/SpaceMono-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/SpaceMono-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'SpaceMono';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/SpaceMono-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/SpaceMono-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

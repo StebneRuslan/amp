@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'WorkSans';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/WorkSans-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/WorkSans-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'WorkSans';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/WorkSans-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/WorkSans-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}

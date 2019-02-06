@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'FiraSans';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/FiraSans-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/FiraSans-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'FiraSans';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/FiraSans-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/FiraSans-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'FiraSans';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/FiraSans-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/FiraSans-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'FiraSans';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/FiraSans-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/FiraSans-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

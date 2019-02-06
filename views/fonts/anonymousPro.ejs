@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'AnonymousPro';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/AnonymousPro-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/AnonymousPro-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'AnonymousPro';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/AnonymousPro-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/AnonymousPro-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'AnonymousPro';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/AnonymousPro-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/AnonymousPro-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'Alegreya';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/AnonymousPro-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/AnonymousPro-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

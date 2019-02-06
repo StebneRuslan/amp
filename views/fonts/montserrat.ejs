@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Montserrat';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Montserrat-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Montserrat-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Montserrat';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Montserrat-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Montserrat-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Montserrat';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Montserrat-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Montserrat-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'Montserrat';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Montserrat-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Montserrat-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

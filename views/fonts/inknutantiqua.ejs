@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'InknutAntiqua';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/InknutAntiqua-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/InknutAntiqua-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'InknutAntiqua';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/InknutAntiqua-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/InknutAntiqua-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}

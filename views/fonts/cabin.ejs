@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Cabin';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cabin-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cabin-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Cabin';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cabin-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cabin-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Cabin';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cabin-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cabin-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'Cabin';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cabin-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cabin-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

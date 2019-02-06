@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'Domine';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Domine-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Domine-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Domine';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Domine-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Domine-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: bold;
+}
