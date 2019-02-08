@@ -180,8 +180,8 @@ function getFullScreenElementOffsetX (layer) {
 %>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-    <%for (let i = 0; i <= 2; i++) { %>
-    <amp-story-page style="background: #eeeeee" id='<%='story' + i%>' auto-advance-after="<%= i === 0 ? '' : '10s'%>" class="container">
+    <%for (let i = 0; i < 2; i++) { %>
+    <amp-story-page style="background: #eeeeee" id='<%='story' + i%>' class="container">
         <% let preview = false;
             if (currentSlide) {
                 currentSlide.layers.sort((first, second) => {
@@ -380,7 +380,7 @@ function getFullScreenElementOffsetX (layer) {
                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                             <% } %>
-                    <% if (layer.settings.animateIn && !preview){ %>
+                    <% if (layer.settings.animateIn){ %>
                         animate-in="<%= layer.settings.animateIn %>"
                             <% } %>
                     <% if (layer.settings.animateDuration){ %>
