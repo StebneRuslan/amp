@@ -70,161 +70,162 @@
         <% include ./fonts/sourceserifpro.ejs %>
         <% include ./fonts/spectral.ejs %>
         <% include ./fonts/worksans.ejs %>
+        <% include ./fonts/custom.ejs %>
 
         @font-face {
             font-family: 'Montserrat';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Montserrat-Regular.ttf') format('truetype');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Montserrat-Regular.ttf') format('truetype');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Montserrat-Regular.ttf') format('truetype');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Montserrat-Regular.ttf') format('truetype');
+        <% } %>
             font-weight: 400;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Montserrat';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Montserrat-Light.ttf') format('truetype');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Montserrat-Light.ttf') format('truetype');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Montserrat-Light.ttf') format('truetype');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Montserrat-Light.ttf') format('truetype');
+        <% } %>
             font-weight: 300;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Montserrat';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Montserrat-LightItalic.ttf');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Montserrat-LightItalic.ttf');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Montserrat-LightItalic.ttf');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Montserrat-LightItalic.ttf');
+        <% } %>
             font-weight: 300;
             font-style: italic;
         }
 
         @font-face {
             font-family: 'Montserrat';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Montserrat-Medium.ttf');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Montserrat-Medium.ttf');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Montserrat-Medium.ttf');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Montserrat-Medium.ttf');
+        <% } %>
             font-weight: 500;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Montserrat';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Montserrat-MediumItalic.ttf');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Montserrat-MediumItalic.ttf');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Montserrat-MediumItalic.ttf');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Montserrat-MediumItalic.ttf');
+        <% } %>
             font-weight: 500;
             font-style: italic;
         }
 
         @font-face {
             font-family: 'Helvetica Neue';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/HelveticaNeue-Medium.ttf');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/HelveticaNeue-Medium.ttf');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/HelveticaNeue-Medium.ttf');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/HelveticaNeue-Medium.ttf');
+        <% } %>
             font-weight: 500;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Helvetica Neue';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/HelveticaNeue-Light.ttf');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/HelveticaNeue-Light.ttf');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/HelveticaNeue-Light.ttf');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/HelveticaNeue-Light.ttf');
+        <% } %>
             font-weight: 400;
             font-style: normal;
         }
 
         @font-face {
             font-family: 'Montserrat';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Montserrat-Bold.ttf');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Montserrat-Bold.ttf');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Montserrat-Bold.ttf');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Montserrat-Bold.ttf');
+        <% } %>
             font-weight: 700;
             font-style: normal;
         }
         @font-face {
             font-family: 'Montserrat';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Montserrat-BoldItalic.ttf');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Montserrat-BoldItalic.ttf');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Montserrat-BoldItalic.ttf');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Montserrat-BoldItalic.ttf');
+        <% } %>
             font-weight: 700;
             font-style: italic;
         }
         @font-face {
             font-family: 'Avenir';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Avenir.ttc');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Avenir.ttc');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Avenir.ttc');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Avenir.ttc');
+        <% } %>
             font-weight: 400;
             font-style: normal;
         }
         @font-face {
             font-family: 'Didot';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Didot.ttc');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Didot.ttc');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Didot.ttc');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Didot.ttc');
+        <% } %>
             font-weight: 400;
             font-style: normal;
         }
         @font-face {
             font-family: 'GillSans';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/GillSans.ttc');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/GillSans.ttc');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/GillSans.ttc');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/GillSans.ttc');
+        <% } %>
             font-weight: 400;
             font-style: normal;
         }
         @font-face {
             font-family: 'Helvetica';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Helvetica.ttc');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Helvetica.ttc');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Helvetica.ttc');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Helvetica.ttc');
+        <% } %>
             font-weight: 400;
             font-style: normal;
         }
         @font-face {
             font-family: 'Roboto-Regular';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Roboto-Regular.ttf');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Roboto-Regular.ttf');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Roboto-Regular.ttf');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Roboto-Regular.ttf');
+        <% } %>
             font-weight: 400;
             font-style: normal;
         }
         @font-face {
             font-family: 'Verdana';
-            <% if (fontPath.includes('/fonts')) { %>
-                src: url('<%=fontPath%>/Verdana.ttf');
-            <% } else { %>
-                src: url('<%=fontPath%>/src/public/fonts/Verdana.ttf');
-            <% } %>
+        <% if (fontPath.includes('/fonts')) { %>
+            src: url('<%=fontPath%>/Verdana.ttf');
+        <% } else { %>
+            src: url('<%=fontPath%>/src/public/fonts/Verdana.ttf');
+        <% } %>
             font-weight: 400;
             font-style: normal;
         }
@@ -464,6 +465,9 @@
                 .single-text {
                     font-size: 1.45vh;
                 }
+                .full-screan-video-em {
+                    font-size: 1.88vh;
+                }
             }
         }
         @media (max-width: 1023px) {
@@ -482,6 +486,9 @@
                 .rotate-wrapper {
                     font-size: 2vh;
                 }
+                .full-screan-video-em {
+                    font-size: 1.88vh;
+                }
             }
 
             @media screen and (max-aspect-ratio: 9/20) {
@@ -490,6 +497,9 @@
                 }
                 div.animate {
                     font-size: 3.2vw;
+                }
+                div.full-screan-video-em {
+                    font-size: 3.33vw;
                 }
                 amp-story-grid-layer {
                     height: 156.25vw;
@@ -503,6 +513,9 @@
                 font-size: 1.53vh;
             }
             div.animate {
+                font-size: 2vh;
+            }
+            div.full-screan-video-em {
                 font-size: 2vh;
             }
         }

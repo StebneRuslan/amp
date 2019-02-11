@@ -89,16 +89,12 @@ function getAnimationContainerHeight (layer) {
 }
 
 function getDraggableElementWidth (layer) {
-    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
+    if (layer.settings.layerSettings.fullscreen && (layer.type === 'image' || layer.type === 'video')) {
         return (100 * layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
                         Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))));
     } else {
-        console.log((100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.height *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%');
         return (100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.height *
@@ -106,7 +102,7 @@ function getDraggableElementWidth (layer) {
     }
 }
 function getDraggableElementHeight (layer) {
-    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
+    if (layer.settings.layerSettings.fullscreen && (layer.type === 'image' || layer.type === 'video')) {
         return (100 * layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
                 Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
@@ -337,24 +333,29 @@ ampStory.cuts.map(currentSlide => { %>
                         case 'video': %>
                         <div
                         <%if (layer.settings.layerSettings.fullscreen) {%>
-                            class="full-screan-image drag-item animate"
-                            <% if (!['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
+                            class="full-screan-video-em drag-item animate"
+                                    <% if (!['pan-left', 'pan-right', 'pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
                             style="
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              left: 0%;
-              top: 0%"
-                            <% } else if (['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
+                                    top: 0;
+                                    left: 0;
+                                    position: absolute;
+                                    width: <%=(ampStory.initialWidth / 16) + 'em'%>;
+                                    height: <%=(ampStory.initialHeight / 16) + 'em'%>;"
+                                    <% } else if (['pan-left', 'pan-right'].includes(layer.settings.animateIn)) { %>
                             style="
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              left: 50%;
-              top: 0%"
+                                    transform: translate(-50%, -50%);top: 0;left: 0;
+                                    position: absolute;
+                                    width: <%=getAnimationContainerWidth(layer);%>;
+                                    height: <%=getAnimationContainerHeight(layer);%>;"
+                                    <% } else if (['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
+                            style="
+                                    transform: translate(-50%, -50%);top: 0;
+                                    position: absolute;
+                                    width: <%=getAnimationContainerWidth(layer);%>;
+                                    height: <%=getAnimationContainerHeight(layer);%>;"
                                     <% } %>
                                 <%} else {%>
-                            class="drag-item animate"
+                            class="drag-item animate small-image"
                             style="
                                     position: absolute;
                                     width: <%=getAnimationWidthEm(layer)%>;
@@ -375,9 +376,15 @@ ampStory.cuts.map(currentSlide => { %>
                             <div draggable="true"
                                  id="layer<%=layer.position%>"
                                     <%if (layer.settings.layerSettings.fullscreen) {%>
-                                 class="full-screan-image"
-                                 style="width: 100%;height: 100%;transform: <%='rotate(' + (layer.settings.generalSettings.rotate || 0) + 'deg)'%>;"
-                                    <%} else {%>
+                                 style="
+                                         position: absolute;
+                                         left: 0;
+                                         top: 0;
+                                         width: 100%;
+                                         height: 100%;
+                                         transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
+                                         "
+                                    <% } else { %>
                                  class="rotate-wrapper"
                                  style="
                                          position: absolute;
