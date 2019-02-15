@@ -310,29 +310,24 @@ function getFullScreenElementOffsetX (layer) {
                     case 'video': %>
                     <div
                     <%if (layer.settings.layerSettings.fullscreen) {%>
-                        class="full-screan-video-em drag-item animate"
-                                <% if (!['pan-left', 'pan-right', 'pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
+                        class="full-screan-image drag-item animate"
+                        <% if (!['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
                         style="
-                                top: 0;
-                                left: 0;
-                                position: absolute;
-                                width: <%=(ampStory.initialWidth / 16) + 'em'%>;
-                                height: <%=(ampStory.initialHeight / 16) + 'em'%>;"
-                                <% } else if (['pan-left', 'pan-right'].includes(layer.settings.animateIn)) { %>
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              left: 0%;
+              top: 0%"
+                        <% } else if (['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
                         style="
-                                transform: translate(-50%, -50%);top: 0;left: 0;
-                                position: absolute;
-                                width: <%=getAnimationContainerWidth(layer);%>;
-                                height: <%=getAnimationContainerHeight(layer);%>;"
-                                <% } else if (['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
-                        style="
-                                transform: translate(-50%, -50%);top: 0;
-                                position: absolute;
-                                width: <%=getAnimationContainerWidth(layer);%>;
-                                height: <%=getAnimationContainerHeight(layer);%>;"
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              left: 50%;
+              top: 0%"
                                 <% } %>
                             <%} else {%>
-                        class="drag-item animate small-image"
+                        class="drag-item single-page-item animate"
                         style="
                                 position: absolute;
                                 width: <%=getAnimationWidthEm(layer)%>;
@@ -340,28 +335,13 @@ function getFullScreenElementOffsetX (layer) {
                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                             <% } %>
-                    <% if (layer.settings.animateIn && !preview){ %>
-                        animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                        animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                        animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>
                     >
                         <div draggable="true"
                              id="layer<%=layer.position%>"
                                 <%if (layer.settings.layerSettings.fullscreen) {%>
-                             style="
-                                     position: absolute;
-                                     left: 0;
-                                     top: 0;
-                                     width: 100%;
-                                     height: 100%;
-                                     transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                     "
-                                <% } else { %>
+                             class="full-screan-image"
+                             style="width: 100%;height: 100%;transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
+                                <%} else {%>
                              class="rotate-wrapper"
                              style="
                                      position: absolute;

@@ -345,14 +345,14 @@ ampStory.cuts.map(currentSlide => { %>
                             style="
                                     transform: translate(-50%, -50%);top: 0;left: 0;
                                     position: absolute;
-                                    width: <%=getAnimationContainerWidth(layer);%>;
-                                    height: <%=getAnimationContainerHeight(layer);%>;"
+                                    width: <%=(ampStory.initialWidth / 16) + 'em'%>;
+                                    height: <%=(ampStory.initialHeight / 16) + 'em'%>;"
                                     <% } else if (['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
                             style="
                                     transform: translate(-50%, -50%);top: 0;
                                     position: absolute;
-                                    width: <%=getAnimationContainerWidth(layer);%>;
-                                    height: <%=getAnimationContainerHeight(layer);%>;"
+                                    width: <%=(ampStory.initialWidth / 16) + 'em'%>;
+                                    height: <%=(ampStory.initialHeight / 16) + 'em'%>;"
                                     <% } %>
                                 <%} else {%>
                             class="drag-item animate small-image"

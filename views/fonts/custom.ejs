@@ -1,8 +1,10 @@
-<% ampStory.fonts.forEach(font => { %>
-    @font-face {
+<%if (ampStory && ampStory.fonts) { %>
+    <% ampStory.fonts.forEach(font => { %>
+        @font-face {
         font-family: <%=font.family%>;
-        src: url('path');
+        src: url('<%=font.path%>');
         font-weight: <%= font.weight %>;
         font-style: <%= font.style %>;
-    }
-<% })%>
+        }
+    <% })%>
+<% } %>
