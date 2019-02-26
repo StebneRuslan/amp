@@ -1,43 +1,4 @@
 <%
-function getStyles(settings) {
-  let styles = ''
-  if (settings) {
-    if (settings.margin) {
-      if (['1', '3', '13', '15', '2', '5', '11', '14'].includes(settings.position)) {
-        if (['1', '2', '3', '5'].includes(settings.position)) {
-          styles += `top:${settings.margin}px;`;
-        } else if (['11', '13', '14', '15'].includes(settings.position)) {
-          styles += `top:${-settings.margin}px;`;
-        }
-      }
-      if (['1', '4', '7', '10', '13'].includes(settings.position)) {
-        styles += `left:${settings.margin}px;`;
-      }
-      if (['3', '6', '9', '12', '15'].includes(settings.position)) {
-        styles += `right:${settings.margin}px;`;
-      }
-    }
-    if (settings.opacity) {
-      styles += `opacity:${settings.opacity / 100};`
-    }
-  }
-  return styles
-}
-
-function animationHeight(layer) {
-  return Math.abs((+layer.settings.layerSettings.width) * Math.sin(Radians(+layer.settings.generalSettings.rotate))) +
-          Math.abs((+layer.settings.layerSettings.height) * Math.cos(Radians(+layer.settings.generalSettings.rotate)))
-}
-
-function animationWidth(layer) {
-  return Math.abs((+layer.settings.layerSettings.width) * Math.cos(Radians(+layer.settings.generalSettings.rotate))) +
-          Math.abs((+layer.settings.layerSettings.height) * Math.sin(Radians(+layer.settings.generalSettings.rotate)))
-}
-
-function Radians(deg) {
-  return deg * (Math.PI / 180)
-}
-
 function getVideoUrl (content) {
   let url = content.value
   if (!url) {
@@ -53,43 +14,33 @@ function getVideoUrl (content) {
   }
 }
 if (layer.settings.layerSettings.fullscreen) {%>
-  <div
-  <% if (!['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
-    style="position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden;"
-  <% } else if (['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
-    style="position:absolute;top:0;right:0;bottom:0;width:100%;overflow:hidden;"
+  <amp-video
+          class="full-screen-video"
+          autoplay
+  <% if (layer.settings.layerSettings.mute) {%>
+          noaudio
           <% } %>
-  >
-    <amp-video
-            autoplay
-    <% if (layer.settings.layerSettings.mute) {%>
-            noaudio
-            <% } %>
-            id="full-screen"
-            layout="responsive"
-    <% if (ampStory.fromPreview) { %>
-            src="<%= getVideoUrl(layer.content)%>"
-            <% }%>
-            width="<%= layer.settings.layerSettings.width %>"
-            height="<%= layer.settings.layerSettings.height %>"
-            poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
-            style="z-index:<%= layer.position %>;<%= getStyles(layer.settings.generalSettings) %>">
-      <source src="<%= getVideoUrl(layer.content)%>"
-              type="video/mp4">
-      <div fallback>
-        <p>This browser does not support the video element.</p>
-      </div>
-    </amp-video>
-  </div>
+          layout="responsive"
+  <% if (ampStory.fromPreview) { %>
+          src="<%= getVideoUrl(layer.content)%>"
+          <% }%>
+          width="<%= layer.settings.layerSettings.width %>"
+          height="<%= layer.settings.layerSettings.height %>"
+          poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
+          style="opacity:<%= layer.settings.generalSettings.opacity / 100 %>">
+    <source src="<%= getVideoUrl(layer.content)%>"
+            type="video/mp4">
+    <div fallback>
+      <p>This browser does not support the video element.</p>
+    </div>
+  </amp-video>
 <% } else { %>
   <amp-video
-          class="small-video"
           autoplay
   <% if (layer.settings.layerSettings.mute) { %>
           noaudio
           <% } %>
-          style="width:100%;
-                  height:100%;
+          style="
                   box-shadow:0px 0px <%= layer.settings.generalSettings.shadow %>px 0px rgba(0,0,0,0.75);
                   opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
           width="<%= layer.settings.layerSettings.width %>"
