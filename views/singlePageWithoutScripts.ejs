@@ -23,8 +23,6 @@
     el.dispatchEvent(ev);
   }
 </script>
-<p id="dataWidth"style="display:none"><%= ampStory.initialWidth %></p>
-<p id="dataHeight"style="display:none"><%= ampStory.initialHeight %></p>
 
 <% function getRotateValue (layer) {
     if (layer.settings.layerSettings.fullscreen) {
@@ -117,16 +115,12 @@ function getAnimationContainerHeight (layer) {
 }
 
 function getDraggableElementWidth (layer) {
-    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
+    if (layer.settings.layerSettings.fullscreen && (layer.type === 'image' || layer.type === 'video')) {
         return (100 * layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
                         Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))));
     } else {
-        console.log((100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.height *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%');
         return (100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.height *
@@ -134,7 +128,7 @@ function getDraggableElementWidth (layer) {
     }
 }
 function getDraggableElementHeight (layer) {
-    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
+    if (layer.settings.layerSettings.fullscreen && (layer.type === 'image' || layer.type === 'video')) {
         return (100 * layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
                 Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
@@ -181,7 +175,7 @@ function getFullScreenElementOffsetX (layer) {
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
     <%for (let i = 0; i < 2; i++) { %>
-    <amp-story-page style="background: #eeeeee" id='<%='story' + i%>' class="container">
+    <amp-story-page style="text-rendering: auto;background: #eeeeee" id='<%='story' + i%>' class="container">
         <% let preview = false;
             if (currentSlide) {
                 currentSlide.layers.sort((first, second) => {
@@ -199,7 +193,7 @@ function getFullScreenElementOffsetX (layer) {
                             switch (layer.type) {
                     case 'text': %>
                     <div
-                            class="drag-item single-page-item animate"
+                            class="drag-item animate"
                     <% if (layer.content.value !== '') { %>
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
@@ -211,11 +205,11 @@ function getFullScreenElementOffsetX (layer) {
                     <% if (layer.settings.animateDuration){ %>
                             animate-in-duration="<%= layer.settings.animateDuration %>s"
                             <% } %>
-                    <% if (layer.settings.animateIn){ %>
-                            animate-in-delay="<%= +layer.settings.animateDelay + 1.1 %>s"
+                    <% if (layer.settings.animateDelay){ %>
+                            animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
-                        <div class="text-line" draggable="true" id="layer<%=layer.position%>"
+                        <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
                         >
                             <% include layers/text.ejs %>
@@ -225,7 +219,7 @@ function getFullScreenElementOffsetX (layer) {
 
                     case 'html': %>
                     <div
-                            class="drag-item single-page-item animate text-layer"
+                            class="drag-item single-page-item animate"
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
@@ -239,8 +233,8 @@ function getFullScreenElementOffsetX (layer) {
                             animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
-                        <div class="text-line" draggable="true" id="layer<%=layer.position%>"
-                             style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
+                        <div draggable="true" id="layer<%=layer.position%>"
+                             style="transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -248,9 +242,8 @@ function getFullScreenElementOffsetX (layer) {
 
                     case 'shape': %>
                     <div
-                            class="drag-item single-page-item animate"
+                            class="drag-item animate"
                             style="
-                                    position: absolute;
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
@@ -261,8 +254,8 @@ function getFullScreenElementOffsetX (layer) {
                     <% if (layer.settings.animateDuration){ %>
                             animate-in-duration="<%= layer.settings.animateDuration %>s"
                             <% } %>
-                    <% if (layer.settings.animateIn){ %>
-                            animate-in-delay="<%= +layer.settings.animateDelay + 1.1 %>s"
+                    <% if (layer.settings.animateDelay){ %>
+                            animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
                         <div
@@ -290,26 +283,22 @@ function getFullScreenElementOffsetX (layer) {
                         style="
                                 top: <%=(getFullScreenAnimationContainerHeight(layer) - 100) / -2 + '%'%>;
                                 left: <%=(getFullScreenAnimationContainerWidth(layer) - 100) / -2 + '%'%>;
-                                position: absolute;
                                 width: <%=getAnimationContainerWidth(layer);%>;
                                 height: <%=getAnimationContainerHeight(layer);%>;"
                                 <% } else if (['pan-left', 'pan-right'].includes(layer.settings.animateIn)) { %>
                         style="
                                 transform: translate(-50%, -50%);top: 0;left: 0;
-                                position: absolute;
                                 width: <%=getAnimationContainerWidth(layer);%>;
                                 height: <%=getAnimationContainerHeight(layer);%>;"
                                 <% } else if (['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
                         style="
                                 transform: translate(-50%, -50%);top: 0;
-                                position: absolute;
                                 width: <%=getAnimationContainerWidth(layer);%>;
                                 height: <%=getAnimationContainerHeight(layer);%>;"
                                 <% } %>
                             <%} else {%>
                         class="drag-item animate small-image"
                         style="
-                                position: absolute;
                                 width: <%=getAnimationWidthEm(layer)%>;
                                 height: <%=getAnimationHeightEm(layer)%>;
                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;

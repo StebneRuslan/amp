@@ -6,8 +6,6 @@
 })
 %>
 <body>
-<p id="dataWidth"style="display:none"><%= ampStory.initialWidth %></p>
-<p id="dataHeight"style="display:none"><%= ampStory.initialHeight %></p>
 <script>
   document.addEventListener('dragover', function (event) {
     event.preventDefault();
@@ -22,16 +20,10 @@
     const currentLayer = document.getElementById(`layer${event.data.currentId}`);
     if (currentLayer) {
       currentLayer.parentNode.classList.add('layer-border');
-      if (currentLayer.firstElementChild.classList.contains('text-container')) {
-        currentLayer.firstElementChild.classList.add('text-wrapper');
-      }
     }
     if (event.data.previousId !== null && event.data.previousId !== undefined) {
       const previousLayer = document.getElementById(`layer${event.data.previousId}`);
       previousLayer.parentNode.classList.remove('layer-border');
-      if (previousLayer.firstElementChild.classList.contains('text-wrapper')) {
-        previousLayer.firstElementChild.classList.remove('text-wrapper');
-      }
     }
   });
   window.onload = () => {
@@ -266,7 +258,7 @@ function getFullScreenElementOffsetX (layer) {
 %>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-    <amp-story-page style="background: #eeeeee" id='story' auto-advance-after="10s" class="container">
+    <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="10s" class="container">
         <% let preview = false;
         if (currentSlide) {
             currentSlide.layers.sort((first, second) => {
@@ -286,7 +278,7 @@ function getFullScreenElementOffsetX (layer) {
                     <div
                             onmousedown="mouseDown(event)"
                             onmouseup="mouseUp(event)"
-                            class="drag-item single-page-item animate text-layer"
+                            class="drag-item single-page-item animate"
                     <% if (layer.content.value !== '') { %>
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
@@ -302,7 +294,7 @@ function getFullScreenElementOffsetX (layer) {
                             animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
-                        <div class="text-line-single" draggable="true" id="layer<%=layer.position%>"
+                        <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
                         >
                             <% include layers/text.ejs %>
@@ -314,7 +306,7 @@ function getFullScreenElementOffsetX (layer) {
                     <div
                             onmousedown="mouseDown(event)"
                             onmouseup="mouseUp(event)"
-                            class="drag-item single-page-item animate text-layer"
+                            class="drag-item single-page-item animate"
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
@@ -328,7 +320,7 @@ function getFullScreenElementOffsetX (layer) {
                             animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
                     >
-                        <div class="text-line-single" draggable="true" id="layer<%=layer.position%>"
+                        <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                             <% include layers/text.ejs %>
                         </div>

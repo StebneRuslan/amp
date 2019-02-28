@@ -178,14 +178,14 @@ function getFullScreenElementOffsetX (layer) {
                             switch (layer.type) {
                     case 'text': %>
                     <div
-                            class="drag-item single-page-item animate text-layer"
+                            class="drag-item single-page-item animate"
                     <% if (layer.content.value !== '') { %>
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                             <% } %>
                     >
-                        <div class="text-line" draggable="true" id="layer<%=layer.position%>"
+                        <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
                         >
                             <% include layers/text.ejs %>
@@ -195,12 +195,12 @@ function getFullScreenElementOffsetX (layer) {
 
                     case 'html': %>
                     <div
-                            class="drag-item single-page-item animate text-layer"
+                            class="drag-item single-page-item animate"
                             style="
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                     >
-                        <div class="text-line" draggable="true" id="layer<%=layer.position%>"
+                        <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                             <% include layers/text.ejs %>
                         </div>
