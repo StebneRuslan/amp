@@ -1,0 +1,50 @@
+<script>
+  let targetElement = null;
+  let targetElementParams = null;
+  document.addEventListener('DOMContentLoaded', ready);
+  function ready() {
+    const elements = document.querySelectorAll('.rotate');
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].addEventListener('mousedown', selectElement);
+    }
+  };
+
+  function selectElement(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    targetElement = e.target.parentNode;
+    targetElementParams = e.target.parentNode.getBoundingClientRect();
+    document.addEventListener('mousemove', moveRotateElement);
+    document.addEventListener('mouseup', dropElement);
+  }
+
+  function getAngle(secondPoint) {
+    var centerX = (targetElement.getBoundingClientRect().left) + (targetElement.getBoundingClientRect().width / 2);
+    var centerY = (targetElement.getBoundingClientRect().top) + (targetElement.getBoundingClientRect().height / 2);
+    return (Math.atan2(secondPoint.x - centerX, secondPoint.y - centerY) * (180 / Math.PI) * -1) - 180;
+  }
+
+  function moveRotateElement(e) {
+    console.log(targetElement.style.top);
+    e.stopPropagation();
+    e.preventDefault();
+    let secondPoint = {x: e.clientX, y: e.clientY};
+    const agile = getAngle(secondPoint);
+    postToEditor(agile);
+  }
+
+  function postToEditor(data) {
+    if (data > 180) {
+      data = 360 - data;
+    } else if (data < -180) {
+      data = 360 - (data * -1);
+    }
+    window.parent.postMessage({event: 'rotate', value: parseInt(data, 10)}, 'http://127.0.0.1:3978/#/edit');
+  }
+
+  function dropElement(e) {
+    e.stopPropagation();
+    document.removeEventListener('mousemove', moveRotateElement);
+    document.removeEventListener('mouseup', dropElement);
+  }
+</script>

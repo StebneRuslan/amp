@@ -20,10 +20,12 @@
     const currentLayer = document.getElementById(`layer${event.data.currentId}`);
     if (currentLayer) {
       currentLayer.parentNode.classList.add('layer-border');
+      currentLayer.querySelector('.rotate').style.display = 'flex';
     }
     if (event.data.previousId !== null && event.data.previousId !== undefined) {
       const previousLayer = document.getElementById(`layer${event.data.previousId}`);
       previousLayer.parentNode.classList.remove('layer-border');
+      previousLayer.querySelector('.rotate').style.display = 'none';
     }
   });
   window.onload = () => {
@@ -297,6 +299,7 @@ function getFullScreenElementOffsetX (layer) {
                         <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
                         >
+                          <div class="rotate"></div>
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -322,6 +325,7 @@ function getFullScreenElementOffsetX (layer) {
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
+                          <div class="rotate"></div>
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -360,6 +364,7 @@ function getFullScreenElementOffsetX (layer) {
                                         top: <%=getDeraggableElementOffsetY(layer);%>;
                                         left: <%=getDeraggableElementOffsetX(layer);%>;"
                         >
+                          <div class="rotate"></div>
                             <% include layers/shape.ejs %>
                         </div>
                     </div>
@@ -433,6 +438,7 @@ function getFullScreenElementOffsetX (layer) {
                                      left: <%=getDeraggableElementOffsetX(layer);%>;"
                                 <% } %>
                         >
+                          <div class="rotate"></div>
                             <% include layers/image.ejs %>
                         </div>
                     </div>
@@ -504,6 +510,7 @@ function getFullScreenElementOffsetX (layer) {
                                      left: <%=getDeraggableElementOffsetX(layer);%>;"
                                 <% } %>
                         >
+                          <div class="rotate"></div>
                             <% include layers/video.ejs %>
                         </div>
                     </div>
@@ -514,6 +521,7 @@ function getFullScreenElementOffsetX (layer) {
         <% } %>
     </amp-story-page>
 </amp-story>
+<% include js/rotate.ejs %>
 </body>
 
 </html>

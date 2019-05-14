@@ -238,26 +238,12 @@ function getFullScreenElementOffsetX (layer) {
                     <div
                     <%if (layer.settings.layerSettings.fullscreen) {%>
                         class="full-screan-image drag-item animate"
-                                <% if (!['pan-left', 'pan-right', 'pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
                         style="
                                 top: <%=(getFullScreenAnimationContainerHeight(layer) - 100) / -2 + '%'%>;
                                 left: <%=(getFullScreenAnimationContainerWidth(layer) - 100) / -2 + '%'%>;
                                 position: absolute;
                                 width: <%=getAnimationContainerWidth(layer);%>;
                                 height: <%=getAnimationContainerHeight(layer);%>;"
-                                <% } else if (['pan-left', 'pan-right'].includes(layer.settings.animateIn)) { %>
-                        style="
-                                transform: translate(-50%, -50%);top: 0;left: 0;
-                                position: absolute;
-                                width: <%=getAnimationContainerWidth(layer);%>;
-                                height: <%=getAnimationContainerHeight(layer);%>;"
-                                <% } else if (['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
-                        style="
-                                transform: translate(-50%, -50%);top: 0;
-                                position: absolute;
-                                width: <%=getAnimationContainerWidth(layer);%>;
-                                height: <%=getAnimationContainerHeight(layer);%>;"
-                                <% } %>
                             <%} else {%>
                         class="drag-item animate small-image"
                         style="
@@ -297,36 +283,22 @@ function getFullScreenElementOffsetX (layer) {
 
                     case 'video': %>
                     <div
-                    <%if (layer.settings.layerSettings.fullscreen) {%>
-                        class="full-screan-image drag-item animate"
-                                <% if (!['pan-left', 'pan-right', 'pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
-                        style="
-                                top: <%=(getFullScreenAnimationContainerHeight(layer) - 100) / -2 + '%'%>;
-                                left: <%=(getFullScreenAnimationContainerWidth(layer) - 100) / -2 + '%'%>;
-                                position: absolute;
-                                width: <%=getAnimationContainerWidth(layer);%>;
-                                height: <%=getAnimationContainerHeight(layer);%>;"
-                                <% } else if (['pan-left', 'pan-right'].includes(layer.settings.animateIn)) { %>
-                        style="
-                                transform: translate(-50%, -50%);top: 0;left: 0;
-                                position: absolute;
-                                width: <%=getAnimationContainerWidth(layer);%>;
-                                height: <%=getAnimationContainerHeight(layer);%>;"
-                                <% } else if (['pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
-                        style="
-                                transform: translate(-50%, -50%);top: 0;
-                                position: absolute;
-                                width: <%=getAnimationContainerWidth(layer);%>;
-                                height: <%=getAnimationContainerHeight(layer);%>;"
-                                <% } %>
+                            <%if (layer.settings.layerSettings.fullscreen) {%>
+                            class="full-screan-image drag-item animate"
+                            style="
+                                    top: <%=(getFullScreenAnimationContainerHeight(layer) - 100) / -2 + '%'%>;
+                                    left: <%=(getFullScreenAnimationContainerWidth(layer) - 100) / -2 + '%'%>;
+                                    position: absolute;
+                                    width: <%=getAnimationContainerWidth(layer);%>;
+                                    height: <%=getAnimationContainerHeight(layer);%>;"
                             <%} else {%>
-                        class="drag-item animate small-image"
-                        style="
-                                position: absolute;
-                                width: <%=getAnimationWidthEm(layer)%>;
-                                height: <%=getAnimationHeightEm(layer)%>;
-                                left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                            class="drag-item animate small-image"
+                            style="
+                                    position: absolute;
+                                    width: <%=getAnimationWidthEm(layer)%>;
+                                    height: <%=getAnimationHeightEm(layer)%>;
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                             <% } %>
                     >
                         <div draggable="true"
