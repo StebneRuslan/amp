@@ -1,0 +1,199 @@
+<script>
+  function makeResizableDiv(div) {
+    const element = document.querySelector(div);
+    const resizers = document.querySelectorAll(div + ' .resizer');
+    const minimum_size = 20;
+    let original_width = 0;
+    let original_height = 0;
+    let original_x = 0;
+    let original_y = 0;
+    let original_mouse_x = 0;
+    let original_mouse_y = 0;
+    let firstTuchX = 0;
+    let firstTuchY = 0;
+    let original_position_x = 0;
+    let original_position_y = 0;
+    let params = 0;
+    for (let i = 0;i < resizers.length; i++) {
+      const currentResizer = resizers[i];
+      currentResizer.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        original_width = element.clientWidth;
+        original_height = element.clientHeight;
+        original_x = element.getBoundingClientRect().left;
+        original_y = element.getBoundingClientRect().top;
+        original_mouse_x = e.pageX;
+        original_mouse_y = e.pageY;
+        original_position_x = element.getBoundingClientRect().left;
+        original_position_y = element.getBoundingClientRect().top;
+        params = element.getBoundingClientRect();
+        window.addEventListener('mousemove', resize);
+        window.addEventListener('mouseup', stopResize);
+      });
+
+      function getNewPosition(width, height, angle) {
+        let oldX = -original_width/2;
+        let oldY = original_height/2;
+        let old_x = oldY * Math.sin(angle) + oldX * Math.cos(angle);
+        let old_y = oldY * Math.cos(angle) - oldX * Math.sin(angle);
+        let diff1 = {left: old_x - oldX, top: old_y - oldY};
+
+        let newX = -width/2;
+        let newY = height/2;
+        let new_x = newY * Math.sin(angle) + newX * Math.cos(angle);
+        let new_y = newY * Math.cos(angle) - newX * Math.sin(angle);
+        let diff2 = {left: new_x - newX, top: new_y - newY};
+
+        let offset = {left: diff2.left - diff1.left, top: diff2.top - diff1.top};
+        return offset;
+      };
+
+      function resize(e) {
+        if (currentResizer.classList.contains('bottom-right')) {
+          const width = original_width + (e.pageX - original_mouse_x);
+          const height = original_height + (e.pageY - original_mouse_y);
+          const angle = parseInt(element.style.transform.split('(')[1], 10);
+          let params = {width: width, height: height, rotate: angle};
+          let position = {
+            left: original_x,
+            top: original_y
+          };
+          changeSizeAnimatedElement({params: params, animationElement: element.parentNode, htmlElement: element, currentLayer: null, scale: 1, position: position});
+        } else if (currentResizer.classList.contains('top-right')) {
+          const width = original_width + (e.pageX - original_mouse_x);
+          const height = original_height - (e.pageY - original_mouse_y);
+          const angle = parseInt(element.style.transform.split('(')[1], 10);
+          const new_pos = getNewPosition(width, height);
+
+          let params = {width: width, height: height, rotate: angle};
+
+          let position = {
+            left: original_x,
+            top: original_y + (e.pageY - original_mouse_y)
+          };
+          changeSizeAnimatedElement({params: params, animationElement: element.parentNode, htmlElement: element, currentLayer: null, scale: 1, position: position});
+        } else if (currentResizer.classList.contains('bottom-left')) {
+          const height = original_height + (e.pageY - original_mouse_y);
+          const width = original_width - (e.pageX - original_mouse_x);
+          const angle = parseInt(element.style.transform.split('(')[1], 10);
+          const new_pos = getNewPosition(width, height);
+
+          let params = {width: width, height: height, rotate: angle};
+
+          let position = {
+            left: original_x + (e.pageX - original_mouse_x),
+            top: original_y
+          };
+          changeSizeAnimatedElement({params: params, animationElement: element.parentNode, htmlElement: element, currentLayer: null, scale: 1, position: position});
+        } else if (currentResizer.classList.contains('just-top')) {
+          const height = original_height - (e.pageY - original_mouse_y);
+          const width = original_width;
+          const angle = parseInt(element.style.transform.split('(')[1], 10);
+          const new_pos = getNewPosition(width, height, angle);
+
+          let params = {width: width, height: height, rotate: angle};
+          let position = {
+            left: original_x,
+            top: original_y + e.pageY - original_mouse_y
+          };
+          changeSizeAnimatedElement({params: params, animationElement: element.parentNode, htmlElement: element, currentLayer: null, scale: 1, position: position});
+        } else if (currentResizer.classList.contains('just-right')) {
+          const height = original_height;
+          const width = original_width + (e.pageX - original_mouse_x);
+          const angle = parseInt(element.style.transform.split('(')[1], 10);
+          const new_pos = getNewPosition(width, height, angle);
+
+          let params = {width: width, height: height, rotate: angle};
+          let position = {
+            left: original_x,
+            top: original_y
+          };
+          changeSizeAnimatedElement({params: params, animationElement: element.parentNode, htmlElement: element, currentLayer: null, scale: 1, position: position});
+        } else if (currentResizer.classList.contains('just-left')) {
+          const height = original_height;
+          const width = original_width - (e.pageX - original_mouse_x);
+          const angle = parseInt(element.style.transform.split('(')[1], 10);
+          const new_pos = getNewPosition(width, height, angle);
+
+          let params = {width: width, height: height, rotate: angle};
+          let position = {
+            left: original_x + (e.pageX - original_mouse_x),
+            top: original_y
+          };
+          changeSizeAnimatedElement({params: params, animationElement: element.parentNode, htmlElement: element, currentLayer: null, scale: 1, position: position});
+        } else if (currentResizer.classList.contains('just-bottom')) {
+          const height = original_height + (e.pageY - original_mouse_y);
+          const width = original_width;
+          const angle = parseInt(element.style.transform.split('(')[1], 10);
+          const new_pos = getNewPosition(width, height, angle);
+
+          let params = {width: width, height: height, rotate: angle};
+          let position = {
+            left: original_x,
+            top: original_y
+          };
+          changeSizeAnimatedElement({params: params, animationElement: element.parentNode, htmlElement: element, currentLayer: null, scale: 1, position: position});
+        } else {
+          const width = original_width - (e.pageX - original_mouse_x);
+          const height = original_height - (e.pageY - original_mouse_y);
+          const angle = parseInt(element.style.transform.split('(')[1], 10);
+          const new_pos = getNewPosition(width, height, angle);
+          let params = {width: width, height: height, rotate: angle};
+
+          let position = {
+            left: original_x + (e.pageX - original_mouse_x),
+            top: original_y + (e.pageY - original_mouse_y)
+          };
+
+          changeSizeAnimatedElement({params: params, animationElement: element.parentNode, htmlElement: element, currentLayer: null, scale: 1, position: position});
+        }
+      };
+
+      function stopResize() {
+        window.removeEventListener('mousemove', resize);
+      };
+    }
+  };
+
+  function radians(deg) {
+    return deg * (Math.PI / 180);
+  };
+
+  function getContentAnimationSize(type, width, height, rotate) {
+    return type === 'width' ? Math.abs(width * Math.cos(radians(rotate))) + Math.abs(height * Math.sin(radians(rotate))) :
+      Math.abs(width * Math.sin(radians(rotate))) + Math.abs(height * Math.cos(radians(rotate)));
+  };
+
+  function changeSizeAnimatedElement({params, animationElement, htmlElement, currentLayer, scale, position}) {
+    const containerWidth = getContentAnimationSize('width', params.width * scale, params.height * scale, params.rotate);
+    const containerHeight = getContentAnimationSize('height', params.width * scale, params.height * scale, params.rotate);
+    const thickness = 0;
+    animationElement.style.width = ((containerWidth / (3.434 * document.body.clientWidth / 100) * 16) / 16) + 'em';
+    animationElement.style.height = ((containerHeight / (3.434 * document.body.clientWidth / 100) * 16) / 16) + 'em';
+
+    animationElement.style.top = (100 * position.top) / document.body.clientHeight + '%';
+    animationElement.style.left = (100 * position.left) / document.body.clientWidth + '%';
+
+    htmlElement.style.width = (100 * params.width * scale) / containerWidth + '%';
+    htmlElement.style.height = (100 * params.height * scale) / containerHeight + '%';
+
+    const innerOffsetX = ((animationElement.clientWidth - htmlElement.clientWidth) / 2);
+    const innerOffsetY = ((animationElement.clientHeight - htmlElement.clientHeight) / 2);
+    htmlElement.style.left = innerOffsetX / (3.434 * (document.body.clientWidth / 100)) + 'em';
+    htmlElement.style.top = innerOffsetY / (3.434 * (document.body.clientWidth / 100)) + 'em';
+
+    const result = {
+      event: 'resize',
+      offsetX: position.left,
+      offsetY: position.top,
+      innerOffsetX: innerOffsetX,
+      innerOffsetY: innerOffsetY,
+      width: parseInt((params.width / (3.434 * document.body.clientWidth / 100) * 16), 10),
+      height: parseInt((params.height / (3.434 * document.body.clientWidth / 100) * 16), 10)
+    };
+    window.parent.postMessage(result, 'http://127.0.0.1:3978/#/edit');
+  };
+
+  makeResizableDiv('.resizable');
+</script>

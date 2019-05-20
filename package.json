@@ -42,5 +42,5 @@
     "standard:fix": "standard --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "3.7.10"
+  "version": "3.8.0"
 }
