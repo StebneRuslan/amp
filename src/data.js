@@ -1,4 +1,4 @@
-exports.data = data = { ampStory:
+exports.data = { ampStory:
 { _id: '7e803566-531c-4439-a529-7b91f4911640',
     author:
     { _id: 'fffb600d-bbfd-44c7-9946-8f9e15584942',
@@ -26,7 +26,7 @@ exports.data = data = { ampStory:
                 {
                     author: "fffb600d-bbfd-44c7-9946-8f9e15584942",
                     content: {
-                        html: "<div style='text-align: left;'>1111</div>",
+                        html: "<div style='text-align: left;'>11111</div>",
                         value: "<div style='text-align: left;'>11111</div>"
                     },
                     cut: "c5237394-1101-41e5-9700-4b55fa1fda5a",

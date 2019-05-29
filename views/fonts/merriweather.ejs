@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Merriweather';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Merriweather-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Merriweather-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Merriweather';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Merriweather-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Merriweather-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Merriweather';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Merriweather-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Merriweather-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Merriweather';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Merriweather-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Merriweather-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

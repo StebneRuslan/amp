@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'Eczar';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Eczar-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Eczar-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Eczar';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Eczar-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Eczar-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}

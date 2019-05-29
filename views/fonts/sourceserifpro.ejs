@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'SourceSerifPro';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/SourceSerifPro-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/SourceSerifPro-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SourceSerifPro';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/SourceSerifPro-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/SourceSerifPro-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}

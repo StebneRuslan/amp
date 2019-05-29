@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'ProzaLibre';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/ProzaLibre-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/ProzaLibre-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ProzaLibre';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/ProzaLibre-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/ProzaLibre-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'ProzaLibre';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/ProzaLibre-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/ProzaLibre-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ProzaLibre';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/ProzaLibre-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/ProzaLibre-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

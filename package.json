@@ -1,15 +1,46 @@
 {
-  "name": "amp-to-html",
-  "version": "1.6.22",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "_args": [
+    [
+      "amp-to-html@3.7.10",
+      "/Users/rbilmakovskiy/backend-nodeJS"
+    ]
+  ],
+  "_from": "amp-to-html@3.7.10",
+  "_id": "amp-to-html@3.7.10",
+  "_inBundle": false,
+  "_integrity": "sha512-kUNfqMHYJsirkjfB9CV5K8T1PqYjkn0/dMe6ceLt7tp4iPbs80N0BhSYZSGN57D5FIzISgueiCZk1ATJOzGe3w==",
+  "_location": "/amp-to-html",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "amp-to-html@3.7.10",
+    "name": "amp-to-html",
+    "escapedName": "amp-to-html",
+    "rawSpec": "3.7.10",
+    "saveSpec": null,
+    "fetchSpec": "3.7.10"
   },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/amp-to-html/-/amp-to-html-3.7.10.tgz",
+  "_spec": "3.7.10",
+  "_where": "/Users/rbilmakovskiy/backend-nodeJS",
   "author": "",
-  "license": "ISC",
   "dependencies": {
     "ejs": "^2.6.1",
-    "express": "^4.16.3"
-  }
+    "express": "^4.16.3",
+    "standard": "^12.0.1"
+  },
+  "description": "",
+  "license": "ISC",
+  "main": "index.js",
+  "name": "amp-to-html",
+  "scripts": {
+    "standard": "standard",
+    "standard:fix": "standard --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "3.8.4"
 }
