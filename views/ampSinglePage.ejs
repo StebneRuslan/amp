@@ -7,103 +7,107 @@
 %>
 <body>
 <script>
-  document.addEventListener('dragover', function (event) {
-    event.preventDefault();
-    return false;
-  }, false);
+    document.addEventListener('dragover', function (event) {
+        event.preventDefault();
+        return false;
+    }, false);
 
-  document.addEventListener('drop', function (event) {
-    event.preventDefault();
-    return false;
-  }, false);
-  window.addEventListener('message', function (event) {
-    const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-    if (currentLayer) {
-      currentLayer.parentNode.classList.add('layer-border');
-      currentLayer.querySelector('.rotate').style.display = 'flex';
-    }
-    if (event.data.previousId !== null && event.data.previousId !== undefined) {
-      const previousLayer = document.getElementById(`layer${event.data.previousId}`);
-      previousLayer.parentNode.classList.remove('layer-border');
-      previousLayer.querySelector('.rotate').style.display = 'none';
-    }
-  });
-  window.onload = () => {
-    var css = '.i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
-      head = document.head || document.getElementsByTagName('head')[0],
-      style = document.createElement('style');
-    style.type = 'text/css';
-    if (style.styleSheet){
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    };
-    head.appendChild(style);
-  };
-  const element = null;
+    document.addEventListener('drop', function (event) {
+        event.preventDefault();
+        return false;
+    }, false);
+    window.addEventListener('message', function (event) {
+        const currentLayer = document.getElementById(`layer${event.data.currentId}`);
 
-  function preventImageDragging (event) {
-    event.preventDefault();
-  }
-
-  function selectLayer (event) {
-    const position = getDraggableNode(event.path).children[0].id.toString().slice(5);
-    window.parent.postMessage({event: 'selectLayer', position: position}, 'http://127.0.0.1:3978/#/edit');
-  }
-
-  function getDraggableNode (path) {
-    for (let i = 0; i < path.length; i++) {
-      if (path[i].classList && path[i].classList.value) {
-        if ([].includes.call(path[i].classList, 'drag-item')) {
-          return path[i];
+        if (currentLayer) {
+            currentLayer.parentNode.classList.add('layer-border');
+            currentLayer.querySelector('.rotate').style.display = 'flex';
+            currentLayer.classList.add('resizable');
+            makeResizableDiv(currentLayer);
         }
-      }
+        if (event.data.previousId !== null && event.data.previousId !== undefined) {
+            const previousLayer = document.getElementById(`layer${event.data.previousId}`);
+            previousLayer.classList.remove('resizable');
+            previousLayer.parentNode.classList.remove('layer-border');
+            previousLayer.querySelector('.rotate').style.display = 'none';
+        }
+    });
+    window.onload = () => {
+        var css = '.i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
+            head = document.head || document.getElementsByTagName('head')[0],
+            style = document.createElement('style');
+        style.type = 'text/css';
+        if (style.styleSheet){
+            style.styleSheet.cssText = css;
+        } else {
+            style.appendChild(document.createTextNode(css));
+        };
+        head.appendChild(style);
+    };
+    const element = null;
+
+    function preventImageDragging (event) {
+        event.preventDefault();
     }
-  }
 
-  function mouseDown(event) {
-    event.preventDefault();
-    selectLayer(event);
-    const ampStoryWidth = document.querySelector('body').clientWidth;
-    const ampStoryHeight = document.querySelector('body').clientHeight;
-    const target = getDraggableNode(event.path);
-    const divParams = target.getBoundingClientRect();
-    let centerX = event.x - divParams.left;
-    let centerY = event.y - divParams.top;
-    document.onmousemove = (moveEvent) => {
-      drag(event,
-        getDraggableNode(event.path),
-        moveEvent, centerX, centerY,
-        iframeParams = {ampStoryWidth: ampStoryWidth, ampStoryHeight: ampStoryHeight}
-      );
-    };
-    document.onmouseleave = (moveEvent) => {
-      mouseUp(event);
-    };
-    document.onmousedovn = (moveEvent) => {
-      mouseUp(event);
-    };
-  };
-
-  function mouseUp (event) {
-    event.preventDefault();
-    document.onmousemove = null;
-    document.onmouseleave = null;
-  };
-
-  function drag (event, target, moveEvent, centerX, centerY) {
-    if (event.screenX !== 0) {
-      let leftInPx = (moveEvent.x - centerX);
-      let topInPx = (moveEvent.y - centerY);
-      target.style.left = ((leftInPx / iframeParams.ampStoryWidth) * 100) + '%';
-      target.style.top = ((topInPx / iframeParams.ampStoryHeight) * 100) + '%';
-      drop({offsetX: parseInt(leftInPx, 10), offsetY: parseInt(topInPx, 10)});
+    function selectLayer (event) {
+        const position = getDraggableNode(event.path).children[0].id.toString().slice(5);
+        window.parent.postMessage({event: 'selectLayer', position: position}, 'http://127.0.0.1:3978/#/edit');
     }
-  };
 
-  function drop (coordinates) {
-    window.parent.postMessage({event: 'move', coordinates: coordinates}, 'http://127.0.0.1:3978/#/edit');
-  }
+    function getDraggableNode (path) {
+        for (let i = 0; i < path.length; i++) {
+            if (path[i].classList && path[i].classList.value) {
+                if ([].includes.call(path[i].classList, 'drag-item')) {
+                    return path[i];
+                }
+            }
+        }
+    }
+
+    function mouseDown(event) {
+        event.preventDefault();
+        selectLayer(event);
+        const ampStoryWidth = document.querySelector('body').clientWidth;
+        const ampStoryHeight = document.querySelector('body').clientHeight;
+        const target = getDraggableNode(event.path);
+        const divParams = target.getBoundingClientRect();
+        let centerX = event.x - divParams.left;
+        let centerY = event.y - divParams.top;
+        document.onmousemove = (moveEvent) => {
+            drag(event,
+                getDraggableNode(event.path),
+                moveEvent, centerX, centerY,
+                iframeParams = {ampStoryWidth: ampStoryWidth, ampStoryHeight: ampStoryHeight}
+            );
+        };
+        document.onmouseleave = (moveEvent) => {
+            mouseUp(event);
+        };
+        document.onmousedovn = (moveEvent) => {
+            mouseUp(event);
+        };
+    };
+
+    function mouseUp (event) {
+        event.preventDefault();
+        document.onmousemove = null;
+        document.onmouseleave = null;
+    };
+
+    function drag (event, target, moveEvent, centerX, centerY) {
+        if (event.screenX !== 0) {
+            let leftInPx = (moveEvent.x - centerX);
+            let topInPx = (moveEvent.y - centerY);
+            target.style.left = ((leftInPx / iframeParams.ampStoryWidth) * 100) + '%';
+            target.style.top = ((topInPx / iframeParams.ampStoryHeight) * 100) + '%';
+            drop({offsetX: parseInt(leftInPx, 10), offsetY: parseInt(topInPx, 10)});
+        }
+    };
+
+    function drop (coordinates) {
+        window.parent.postMessage({event: 'move', coordinates: coordinates}, 'http://127.0.0.1:3978/#/edit');
+    }
 </script>
 
 <% function getRotateValue (layer) {
@@ -288,7 +292,7 @@ function getFullScreenElementOffsetX (layer) {
                             <% } %>
                     <% if (layer.settings.animateIn && !preview){ %>
                             animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
+                            <% rotate} %>
                     <% if (layer.settings.animateDuration){ %>
                             animate-in-duration="<%= layer.settings.animateDuration %>s"
                             <% } %>
@@ -299,7 +303,7 @@ function getFullScreenElementOffsetX (layer) {
                         <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
                         >
-                          <div class="rotate"></div>
+                            <div class="rotate"></div>
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -325,7 +329,7 @@ function getFullScreenElementOffsetX (layer) {
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
-                          <div class="rotate"></div>
+                            <div class="rotate"></div>
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -355,7 +359,7 @@ function getFullScreenElementOffsetX (layer) {
                         <div
                                 id="layer<%=layer.position%>"
                                 draggable="true"
-                                class="rotate-wrapper"
+                                class="rotate-wrapper "
                                 style="
                                         position: absolute;
                                         width: <%=getDraggableElementWidth(layer);%>;
@@ -364,8 +368,14 @@ function getFullScreenElementOffsetX (layer) {
                                         top: <%=getDeraggableElementOffsetY(layer);%>;
                                         left: <%=getDeraggableElementOffsetX(layer);%>;"
                         >
-                          <div class="rotate"></div>
-                            <% include layers/shape.ejs %>
+                            <div class='resizers'>
+                                <div class="rotate"></div>
+                                <div class='resizer top-left'></div>
+                                <div class='resizer top-right'></div>
+                                <div class='resizer bottom-left'></div>
+                                <div class='resizer bottom-right'></div>
+                                <% include layers/shape.ejs %>
+                            </div>
                         </div>
                     </div>
                     <% break;
@@ -373,7 +383,7 @@ function getFullScreenElementOffsetX (layer) {
                     case 'image': %>
                     <div
                     <%if (layer.settings.layerSettings.fullscreen) {%>
-                        class="full-screan-image drag-item animate"
+                        class="full-screan-image drag-item animate "
                                 <% if (!['pan-left', 'pan-right', 'pan-down', 'pan-up'].includes(layer.settings.animateIn)) { %>
                         style="
                                 top: <%=(getFullScreenAnimationContainerHeight(layer) - 100) / -2 + '%'%>;
@@ -415,6 +425,12 @@ function getFullScreenElementOffsetX (layer) {
                     <% if (layer.settings.animateDelay){ %>
                         animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
+                    <% if (layer.settings.animateIn === 'zoom-in'){ %>
+                        scale-start="1" scale-end="1.5"
+                            <% } %>
+                    <% if (layer.settings.animateIn === 'zoom-out'){ %>
+                        scale-start="1.5" scale-end="1"
+                            <% } %>
                     >
                         <div draggable="true"
                              id="layer<%=layer.position%>"
@@ -428,7 +444,7 @@ function getFullScreenElementOffsetX (layer) {
                                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                      "
                                 <% } else { %>
-                             class="rotate-wrapper"
+                             class="rotate-wrapper "
                              style="
                                      position: absolute;
                                      width: <%=getDraggableElementWidth(layer);%>;
@@ -438,8 +454,15 @@ function getFullScreenElementOffsetX (layer) {
                                      left: <%=getDeraggableElementOffsetX(layer);%>;"
                                 <% } %>
                         >
-                          <div class="rotate"></div>
-                            <% include layers/image.ejs %>
+                            <div class='resizers'>
+                                <div class="rotate"></div>
+                                <div class='resizer top-left'></div>
+                                <div class='resizer top-right'></div>
+                                <div class='resizer bottom-left'></div>
+                                <div class='resizer bottom-right'></div>
+
+                                <% include layers/image.ejs %>
+                            </div>
                         </div>
                     </div>
                     <% break
@@ -489,6 +512,12 @@ function getFullScreenElementOffsetX (layer) {
                     <% if (layer.settings.animateDelay){ %>
                         animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>
+                    <% if (layer.settings.animateIn === 'zoom-in'){ %>
+                        scale-start="1" scale-end="1.5"
+                            <% } %>
+                    <% if (layer.settings.animateIn === 'zoom-out'){ %>
+                        scale-start="1.5" scale-end="1"
+                            <% } %>
                     >
                         <div draggable="true"
                              id="layer<%=layer.position%>"
@@ -510,8 +539,14 @@ function getFullScreenElementOffsetX (layer) {
                                      left: <%=getDeraggableElementOffsetX(layer);%>;"
                                 <% } %>
                         >
-                          <div class="rotate"></div>
-                            <% include layers/video.ejs %>
+                            <div class='resizers'>
+                                <div class="rotate"></div>
+                                <div class='resizer top-left'></div>
+                                <div class='resizer top-right'></div>
+                                <div class='resizer bottom-left'></div>
+                                <div class='resizer bottom-right'></div>
+                                <% include layers/video.ejs %>
+                            </div>
                         </div>
                     </div>
                     <% break
@@ -522,6 +557,7 @@ function getFullScreenElementOffsetX (layer) {
     </amp-story-page>
 </amp-story>
 <% include js/rotate.ejs %>
+<% include js/resizer.ejs %>
 </body>
 
 </html>

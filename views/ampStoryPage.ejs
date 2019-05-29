@@ -296,6 +296,12 @@ ampStory.cuts.map(currentSlide => { %>
                         <% if (layer.settings.animateDelay){ %>
                             animate-in-delay="<%= layer.settings.animateDelay %>s"
                                 <% } %>
+                        <% if (layer.settings.animateIn === 'zoom-in'){ %>
+                            scale-start="1" scale-end="1.5"
+                                <% } %>
+                        <% if (layer.settings.animateIn === 'zoom-out'){ %>
+                            scale-start="1.5" scale-end="1"
+                                <% } %>
                         >
                             <div draggable="true"
                                  id="layer<%=layer.position%>"
@@ -365,6 +371,12 @@ ampStory.cuts.map(currentSlide => { %>
                                 <% } %>
                         <% if (layer.settings.animateDelay){ %>
                             animate-in-delay="<%= layer.settings.animateDelay %>s"
+                                <% } %>
+                        <% if (layer.settings.animateIn === 'zoom-in'){ %>
+                            scale-start="1" scale-end="1.5"
+                                <% } %>
+                        <% if (layer.settings.animateIn === 'zoom-out'){ %>
+                            scale-start="1.5" scale-end="1"
                                 <% } %>
                         >
                             <div draggable="true"
