@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="../dist/style/subjx.css"/>
+    <style>
+        html, 
+        body {
+            margin:0;
+            padding: 0;
+            height: 100%;
+        }
+        .draggable {
+            position: absolute;
+            width:150px;
+            height:100px; 
+            background-color:yellow;
+        }
+    </style>
+    <script src="../dist/js/subjx.js" type="text/javascript" charset="utf-8"></script>
+    <title>Demo</title>
+  </head>
+  <body>
+            <div class='draggable' style='top:150px; left:350px;'></div>
+    
+  </body>
+    <script>
+
+        const Draggables = 
+            Subjx('.draggable').drag({
+                each: {
+                    resize: true
+                }, 
+                snap: {
+                    x: 20,
+                    y: 20
+                }
+            });
+    </script>
+</html>
