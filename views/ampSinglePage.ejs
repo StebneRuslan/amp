@@ -444,7 +444,7 @@ function getFullScreenElementOffsetX (layer) {
                                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                      "
                                 <% } else { %>
-                             class="rotate-wrapper "
+                             class="rotate-wrapper draggable"
                              style="
                                      position: absolute;
                                      width: <%=getDraggableElementWidth(layer);%>;
@@ -456,11 +456,6 @@ function getFullScreenElementOffsetX (layer) {
                         >
                             <div class='resizers'>
                                 <div class="rotate"></div>
-                                <div class='resizer top-left'></div>
-                                <div class='resizer top-right'></div>
-                                <div class='resizer bottom-left'></div>
-                                <div class='resizer bottom-right'></div>
-
                                 <% include layers/image.ejs %>
                             </div>
                         </div>
@@ -558,6 +553,20 @@ function getFullScreenElementOffsetX (layer) {
 </amp-story>
 <% include js/rotate.ejs %>
 <% include js/resizer.ejs %>
+
+<script type="text/javascript" src="file:///users/rbilmakovskiy/backend-nodeJS/node_modules/amp-to-html/dist/js/subjx.js"></script>
+<script>
+    const Draggables =
+        Subjx('.draggable').drag({
+            each: {
+                resize: true
+            },
+            snap: {
+                x: 20,
+                y: 20
+            }
+        });
+</script>
 </body>
 
 </html>
