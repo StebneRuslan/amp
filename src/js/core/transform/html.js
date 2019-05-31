@@ -445,9 +445,10 @@ function processResize(
         height: css.height,
     }
 
-    console.log('123123123123123123123123123121212412412412412412412412');
+
+    // Helper(el).css(css);
+    Helper(el.parentNode).css(css);
     window.parent.postMessage({event: 'resize-from-package', size: size}, 'http://127.0.0.1:3978/#/edit');
-    Helper(el).css(css);
 
     storage.cached = matrix;
 }
