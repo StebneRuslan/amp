@@ -446,8 +446,7 @@ function processResize(
     }
 
 
-    // Helper(el).css(css);
-    Helper(el.parentNode).css(css);
+    Helper(el).css(css);
     window.parent.postMessage({event: 'resize-from-package', size: size}, 'http://127.0.0.1:3978/#/edit');
 
     storage.cached = matrix;
