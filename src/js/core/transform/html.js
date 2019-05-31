@@ -396,10 +396,8 @@ function processResize(
         transform
     } = storage;
 
-    console.log('ping3')
 
     const { style } = controls;
-    console.log('storagestoragestorage', storage)
 
     if (width !== null) {
         style.width = `${snapToGrid(width, snap.x)}px`;
@@ -418,14 +416,10 @@ function processResize(
         revX,
         revY
     );
-    console.log('dasdasdasasdada', left, top, coords)
     const resultY = top - (coords.top - coordY),
         resultX = left - (coords.left - coordX);
-    // console.log('!!!!!!', coords.top, ' - ', coordY, ' = ', resultY);
 
     const matrix = [...transform];
-
-    console.log('matrixmatrixmatrix', matrix)
 
     matrix[4] = resultX;
     matrix[5] = resultY;
@@ -446,6 +440,12 @@ function processResize(
         dimens.height
     );
 
+    const size = {
+        width: css.width,
+        height: css.height,
+    }
+
+    window.parent.postMessage({event: 'resize-from-package', size: size}, 'http://127.0.0.1:3978/#/edit');
     Helper(el).css(css);
 
     storage.cached = matrix;
