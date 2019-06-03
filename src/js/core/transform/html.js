@@ -111,6 +111,7 @@ export default class Draggable extends Subject {
 
         _el.css(css);
         Helper(controls).css(css);
+        window.parent.postMessage({event: 'resize-on-mouseup', position: { width: pW, height: pH } }, 'http://127.0.0.1:3978/#/edit');
         console.log('@@@@@@@@@@@@@@@@@@@@@', storage);
         this.storage.cached = null;
     }
