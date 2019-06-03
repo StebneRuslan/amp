@@ -111,7 +111,7 @@ export default class Draggable extends Subject {
 
         _el.css(css);
         Helper(controls).css(css);
-
+        console.log('@@@@@@@@@@@@@@@@@@@@@', storage);
         this.storage.cached = null;
     }
 
