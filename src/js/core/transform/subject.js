@@ -116,7 +116,6 @@ export default class Subject {
                     height = null;
     
                 if (handle.is(handles.br) || handle.is(handles.mr)) {
-                    console.log('++++++++++++++++++++++++', pageX, pageY, '"""""', cx, cy)
                     pos = getRotatedPoint(
                         cx, 
                         cy,
@@ -129,10 +128,8 @@ export default class Subject {
                     pageY = pos.top;
                     pageX = pos.left;
 
-                    console.log('__________________________', pageX, pageY)
                     y = (pageY - cy) / scaleY;
                     x = (pageX - cx) / scaleX;
-                    console.log('!1112121212121!!!!!!!', x, y)
 
                     let doy = handle.is(handles.br);
     
