@@ -510,7 +510,7 @@ function processRotate(radians) {
     matrix[2] = - floatToFixed(Math.sin(angle));
     matrix[3] = floatToFixed(Math.cos(angle));
 
-    window.parent.postMessage({event: 'rotate-from-resizer', value: angle}, 'http://127.0.0.1:3978/#/edit');
+    window.parent.postMessage({event: 'rotate-from-resizer', value: angle * (180 / Math.PI)}, 'http://127.0.0.1:3978/#/edit');
     const css = matrixToCSS(matrix);
 
     Helper(controls).css(css);
