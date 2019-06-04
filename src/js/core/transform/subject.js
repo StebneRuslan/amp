@@ -471,7 +471,7 @@ function loadOptions(options) {
 
             snap.x = isUndef(x) ? 10 : x;
             snap.y = isUndef(y) ? 10 : y;
-            snap.angle = isUndef(angle) ? 1 * RAD : angle * RAD;
+            snap.angle = isUndef(angle) ? 10 * RAD : angle * RAD;
         }
         
         if (isDef(options.each)) {

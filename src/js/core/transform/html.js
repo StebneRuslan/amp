@@ -117,7 +117,6 @@ export default class Draggable extends Subject {
             diffLeft,
             diffTop
         } }, 'http://127.0.0.1:3978/#/edit');
-        console.log('@@@@@@@@@@@@@@@@@@@@@', storage);
         this.storage.cached = null;
     }
 
@@ -217,7 +216,6 @@ function _compute(e) {
         parent,
         snap
     } = storage;
-    console.log('ping2543')
 
     const handle = Helper(e.target);
 
@@ -257,7 +255,6 @@ function _compute(e) {
     );
 
     const transform = parseMatrix(Helper(ctrls));
-    console.log(213, transform[4], transform[5], cw, ch, refang)
     //getting current coordinates considering rotation angle
     const coords = rotatedTopLeft(
         transform[4],
@@ -268,7 +265,6 @@ function _compute(e) {
         revX,
         revY
     );
-    console.log('&&&&&&&&&&&&&&', coords)
     const offset_ = getOffset(ctrls);
 
     const center_x = offset_.left + cw / 2,

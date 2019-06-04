@@ -20,11 +20,37 @@
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
 
         if (currentLayer) {
+            console.log('111', document.querySelectorAll('.dg-wrapper'));
+            Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
+                console.log('22222', element);
+                element.classList.remove('draggable');
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
+                console.log('22222', element);
+                element.remove();
+            });
+            console.log('1111', currentLayer);
+            currentLayer.classList.add('draggable');
+            const Draggables =
+                Subjx('.draggable').drag({
+                    each: {
+                        resize: true
+                    },
+                    snap: {
+                        x: 1,
+                        y: 1
+                    }
+                });
             makeResizableDiv(currentLayer);
         }
         if (event.data.previousId !== null && event.data.previousId !== undefined) {
             const previousLayer = document.getElementById(`layer${event.data.previousId}`);
             previousLayer.classList.remove('resizable');
+            if (previousLayer) {
+
+                previousLayer.classList.remove('draggable');
+
+            }
             previousLayer.parentNode.classList.remove('layer-border');
             previousLayer.querySelector('.rotate').style.display = 'none';
         }
@@ -441,7 +467,7 @@ function getFullScreenElementOffsetX (layer) {
                                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                      "
                                 <% } else { %>
-                             class="rotate-wrapper draggable"
+                             class="rotate-wrapper"
                              style="
                                      position: absolute;
                                      width: <%=getDraggableElementWidth(layer);%>;
@@ -551,18 +577,18 @@ function getFullScreenElementOffsetX (layer) {
 <% include js/rotate.ejs %>
 <% include js/resizer.ejs %>
 
-<script type="text/javascript" src="file:///users/rbilmakovskiy/backend-nodeJS/node_modules/amp-to-html/dist/js/subjx.js"></script>
+<script type="text/javascript" src="/resize-files?path=amp-to-html/dist/js/subjx.js"></script>
 <script>
-    const Draggables =
-        Subjx('.draggable').drag({
-            each: {
-                resize: true
-            },
-            snap: {
-                x: 1,
-                y: 1
-            }
-        });
+    // const Draggables =
+    //     Subjx('.draggable').drag({
+    //         each: {
+    //             resize: true
+    //         },
+    //         snap: {
+    //             x: 1,
+    //             y: 1
+    //         }
+    //     });
 </script>
 </body>
 
