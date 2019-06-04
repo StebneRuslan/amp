@@ -20,9 +20,6 @@
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
 
         if (currentLayer) {
-            currentLayer.parentNode.classList.add('layer-border');
-            currentLayer.querySelector('.rotate').style.display = 'flex';
-            currentLayer.classList.add('resizable');
             makeResizableDiv(currentLayer);
         }
         if (event.data.previousId !== null && event.data.previousId !== undefined) {

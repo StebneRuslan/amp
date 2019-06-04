@@ -454,7 +454,7 @@ function loadOptions(options) {
     let snap = {
         x: 10,
         y: 10,
-        angle: 10 * RAD
+        angle: 1 * RAD
     };
 
     let each = {
