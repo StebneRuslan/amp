@@ -45,7 +45,7 @@ function getAnimationWidthEm (layer) {
     return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / 16 + 'em';
+                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
 }
 function getAnimationHeightEm (layer) {
     let thickness = 0;
@@ -55,7 +55,7 @@ function getAnimationHeightEm (layer) {
     return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / 16 + 'em';
+                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
 }
 
 function getAnimationContainerWidth (layer) {
