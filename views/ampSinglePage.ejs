@@ -18,18 +18,36 @@
     }, false);
     window.addEventListener('message', function (event) {
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-
         if (currentLayer) {
-            currentLayer.parentNode.classList.add('layer-border');
-            currentLayer.querySelector('.rotate').style.display = 'flex';
-            currentLayer.classList.add('resizable');
-            makeResizableDiv(currentLayer);
+            Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
+                element.classList.remove('draggable');
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
+                element.remove();
+            });
+            currentLayer.classList.add('draggable');
+            if (!currentLayer.querySelector('.text-container')) {
+                const Draggables =
+                    Subjx('.draggable').drag({
+                        each: {
+                            resize: true
+                        },
+                        snap: {
+                            x: 1,
+                            y: 1
+                        }
+                    });
+            }
         }
         if (event.data.previousId !== null && event.data.previousId !== undefined) {
             const previousLayer = document.getElementById(`layer${event.data.previousId}`);
             previousLayer.classList.remove('resizable');
+            if (previousLayer) {
+
+                previousLayer.classList.remove('draggable');
+
+            }
             previousLayer.parentNode.classList.remove('layer-border');
-            previousLayer.querySelector('.rotate').style.display = 'none';
         }
     });
     window.onload = () => {
@@ -157,7 +175,7 @@ function getAnimationWidthEm (layer) {
     return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / 16 + 'em';
+                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
 }
 function getAnimationHeightEm (layer) {
     let thickness = 0;
@@ -167,7 +185,7 @@ function getAnimationHeightEm (layer) {
     return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / 16 + 'em';
+                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
 }
 
 function getAnimationContainerWidth (layer) {
@@ -292,7 +310,7 @@ function getFullScreenElementOffsetX (layer) {
                             <% } %>
                     <% if (layer.settings.animateIn && !preview){ %>
                             animate-in="<%= layer.settings.animateIn %>"
-                            <% rotate} %>
+                            <% } %>
                     <% if (layer.settings.animateDuration){ %>
                             animate-in-duration="<%= layer.settings.animateDuration %>s"
                             <% } %>
@@ -303,7 +321,6 @@ function getFullScreenElementOffsetX (layer) {
                         <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
                         >
-                            <div class="rotate"></div>
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -329,7 +346,6 @@ function getFullScreenElementOffsetX (layer) {
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
-                            <div class="rotate"></div>
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -368,14 +384,7 @@ function getFullScreenElementOffsetX (layer) {
                                         top: <%=getDeraggableElementOffsetY(layer);%>;
                                         left: <%=getDeraggableElementOffsetX(layer);%>;"
                         >
-                            <div class='resizers'>
-                                <div class="rotate"></div>
-                                <div class='resizer top-left'></div>
-                                <div class='resizer top-right'></div>
-                                <div class='resizer bottom-left'></div>
-                                <div class='resizer bottom-right'></div>
-                                <% include layers/shape.ejs %>
-                            </div>
+                            <% include layers/shape.ejs %>
                         </div>
                     </div>
                     <% break;
@@ -444,7 +453,7 @@ function getFullScreenElementOffsetX (layer) {
                                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                      "
                                 <% } else { %>
-                             class="rotate-wrapper "
+                             class="rotate-wrapper"
                              style="
                                      position: absolute;
                                      width: <%=getDraggableElementWidth(layer);%>;
@@ -454,15 +463,7 @@ function getFullScreenElementOffsetX (layer) {
                                      left: <%=getDeraggableElementOffsetX(layer);%>;"
                                 <% } %>
                         >
-                            <div class='resizers'>
-                                <div class="rotate"></div>
-                                <div class='resizer top-left'></div>
-                                <div class='resizer top-right'></div>
-                                <div class='resizer bottom-left'></div>
-                                <div class='resizer bottom-right'></div>
-
-                                <% include layers/image.ejs %>
-                            </div>
+                            <% include layers/image.ejs %>
                         </div>
                     </div>
                     <% break
@@ -539,14 +540,7 @@ function getFullScreenElementOffsetX (layer) {
                                      left: <%=getDeraggableElementOffsetX(layer);%>;"
                                 <% } %>
                         >
-                            <div class='resizers'>
-                                <div class="rotate"></div>
-                                <div class='resizer top-left'></div>
-                                <div class='resizer top-right'></div>
-                                <div class='resizer bottom-left'></div>
-                                <div class='resizer bottom-right'></div>
-                                <% include layers/video.ejs %>
-                            </div>
+                            <% include layers/video.ejs %>
                         </div>
                     </div>
                     <% break
@@ -558,6 +552,20 @@ function getFullScreenElementOffsetX (layer) {
 </amp-story>
 <% include js/rotate.ejs %>
 <% include js/resizer.ejs %>
+
+<script type="text/javascript" src="/resize-files?path=amp-to-html/dist/js/subjx.js"></script>
+<script>
+    // const Draggables =
+    //     Subjx('.draggable').drag({
+    //         each: {
+    //             resize: true
+    //         },
+    //         snap: {
+    //             x: 1,
+    //             y: 1
+    //         }
+    //     });
+</script>
 </body>
 
 </html>

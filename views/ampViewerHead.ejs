@@ -219,9 +219,9 @@
             user-select: none;
         }
 
-        .single-page-item:not(.layer-border):hover {
-            box-shadow: 0 0 0 1px #28b9ff;
-        }
+        /*.single-page-item:not(.layer-border):hover {*/
+        /*    box-shadow: 0 0 0 1px #28b9ff;*/
+        /*}*/
 
         .drag-item {
             position: absolute;
@@ -335,4 +335,7 @@
             }
         }
     </style>
+    <% if (ampStory.fromPreview || !v0Path.includes('https')) { %>
+    <link rel="stylesheet" href="/resize-files?path=amp-to-html/dist/style/subjx.css"/>
+    <% } %>
 </head>

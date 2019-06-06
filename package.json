@@ -1,46 +1,44 @@
 {
-  "_args": [
-    [
-      "amp-to-html@3.7.10",
-      "/Users/rbilmakovskiy/backend-nodeJS"
-    ]
-  ],
-  "_from": "amp-to-html@3.7.10",
-  "_id": "amp-to-html@3.7.10",
-  "_inBundle": false,
-  "_integrity": "sha512-kUNfqMHYJsirkjfB9CV5K8T1PqYjkn0/dMe6ceLt7tp4iPbs80N0BhSYZSGN57D5FIzISgueiCZk1ATJOzGe3w==",
-  "_location": "/amp-to-html",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "amp-to-html@3.7.10",
-    "name": "amp-to-html",
-    "escapedName": "amp-to-html",
-    "rawSpec": "3.7.10",
-    "saveSpec": null,
-    "fetchSpec": "3.7.10"
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/amp-to-html/-/amp-to-html-3.7.10.tgz",
-  "_spec": "3.7.10",
-  "_where": "/Users/rbilmakovskiy/backend-nodeJS",
-  "author": "",
+  "version": "4.0.6",
+  "author": "bilmakovchik",
   "dependencies": {
     "ejs": "^2.6.1",
     "express": "^4.16.3",
-    "standard": "^12.0.1"
+    "standard": "^12.0.1",
+    "css-loader": "^1.0.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "uglifyjs-webpack-plugin": "^2.0.1"
   },
-  "description": "",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.42",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.42",
+    "@babel/preset-env": "^7.0.0-beta.42",
+    "babel-loader": "^8.0.0-beta.2",
+    "html-loader": "^0.5.5",
+    "mini-css-extract-plugin": "^0.4.4",
+    "webpack": "^4.23.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.4.1"
+  },
   "license": "ISC",
   "main": "index.js",
   "name": "amp-to-html",
   "scripts": {
+    "build": "webpack --mode production",
     "standard": "standard",
     "standard:fix": "standard --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "3.8.4"
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StebneRuslan/amp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/StebneRuslan/amp/issues"
+  },
+  "homepage": "https://github.com/StebneRuslan/amp#readme",
+  "description": ""
 }
