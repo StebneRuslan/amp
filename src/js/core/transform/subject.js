@@ -293,6 +293,7 @@ export default class Subject {
         store.cx = e.pageX;
         store.cy = e.pageY;
         store.ctrlKey = e.ctrlKey;
+        store.shiftKey = e.shiftKey;
 
         Object.keys(computed).forEach(prop => {
             store[prop] = computed[prop];
@@ -471,7 +472,7 @@ function loadOptions(options) {
 
             snap.x = isUndef(x) ? 10 : x;
             snap.y = isUndef(y) ? 10 : y;
-            snap.angle = isUndef(angle) ? 10 * RAD : angle * RAD;
+            snap.angle = isUndef(angle) ? 1 * RAD : angle * RAD;
         }
         
         if (isDef(options.each)) {

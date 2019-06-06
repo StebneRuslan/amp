@@ -405,7 +405,11 @@ function processResize(
         style.width = `${snapToGrid(width, snap.x)}px`;
     }
 
+    const scaleHeight = storage.ch / storage.cw;
     if (height !== null) {
+        if(storage.shiftKey) {
+            height = width * scaleHeight;
+        }
         style.height = `${snapToGrid(height, snap.y)}px`;
     }
 
