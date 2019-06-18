@@ -1,1 +1,38 @@
-data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='<%= layer.settings.layerSettings.width ? layer.settings.layerSettings.width : 70 %>' height='<%= layer.settings.layerSettings.height ? layer.settings.layerSettings.height : 10 %>' style='<%="overflow: visible; filter: url(%23shadow)"%>' viewBox='-12 -22 88 60' preserveAspectRatio='none'><defs><filter id='shadow' width='180%' height='180%' x='-40%' y='-40%'><feDropShadow flood-opacity='<%=layer.settings.generalSettings.shadow == '0' ? 0 : '1'%>' dx='0' dy='0' stdDeviation='<%= layer.settings.generalSettings.shadow / 35 %>' /></filter></defs><g><g><use fill='transparent'/><path d='M 0 8 L 4 16 L 60 16 L 64 8 L 60 0 L 4 0 z' stroke='<%= layer.settings.layerSettings.shapeStyles.borderColor ? layer.settings.layerSettings.shapeStyles.borderColor : 'black' %>' fill='<%= layer.settings.layerSettings.shapeStyles.fillColor ? layer.settings.layerSettings.shapeStyles.fillColor : 'transparent' %>' stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? layer.settings.layerSettings.shapeStyles.thickness : 0 %>' vector-effect='non-scaling-stroke'></path></g></g></svg>
+<svg
+        xmlns='http://www.w3.org/2000/svg'
+        xmlns:xlink='http://www.w3.org/1999/xlink'
+        width='<%= getSvgSizeInProcentage('width') %>'
+        height='<%= getSvgSizeInProcentage('height') %>'
+        style='<%="overflow: visible; filter: url(#shadow);" + `transform: translate(${getSvgTranslate()}px, ${getSvgTranslate()}px); width: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px); height: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px);`%>'
+        viewBox='0 -16 64 48'
+        preserveAspectRatio='none'
+>
+    <defs>
+        <filter id='shadow' width='200%' height='200%' x='-40%' y='-40%'>
+            <%if (layer.settings.generalSettings.shadow !== '0') { %>
+            <feDropShadow flood-opacity='<%=layer.settings.generalSettings.shadow == '0' ? '0' : '1'%>' dx='0' dy='0' stdDeviation='<%= layer.settings.generalSettings.shadow / 10 %>' />
+            <% } %>
+        </filter>
+    </defs>
+    <g>
+        <g>
+            <use fill='transparent'/>
+            <path
+                    d='M 0 8 L 4 16 L 60 16 L 64 8 L 60 0 L 4 0 z'
+                    stroke='<%= layer.settings.layerSettings.shapeStyles.borderColor ? layer.settings.layerSettings.shapeStyles.borderColor : 'black' %>'
+                    fill='<%= layer.settings.layerSettings.shapeStyles.fillColor ? layer.settings.layerSettings.shapeStyles.fillColor : 'transparent' %>'
+                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? layer.settings.layerSettings.shapeStyles.thickness : 0 %>'
+                    vector-effect='non-scaling-stroke'>
+            </path>
+        </g>
+    </g>
+</svg>
+
+<%function getSvgSizeInProcentage(type) {
+    return (100 * (layer.settings.layerSettings[type] + layer.settings.layerSettings.shapeStyles.thickness / 2)) /
+            (layer.settings.layerSettings[type] + layer.settings.layerSettings.shapeStyles.thickness * 1.5) + '%';
+} %>
+
+<%function getSvgTranslate() {
+    return layer.settings.layerSettings.shapeStyles.thickness / 2;
+} %>
