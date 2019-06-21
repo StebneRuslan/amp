@@ -3,12 +3,12 @@
         xmlns:xlink='http://www.w3.org/1999/xlink'
         width='<%= getSvgSizeInProcentage('width') %>'
         height='<%= getSvgSizeInProcentage('height') %>'
-        style='<%="overflow: visible; filter: url(#shadow);" + `transform: translate(${getSvgTranslate()}px, ${getSvgTranslate()}px); width: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px); height: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px);`%>'
+        style='<%=`overflow: visible; filter: url(#shadow${layer.position}); transform: translate(${getSvgTranslate()}px, ${getSvgTranslate()}px); width: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px); height: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px);`%>'
         viewBox='0 0 50 50'
         preserveAspectRatio='none'
 >
     <defs>
-        <filter id='shadow' width='200%' height='200%' x='-40%' y='-40%'>
+        <filter id='<%=`shadow${layer.position}`%>' width='200%' height='200%' x='-40%' y='-40%'>
             <%if (layer.settings.generalSettings.shadow !== '0') { %>
             <feDropShadow flood-opacity='<%=layer.settings.generalSettings.shadow == '0' ? '0' : '1'%>' dx='0' dy='0' stdDeviation='<%= layer.settings.generalSettings.shadow / 10 %>' />
             <% } %>
