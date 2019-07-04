@@ -239,15 +239,15 @@ function getFullScreenElementOffsetX (layer) {
                             class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
                             style="
                                     position: absolute;
+                            <%if (layer.settings.layerSettings.fullscreen) {%>
+                                    width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
+                                    height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
+                            <% } else {%>
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
+                            <% }%>
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;" <% if (layer.settings.animateIn && !preview){ %>
-                            animate-in="<%= layer.settings.animateIn %>" <% } %> <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                    <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %> <% if (layer.settings.animateIn === 'zoom-in'){ %> scale-start="1" scale-end="1.5" <% } %>
-                    <% if (layer.settings.animateIn === 'zoom-out'){ %> scale-start="1.5" scale-end="1" <% } %>>
+                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;">
                         <div draggable="true" id="layer<%=layer.position%>"
                                 <%if (layer.settings.layerSettings.fullscreen) {%> style="
                                 position: absolute;
@@ -273,16 +273,15 @@ function getFullScreenElementOffsetX (layer) {
                             class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
                             style="
                                     position: absolute;
+                            <%if (layer.settings.layerSettings.fullscreen) {%>
+                                    width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
+                                    height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
+                            <% } else {%>
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
+                            <% }%>
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                    <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>"
-                            <% } %> <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                    <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %> <% if (layer.settings.animateIn === 'zoom-in'){ %> scale-start="1" scale-end="1.5" <% } %>
-                    <% if (layer.settings.animateIn === 'zoom-out'){ %> scale-start="1.5" scale-end="1" <% } %>>
+                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;">
                         <div draggable="true" id="layer<%=layer.position%>"
                                 <%if (layer.settings.layerSettings.fullscreen) {%> style="
                                 position: absolute;

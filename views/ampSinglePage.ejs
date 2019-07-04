@@ -390,8 +390,13 @@ function getFullScreenElementOffsetX (layer) {
                              class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
                              style="
                                      position: absolute;
+                             <%if (layer.settings.layerSettings.fullscreen) {%>
                                      width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
                                      height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
+                             <% } else {%>
+                                     width: <%=getAnimationWidthEm(layer)%>;
+                                     height: <%=getAnimationHeightEm(layer)%>;
+                             <% }%>
                                      left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                      top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                         <% if (!layer.settings.layerSettings.fullscreen && layer.settings.animateIn && !preview){ %>
@@ -446,8 +451,13 @@ function getFullScreenElementOffsetX (layer) {
                              class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
                              style="
                                      position: absolute;
+                             <%if (layer.settings.layerSettings.fullscreen) {%>
                                      width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
                                      height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
+                             <% } else {%>
+                                     width: <%=getAnimationWidthEm(layer)%>;
+                                     height: <%=getAnimationHeightEm(layer)%>;
+                             <% }%>
                                      left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                      top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                         <% if (!layer.settings.layerSettings.fullscreen && layer.settings.animateIn && !preview){ %>
