@@ -501,6 +501,54 @@ function processRotate(radians) {
     } = storage;
 
     const matrix = [...transform];
+    const props = {
+        elDrag: el.parentNode.querySelector('.dg-controls'),
+        elDragContainer: document.querySelector('body')
+    }
+    if (props.elDrag.id && props.elDrag.id.match('fullscreen')) {
+        props.elDragClient = {
+            left: +props.elDrag.id.split('/')[1],
+            right: +props.elDrag.id.split('/')[2],
+            top: +props.elDrag.id.split('/')[3],
+            bottom: +props.elDrag.id.split('/')[4]
+        }
+        if (props.elDragClient.left || Math.abs(Math.round(props.elDragClient.right + 2)) - Math.round(props.elDragContainer.clientWidth)) {
+            if (left > 0 && props.elDragClient.left) {
+                // need to optimize this
+                if (Math.abs(props.elDragClient.left) > Math.abs(left)) {
+                    matrix[4] = snapToGrid(transform[4] + Math.round(left), snap.x);
+                } else {
+                    matrix[4] = snapToGrid(transform[4] + Math.abs(props.elDragClient.left), snap.x);
+                }
+            } else if (left <= 0 && Math.round(props.elDragClient.right - 2) - Math.round(props.elDragContainer.clientWidth)) {
+                if ((Math.abs(Math.round(props.elDragClient.right)) - Math.round(props.elDragContainer.clientWidth)) - Math.abs(left) > 0) {
+                    matrix[4] = snapToGrid(transform[4] + left, snap.x);
+                } else {
+                    matrix[4] = snapToGrid(transform[4] - (Math.abs(Math.round(props.elDragClient.right)) - Math.round(props.elDragContainer.clientWidth)), snap.x);
+                }
+            }
+        }
+        if (props.elDragClient.top) {
+            if (top > 0 && props.elDragClient.top) {
+                // need to optimize this
+                if (Math.abs(props.elDragClient.top) > Math.abs(top)) {
+                    matrix[5] = snapToGrid(transform[5] + Math.round(top), snap.y);
+                } else {
+                    matrix[5] = snapToGrid(transform[5] + (Math.abs(props.elDragClient.top)), snap.y);
+                }
+            } else if (left <= 0 && Math.round(props.elDragClient.bottom - 2) - Math.round(props.elDragContainer.clientHeight)) {
+                if ((Math.abs(Math.round(props.elDragClient.bottom)) - Math.round(props.elDragContainer.clientHeight)) - Math.abs(top) > 0) {
+                    matrix[5] = snapToGrid(transform[5] + top, snap.y);
+                } else {
+                    matrix[5] = snapToGrid(transform[5] - (Math.abs(Math.round(props.elDragClient.bottom)) - Math.round(props.elDragContainer.clientHeight)), snap.y);
+                }
+            }
+        }
+
+    } else {
+        matrix[4] = snapToGrid(transform[4] + left, snap.x);
+        matrix[5] = snapToGrid(transform[5] + top, snap.y);
+    }
 
     const angle = snapToGrid(refang + radians, snap.angle);
 
