@@ -45,6 +45,7 @@
                 Array.prototype.forEach.call(document.querySelectorAll('.dg-hdl'), (element) => {
                     element.style.display = 'none';
                 });
+                document.querySelector('.dg-controls').style.border = '1px dashed transparent';
             }
         }
         if (event.data.previousId !== null && event.data.previousId !== undefined) {
