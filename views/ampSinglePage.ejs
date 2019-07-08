@@ -61,6 +61,13 @@
             }
         }
     });
+    window.addEventListener('keydown', (e) => {
+        if (e.keyCode === 90 && (e.ctrlKey || e.metaKey) && e.shiftKey) {
+            window.parent.postMessage({event: 'redoStep'}, '*');
+        } else if (e.keyCode === 90 && (e.ctrlKey || e.metaKey)) {
+            window.parent.postMessage({event: 'undoStep'}, '*');
+        }
+    });
     window.onload = () => {
         var css = '.i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
             head = document.head || document.getElementsByTagName('head')[0],
@@ -111,19 +118,23 @@
         const divParams = target.getBoundingClientRect();
         let centerX = event.x - divParams.left;
         let centerY = event.y - divParams.top;
-        document.onmousemove = (moveEvent) => {
-            drag(event,
-                getDraggableNode(event.path),
-                moveEvent, centerX, centerY,
-                iframeParams = { ampStoryWidth: ampStoryWidth, ampStoryHeight: ampStoryHeight }
-            );
-        };
-        document.onmouseleave = (moveEvent) => {
-            mouseUp(event);
-        };
-        document.onmousedovn = (moveEvent) => {
-            mouseUp(event);
-        };
+
+        if (!target.classList.contains('fullscreen')) {
+            document.onmousemove = (moveEvent) => {
+                drag(event,
+                    getDraggableNode(event.path),
+                    moveEvent, centerX, centerY,
+                    iframeParams = { ampStoryWidth: ampStoryWidth, ampStoryHeight: ampStoryHeight }
+                );
+            };
+            document.onmouseleave = (moveEvent) => {
+                mouseUp(event);
+            };
+            document.onmousedovn = (moveEvent) => {
+                mouseUp(event);
+            };
+        }
+
     };
 
     function mouseUp(event) {
@@ -530,8 +541,6 @@ function getFullScreenElementOffsetX (layer) {
         <% } %>
     </amp-story-page>
 </amp-story>
-<% include js/rotate.ejs %>
-<% include js/resizer.ejs %>
 
 <script type="text/javascript" src="/resize-files?path=amp-to-html/dist/js/subjx.js"></script>
 </body>

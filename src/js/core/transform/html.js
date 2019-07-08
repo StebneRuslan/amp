@@ -1,7 +1,7 @@
 import { Helper } from '../helper'
 import Subject from './subject'
 
-import { 
+import {
     addClass,
     getTransform,
     parseMatrix,
@@ -88,23 +88,23 @@ export default class Draggable extends Subject {
         const css = matrixToCSS(matrix);
 
         const pW = parent.css('width'),
-                pH = parent.css('height');
+            pH = parent.css('height');
 
         const left = parseFloat(
             toPX(_el.css('left'), pW)
         );
         const top = parseFloat(
             toPX(_el.css('top'), pH)
-        );               
+        );
 
         css.left = fromPX(
-            left + diffLeft + 'px', 
+            left + diffLeft + 'px',
             pW,
             dimens.left
         );
 
         css.top = fromPX(
-            top + diffTop + 'px', 
+            top + diffTop + 'px',
             pH,
             dimens.top
         );
@@ -112,11 +112,11 @@ export default class Draggable extends Subject {
         _el.css(css);
         Helper(controls).css(css);
         window.parent.postMessage({event: 'resize-on-mouseup', position: {
-            width: controls.style.width,
-            height: controls.style.height,
-            diffLeft,
-            diffTop
-        } }, 'http://127.0.0.1:3978/#/edit');
+                width: controls.style.width,
+                height: controls.style.height,
+                diffLeft,
+                diffTop
+            } }, 'http://127.0.0.1:3978/#/edit');
         this.storage.cached = null;
     }
 
@@ -125,8 +125,8 @@ export default class Draggable extends Subject {
         const store = this.storage;
 
         const recalc = refreshState.call(this,
-            data.factor, 
-            data.revX, 
+            data.factor,
+            data.revX,
             data.revY
         );
 
@@ -190,7 +190,7 @@ function _init(sel) {
     });
 
     _controls.on('mousedown', this._onMouseDown)
-            .on('touchstart', this._onTouchStart);
+        .on('touchstart', this._onTouchStart);
 }
 
 function _destroy() {
@@ -198,7 +198,7 @@ function _destroy() {
     const { controls } = this.storage;
 
     Helper(controls).off('mousedown', this._onMouseDown)
-                    .off('touchstart', this._onTouchStart);
+        .off('touchstart', this._onTouchStart);
 
     this.el.parentNode.removeChild(controls.parentNode);
 }
@@ -222,18 +222,18 @@ function _compute(e) {
     let factor = 1;
 
     //reverse axis
-    const revX = handle.is(handles.tl) || 
-                handle.is(handles.ml) || 
-                handle.is(handles.bl) || 
-                handle.is(handles.tc);
+    const revX = handle.is(handles.tl) ||
+        handle.is(handles.ml) ||
+        handle.is(handles.bl) ||
+        handle.is(handles.tc);
 
-    const revY = handle.is(handles.tl) || 
-                handle.is(handles.tr) || 
-                handle.is(handles.tc) || 
-                handle.is(handles.ml);
+    const revY = handle.is(handles.tl) ||
+        handle.is(handles.tr) ||
+        handle.is(handles.tc) ||
+        handle.is(handles.ml);
 
     //reverse angle
-    if (handle.is(handles.tr) || 
+    if (handle.is(handles.tr) ||
         handle.is(handles.bl)
     ) {
         factor = -1;
@@ -243,7 +243,7 @@ function _compute(e) {
         tr_off = getOffset(handles.tr[0]);
 
     const refang = Math.atan2(
-        tr_off.top - tl_off.top, 
+        tr_off.top - tl_off.top,
         tr_off.left - tl_off.left
     ) * factor;
 
@@ -271,7 +271,7 @@ function _compute(e) {
         center_y = offset_.top + ch / 2;
 
     const pressang = Math.atan2(
-        e.pageY - center_y, 
+        e.pageY - center_y,
         e.pageX - center_x
     );
 
@@ -376,7 +376,7 @@ function refreshState(factor, revX, revY) {
 function processResize(
     width,
     height,
-    revX, 
+    revX,
     revY
 ) {
 
@@ -405,9 +405,14 @@ function processResize(
         style.width = `${snapToGrid(width, snap.x)}px`;
     }
 
+    const canResizeWithShiftKey = handle[0].classList.contains('dg-hdl-br') ||
+        handle[0].classList.contains('dg-hdl-tr') ||
+        handle[0].classList.contains('dg-hdl-bl') ||
+        handle[0].classList.contains('dg-hdl-tl');
+
     const scaleHeight = storage.ch / storage.cw;
     if (height !== null) {
-        if(storage.shiftKey) {
+        if(storage.shiftKey && canResizeWithShiftKey) {
             height = width * scaleHeight;
         }
         style.height = `${snapToGrid(height, snap.y)}px`;
@@ -475,42 +480,17 @@ function processMove(
 
     const matrix = [...transform];
 
-    matrix[4] = snapToGrid(transform[4] + left, snap.x);
-    matrix[5] = snapToGrid(transform[5] + top, snap.y);
-        
-    const css = matrixToCSS(matrix);
-
-    Helper(controls).css(css);
-    Helper(el).css(css);
-
-    storage.cached = matrix;
-}
-
-function processRotate(radians) {
-
-    const {
-        el,
-        storage
-    } = this;
-
-    const {
-        controls,
-        transform,
-        refang,
-        snap
-    } = storage;
-
-    const matrix = [...transform];
     const props = {
-        elDrag: el.parentNode.querySelector('.dg-controls'),
+        elDrag: el,
         elDragContainer: document.querySelector('body')
     }
-    if (props.elDrag.id && props.elDrag.id.match('fullscreen')) {
+
+    if (props.elDrag.name && props.elDrag.name.match('fullscreen')) {
         props.elDragClient = {
-            left: +props.elDrag.id.split('/')[1],
-            right: +props.elDrag.id.split('/')[2],
-            top: +props.elDrag.id.split('/')[3],
-            bottom: +props.elDrag.id.split('/')[4]
+            left: +props.elDrag.name.split('/')[1],
+            right: +props.elDrag.name.split('/')[2],
+            top: +props.elDrag.name.split('/')[3],
+            bottom: +props.elDrag.name.split('/')[4]
         }
         if (props.elDragClient.left || Math.abs(Math.round(props.elDragClient.right + 2)) - Math.round(props.elDragContainer.clientWidth)) {
             if (left > 0 && props.elDragClient.left) {
@@ -550,6 +530,30 @@ function processRotate(radians) {
         matrix[5] = snapToGrid(transform[5] + top, snap.y);
     }
 
+    const css = matrixToCSS(matrix);
+
+    Helper(controls).css(css);
+    Helper(el).css(css);
+
+    storage.cached = matrix;
+}
+
+function processRotate(radians) {
+
+    const {
+        el,
+        storage
+    } = this;
+
+    const {
+        controls,
+        transform,
+        refang,
+        snap
+    } = storage;
+
+    const matrix = [...transform];
+
     const angle = snapToGrid(refang + radians, snap.angle);
 
     //rotate(Xdeg) = matrix(cos(X), sin(X), -sin(X), cos(X), 0, 0);
@@ -576,6 +580,6 @@ function matrixToCSS(arr) {
         webkitTranform: style,
         mozTransform: style,
         msTransform: style,
-        otransform: style                     
+        otransform: style
     }
 }
