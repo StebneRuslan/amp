@@ -4,14 +4,20 @@
     <div
             id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
             style="width: 100%;height: 100%;">
-      <amp-img
-              width="<%= layer.settings.layerSettings.width %>px"
-              height="<%= layer.settings.layerSettings.height %>px"
-              layout="responsive"
-              alt="an image"
-              style="width:100%;height:100%;object-fit:fill;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
-              src="<%- include('shapes/' + layer.content.value, {layer: layer}) %>"
-      ></amp-img>
+      <% switch (layer.content.value) {
+      case 'square' : %>
+      <% include ../shapes/square.ejs %>
+      <% break
+      case 'circle' : %>
+      <% include ../shapes/circle.ejs %>
+      <% break
+      case'triangle' : %>
+      <% include ../shapes/triangle.ejs %>
+      <% break
+      case'line' : %>
+      <% include ../shapes/line.ejs %>
+      <% break %>
+      <% } %>
     </div>
   </div>
 </div>
