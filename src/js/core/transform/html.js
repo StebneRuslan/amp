@@ -387,6 +387,7 @@ function processResize(
 
     const {
         controls,
+        handle,
         snap,
         left,
         top,
