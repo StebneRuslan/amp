@@ -488,24 +488,24 @@ function processMove(
 
     if (props.elDrag.name && props.elDrag.name.match('fullscreen')) {
         props.elDragClient = {
-            left: +props.elDrag.name.split('/')[1],
-            right: +props.elDrag.name.split('/')[2],
-            top: +props.elDrag.name.split('/')[3],
-            bottom: +props.elDrag.name.split('/')[4]
+            left: Math.floor(+props.elDrag.name.split('/')[1]),
+            right: Math.floor(+props.elDrag.name.split('/')[2]),
+            top: Math.floor(+props.elDrag.name.split('/')[3]),
+            bottom: Math.floor(+props.elDrag.name.split('/')[4])
         }
-        if (props.elDragClient.left || Math.abs(Math.round(props.elDragClient.right + 2)) - Math.round(props.elDragContainer.clientWidth)) {
+        if (props.elDragClient.left || Math.abs(Math.floor(props.elDragClient.right + 2)) - Math.floor(props.elDragContainer.clientWidth)) {
             if (left > 0 && props.elDragClient.left) {
                 // need to optimize this
                 if (Math.abs(props.elDragClient.left) > Math.abs(left)) {
-                    matrix[4] = snapToGrid(transform[4] + Math.round(left), snap.x);
+                    matrix[4] = snapToGrid(transform[4] + Math.floor(left), snap.x);
                 } else {
                     matrix[4] = snapToGrid(transform[4] + Math.abs(props.elDragClient.left), snap.x);
                 }
-            } else if (left <= 0 && Math.round(props.elDragClient.right - 2) - Math.round(props.elDragContainer.clientWidth)) {
-                if ((Math.abs(Math.round(props.elDragClient.right)) - Math.round(props.elDragContainer.clientWidth)) - Math.abs(left) > 0) {
+            } else if (left <= 0 && Math.floor(props.elDragClient.right - 2) - Math.floor(props.elDragContainer.clientWidth)) {
+                if ((Math.abs(Math.floor(props.elDragClient.right)) - Math.floor(props.elDragContainer.clientWidth)) - Math.abs(left) > 0) {
                     matrix[4] = snapToGrid(transform[4] + left, snap.x);
                 } else {
-                    matrix[4] = snapToGrid(transform[4] - (Math.abs(Math.round(props.elDragClient.right)) - Math.round(props.elDragContainer.clientWidth)), snap.x);
+                    matrix[4] = snapToGrid(transform[4] - (Math.abs(Math.floor(props.elDragClient.right)) - Math.floor(props.elDragContainer.clientWidth)), snap.x);
                 }
             }
         }
@@ -513,15 +513,15 @@ function processMove(
             if (top > 0 && props.elDragClient.top) {
                 // need to optimize this
                 if (Math.abs(props.elDragClient.top) > Math.abs(top)) {
-                    matrix[5] = snapToGrid(transform[5] + Math.round(top), snap.y);
+                    matrix[5] = snapToGrid(transform[5] + Math.floor(top), snap.y);
                 } else {
                     matrix[5] = snapToGrid(transform[5] + (Math.abs(props.elDragClient.top)), snap.y);
                 }
-            } else if (left <= 0 && Math.round(props.elDragClient.bottom - 2) - Math.round(props.elDragContainer.clientHeight)) {
-                if ((Math.abs(Math.round(props.elDragClient.bottom)) - Math.round(props.elDragContainer.clientHeight)) - Math.abs(top) > 0) {
+            } else if (left <= 0 && Math.floor(props.elDragClient.bottom - 2) - Math.floor(props.elDragContainer.clientHeight)) {
+                if ((Math.abs(Math.floor(props.elDragClient.bottom)) - Math.floor(props.elDragContainer.clientHeight)) - Math.abs(top) > 0) {
                     matrix[5] = snapToGrid(transform[5] + top, snap.y);
                 } else {
-                    matrix[5] = snapToGrid(transform[5] - (Math.abs(Math.round(props.elDragClient.bottom)) - Math.round(props.elDragContainer.clientHeight)), snap.y);
+                    matrix[5] = snapToGrid(transform[5] - (Math.abs(Math.floor(props.elDragClient.bottom)) - Math.floor(props.elDragContainer.clientHeight)), snap.y);
                 }
             }
         }
