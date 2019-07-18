@@ -349,7 +349,7 @@ function getFullScreenElementOffsetX (layer) {
                     >
                         <% }%>
                         <div
-                                class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
+                                class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
                                 style="
                                         position: absolute;
                                 <%if (layer.settings.layerSettings.fullscreen) {%>
@@ -371,8 +371,10 @@ function getFullScreenElementOffsetX (layer) {
                             <div draggable="true" id="layer<%=layer.position%>"
                                     <%if (layer.settings.layerSettings.fullscreen) {%> style="
                                     position: absolute;
-                                    width: <%=getDraggableElementWidth(layer)%>;
-                                    height: <%=getDraggableElementHeight(layer)%>;
+                                    left: <%=getFullScreenElementOffsetX(layer) + '%'%>;
+                                    top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
+                                    width: <%=getDraggableElementWidth(layer) + '%'%>;
+                                    height: <%=getDraggableElementHeight(layer) + '%';%>;
                                     transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                     " <% } else { %> class="rotate-wrapper" style="
                                     position: absolute;
