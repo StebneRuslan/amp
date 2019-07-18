@@ -4,16 +4,12 @@ function getVideoUrl (content) {
   if (!url) {
     url = content.video
   }
-  // TODO change to https
   if (/http:\/\//.test(url) || /https:\/\//.test(url)) {
-    // const httpsUrl = url.slice(0, 4) + 's' + url.slice(4)
-    // console.log('httpsUrlhttpsUrlhttpsUrlhttpsUrl', httpsUrl)
     return url
   } else {
     return `//localhost:3978${url}#t=0,10`
   }
-}
-if (layer.settings.layerSettings.fullscreen) { %>
+} %>
   <amp-video
           autoplay
   <% if (layer.settings.layerSettings.mute) { %>
@@ -38,4 +34,3 @@ if (layer.settings.layerSettings.fullscreen) { %>
         o element.</p>
     </div>
   </amp-video>
-<% } %>
