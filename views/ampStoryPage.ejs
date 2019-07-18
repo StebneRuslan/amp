@@ -176,27 +176,18 @@ ampStory.cuts.map(currentSlide => { %>
         <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
             <% switch (layer.type) {
             case 'text': %>
-            <amp-story-grid-layer template="fill">
-                <div
-                        class="drag-item animate"
-                <% if (layer.content.value !== '') { %>
-                        style="
-                                left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                        <% } %>
-                <% if (layer.settings.animateIn && !preview){ %>
-                        animate-in="<%= layer.settings.animateIn %>"
-                        <% } %>
-                <% if (layer.settings.animateDuration){ %>
-                        animate-in-duration="<%= layer.settings.animateDuration %>s"
-                        <% } %>
-                <% if (layer.settings.animateDelay){ %>
-                        animate-in-delay="<%= layer.settings.animateDelay %>s"
-                        <% } %>
-                >
+            <amp-story-grid-layer template="horizontal">
+                <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                     class="drag-item single-page-item animate" <% if (layer.content.value !== '') { %>
+                     style="
+                             left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;" <% } %> <% if (layer.settings.animateIn && !preview){ %>
+                     animate-in="<%= layer.settings.animateIn %>" <% } %> <% if (layer.settings.animateDuration){ %>
+                     animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+                <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
+                        <% } %>>
                     <div draggable="true" id="layer<%=layer.position%>"
-                         style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
-                    >
+                         style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                         <% include layers/text.ejs %>
                     </div>
                 </div>
@@ -204,24 +195,19 @@ ampStory.cuts.map(currentSlide => { %>
             <% break;
 
             case 'html': %>
-            <amp-story-grid-layer template="fill">
-                <div
-                        class="drag-item animate"
-                        style="
-                                left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                <% if (layer.settings.animateIn && !preview){ %>
-                        animate-in="<%= layer.settings.animateIn %>"
-                        <% } %>
-                <% if (layer.settings.animateDuration){ %>
-                        animate-in-duration="<%= layer.settings.animateDuration %>s"
-                        <% } %>
-                <% if (layer.settings.animateDelay){ %>
-                        animate-in-delay="<%= layer.settings.animateDelay %>s"
-                        <% } %>
-                >
+            <amp-story-grid-layer template="horizontal">
+                <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                     class="drag-item single-page-item animate"
+                     style="
+                             left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>"
+                        <% } %> <% if (layer.settings.animateDuration){ %>
+                     animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+                <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
+                        <% } %>>
                     <div draggable="true" id="layer<%=layer.position%>"
-                         style="transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
+                         style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                         <% include layers/text.ejs %>
                     </div>
                 </div>
@@ -229,36 +215,27 @@ ampStory.cuts.map(currentSlide => { %>
             <% break;
 
             case 'shape': %>
-            <amp-story-grid-layer template="fill">
+            <amp-story-grid-layer template="horizontal">
                 <div
-                        class="drag-item animate"
+                        class="drag-item single-page-item animate"
                         style="
+                                position: absolute;
                                 width: <%=getAnimationWidthEm(layer)%>;
                                 height: <%=getAnimationHeightEm(layer)%>;
                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
-                <% if (layer.settings.animateIn && !preview){ %>
-                        animate-in="<%= layer.settings.animateIn %>"
-                        <% } %>
-                <% if (layer.settings.animateDuration){ %>
-                        animate-in-duration="<%= layer.settings.animateDuration %>s"
-                        <% } %>
-                <% if (layer.settings.animateDelay){ %>
-                        animate-in-delay="<%= layer.settings.animateDelay %>s"
-                        <% } %>
-                >
-                    <div
-                            id="layer<%=layer.position%>"
-                            draggable="true"
-                            class="rotate-wrapper"
-                            style="
-                                    position: absolute;
-                                    width: <%=getDraggableElementWidth(layer);%>;
-                                    height: <%=getDraggableElementHeight(layer);%>;
-                                    transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                    top: <%=getDeraggableElementOffsetY(layer);%>;
-                                    left: <%=getDeraggableElementOffsetX(layer);%>;"
-                    >
+                <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>"
+                        <% } %> <% if (layer.settings.animateDuration){ %>
+                        animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+                <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
+                        <% } %>>
+                    <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper " style="
+                            position: absolute;
+                            width: <%=getDraggableElementWidth(layer);%>;
+                            height: <%=getDraggableElementHeight(layer);%>;
+                            transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
+                            top: <%=getDeraggableElementOffsetY(layer);%>;
+                            left: <%=getDeraggableElementOffsetX(layer);%>;">
                         <% include layers/shape.ejs %>
                     </div>
                 </div>
@@ -303,13 +280,13 @@ ampStory.cuts.map(currentSlide => { %>
                             transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
                             top: <%=getDeraggableElementOffsetY(layer);%>;
                             left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                        <% include layers/image.ejs %>
+                        <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
                     </div>
                 </div>
             </amp-story-grid-layer>
             <% } else { %>
                 <amp-story-grid-layer template="fill">
-                    <% include layers/image.ejs %>
+                    <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
                 </amp-story-grid-layer>
             <% } %>
             <% break
@@ -350,13 +327,13 @@ ampStory.cuts.map(currentSlide => { %>
                             transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
                             top: <%=getDeraggableElementOffsetY(layer);%>;
                             left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                        <% include layers/video.ejs %>
+                        <%- include('layers/video.ejs', {withAnimations: true, layer: layer }); %>
                     </div>
                 </div>
             </amp-story-grid-layer>
             <% } else { %>
                 <amp-story-grid-layer template="fill">
-                    <% include layers/video.ejs %>
+                    <%- include('layers/video.ejs', {withAnimations: true, layer: layer }); %>
                 </amp-story-grid-layer>
             <% } %>
             <% break

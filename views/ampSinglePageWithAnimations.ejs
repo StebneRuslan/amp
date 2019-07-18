@@ -68,7 +68,7 @@
         }
     });
     window.onload = () => {
-        var css = '.i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
+        var css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
             head = document.head || document.getElementsByTagName('head')[0],
             style = document.createElement('style');
         style.type = 'text/css';
@@ -355,7 +355,7 @@ function getFullScreenElementOffsetX (layer) {
 
                 case 'shape': %>
                 <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                    <div
                          class="drag-item single-page-item animate"
                          style="
                                  position: absolute;
@@ -384,7 +384,7 @@ function getFullScreenElementOffsetX (layer) {
                 case 'image': %>
                 <% if (!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) { %>
                 <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                    <div
                          class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
                          style="
                                  position: absolute;
@@ -419,20 +419,20 @@ function getFullScreenElementOffsetX (layer) {
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
                                 top: <%=getDeraggableElementOffsetY(layer);%>;
                                 left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                            <% include layers/image.ejs %>
+                            <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
                         </div>
                     </div>
                 </amp-story-grid-layer>
                 <% } else { %>
                     <amp-story-grid-layer template="fill">
-                        <% include layers/image.ejs %>
+                        <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
                     </amp-story-grid-layer>
                 <% } %>
                 <% break
                 case 'video': %>
                 <% if (!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) { %>
                 <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                    <div
                          class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
                          style="
                                  position: absolute;
@@ -465,13 +465,13 @@ function getFullScreenElementOffsetX (layer) {
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
                                 top: <%=getDeraggableElementOffsetY(layer);%>;
                                 left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                            <% include layers/video.ejs %>
+                            <%- include('layers/video.ejs', {withAnimations: true, layer: layer }); %>
                         </div>
                     </div>
                 </amp-story-grid-layer>
                 <% } else { %>
                     <amp-story-grid-layer template="fill">
-                        <% include layers/video.ejs %>
+                       <%- include('layers/video.ejs', {withAnimations: true, layer: layer }); %>
                     </amp-story-grid-layer>
                 <% } %>
                 <% break

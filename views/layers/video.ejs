@@ -15,7 +15,7 @@ function getVideoUrl (content) {
 }
 if (layer.settings.layerSettings.fullscreen) {%>
   <amp-video
-  <% if (['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn && !preview){ %>
+  <% if (withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
     animate-in="<%= layer.settings.animateIn %>"
     <% if (layer.settings.animateDuration){ %>
     animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
