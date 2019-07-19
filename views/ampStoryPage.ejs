@@ -264,6 +264,12 @@ ampStory.cuts.map(currentSlide => { %>
                         animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
                 <% if (layer.settings.animateDelay){ %>
                         animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
+                <%if (['zoom-in'].includes(layer.settings.animateIn)) { %>
+                        scale-start="1" scale-end="1.4"
+                        <% } %>
+                <%if (['zoom-out'].includes(layer.settings.animateIn)) { %>
+                        scale-start="1.4" scale-end="1"
+                        <% } %>
                 >
                     <div draggable="true" id="layer<%=layer.position%>"
                             <%if (layer.settings.layerSettings.fullscreen) {%> style="
@@ -313,6 +319,12 @@ ampStory.cuts.map(currentSlide => { %>
                         animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
                 <% if (layer.settings.animateDelay){ %>
                         animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
+                <%if (['zoom-in'].includes(layer.settings.animateIn)) { %>
+                        scale-start="1" scale-end="1.4"
+                        <% } %>
+                <%if (['zoom-out'].includes(layer.settings.animateIn)) { %>
+                        scale-start="1.4" scale-end="1"
+                        <% } %>
                 >
                     <div draggable="true" id="layer<%=layer.position%>"
                             <%if (layer.settings.layerSettings.fullscreen) {%> style="

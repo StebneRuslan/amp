@@ -397,12 +397,18 @@ function getFullScreenElementOffsetX (layer) {
                          <% }%>
                                  left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
                                  top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                    <% if (!['pan-left', 'pan-right'].includes(layer.settings.animateIn) && layer.settings.animateIn && !preview){ %>
+                    <% if (layer.settings.animateIn && !preview){ %>
                          animate-in="<%= layer.settings.animateIn %>" <% } %>
                     <% if (layer.settings.animateDuration){ %>
                          animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
                     <% if (layer.settings.animateDelay){ %>
                          animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
+                    <%if (['zoom-in'].includes(layer.settings.animateIn)) { %>
+                       scale-start="1" scale-end="1.4"
+                    <% } %>
+                    <%if (['zoom-out'].includes(layer.settings.animateIn)) { %>
+                       scale-start="1.4" scale-end="1"
+                    <% } %>
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
                                 <%if (layer.settings.layerSettings.fullscreen) {%> style="
@@ -451,6 +457,12 @@ function getFullScreenElementOffsetX (layer) {
                          animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
                     <% if (layer.settings.animateDelay){ %>
                          animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
+                     <%if (['zoom-in'].includes(layer.settings.animateIn)) { %>
+                        scale-start="1" scale-end="1.4"
+                     <% } %>
+                     <%if (['zoom-out'].includes(layer.settings.animateIn)) { %>
+                        scale-start="1.4" scale-end="1"
+                     <% } %>
                     >
                         <div draggable="true" id="layer<%=layer.position%>"
                                 <%if (layer.settings.layerSettings.fullscreen) {%> style="
