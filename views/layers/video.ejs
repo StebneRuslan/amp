@@ -14,6 +14,9 @@ function getVideoUrl (content) {
   }
 }
 if (layer.settings.layerSettings.fullscreen) {%>
+  <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+<div style="transform: translateX(50%);">
+  <% } %>
   <amp-video
   <% if (withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
     animate-in="<%= layer.settings.animateIn %>"
@@ -41,6 +44,9 @@ if (layer.settings.layerSettings.fullscreen) {%>
       <p>This browser does not support the video element.</p>
     </div>
   </amp-video>
+  <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+</div>
+  <% } %>
 <% } else { %>
   <amp-video
           autoplay

@@ -177,7 +177,7 @@ ampStory.cuts.map(currentSlide => { %>
             <% switch (layer.type) {
             case 'text': %>
             <amp-story-grid-layer template="horizontal">
-                <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                <div
                      class="drag-item single-page-item animate" <% if (layer.content.value !== '') { %>
                      style="
                              left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
@@ -196,7 +196,7 @@ ampStory.cuts.map(currentSlide => { %>
 
             case 'html': %>
             <amp-story-grid-layer template="horizontal">
-                <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                <div
                      class="drag-item single-page-item animate"
                      style="
                              left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;

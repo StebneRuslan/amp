@@ -13,21 +13,28 @@
   }
 }
 if (layer.settings.layerSettings.fullscreen) { %>
-  <amp-img
-  <% if (withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
-    animate-in="<%= layer.settings.animateIn %>"
-    <% if (layer.settings.animateDuration){ %>
-    animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-    <% if (layer.settings.animateDelay){ %>
-    animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
-          <% } %>
-    src="<%= getImageUrl(layer.content) %>"
-    width="<%= layer.settings.layerSettings.width %>"
-    height="<%= layer.settings.layerSettings.height %>"
-    layout="fixed"
-    alt="an image"
-    style="width:100%;height:100%;object-fit:fill;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;">
-  </amp-img>
+  <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+  <div style="transform: translateX(50%);">
+    <% } %>
+    <amp-img
+    <% if (withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+      animate-in="<%= layer.settings.animateIn %>"
+      <% if (layer.settings.animateDuration){ %>
+      animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+      <% if (layer.settings.animateDelay){ %>
+      animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
+            <% } %>
+      src="<%= getImageUrl(layer.content) %>"
+      width="<%= layer.settings.layerSettings.width %>"
+      height="<%= layer.settings.layerSettings.height %>"
+      layout="fixed"
+      alt="an image"
+      style="width:100%;height:100%;object-fit:fill;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;">
+    </amp-img>
+    <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+  </div>
+  <% } %>
+
 <% } else { %>
   <amp-img
           class="small-image"
