@@ -349,8 +349,13 @@ function getFullScreenElementOffsetX (layer) {
                                  position: absolute;
                                  width: <%=getAnimationWidthEm(layer)%>;
                                  height: <%=getAnimationHeightEm(layer)%>;
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
-                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;">
+                         <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.width) === 0) {%>
+                             bottom: 0;
+                                     top: initial;
+                         <% } else {%>
+                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
+                         <% }%>
+                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;"">
                         <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper " style="
                                 position: absolute;
                                 width: <%=getDraggableElementWidth(layer);%>;
@@ -377,8 +382,13 @@ function getFullScreenElementOffsetX (layer) {
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
                             <% }%>
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;">
+                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.width) === 0) {%>
+                                bottom: 0;
+                                        top: initial;
+                            <% } else {%>
+                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
+                            <% }%>
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
                         <div id="layer<%=layer.position%>"
                                 <%if (layer.settings.layerSettings.fullscreen) {%> style="
                                 position: absolute;
@@ -413,8 +423,13 @@ function getFullScreenElementOffsetX (layer) {
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
                             <% }%>
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.width) === 0) {%>
+                                bottom: 0;
+                                        top: initial;
+                            <% } else {%>
+                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
+                            <% }%>
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;"
                     >
                         <div  id="layer<%=layer.position%>"
                                 <%if (layer.settings.layerSettings.fullscreen) {%> style="

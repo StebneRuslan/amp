@@ -211,8 +211,13 @@ function getFullScreenElementOffsetX (layer) {
                                     position: absolute;
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
-                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
+                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.width) === 0) {%>
+                                bottom: 0;
+                                        top: initial;
+                            <% } else {%>
+                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
+                            <% }%>
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;"
                     <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>"
                             <% } %> <% if (layer.settings.animateDuration){ %>
                             animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
@@ -245,8 +250,13 @@ function getFullScreenElementOffsetX (layer) {
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
                             <% }%>
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.width) === 0) {%>
+                                bottom: 0;
+                                        top: initial;
+                            <% } else {%>
+                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
+                            <% }%>
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;"
                     <% if (!['pan-left', 'pan-right'].includes(layer.settings.animateIn) && layer.settings.animateIn && !preview){ %>
                             animate-in="<%= layer.settings.animateIn %>" <% } %>
                     <% if (layer.settings.animateDuration){ %>
@@ -299,8 +309,13 @@ function getFullScreenElementOffsetX (layer) {
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
                             <% }%>
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.width) === 0) {%>
+                                bottom: 0;
+                                        top: initial;
+                            <% } else {%>
+                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
+                            <% }%>
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;"
                     <% if (layer.settings.animateIn && !preview){ %>
                             animate-in="<%= layer.settings.animateIn %>" <% } %>
                     <% if (layer.settings.animateDuration){ %>
