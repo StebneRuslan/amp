@@ -85,9 +85,6 @@
             cursor: nwse-resize;
         }
 
-        amp-story-bookend {
-            display: none!important;
-        }
         .rotate {
             background-color: #23241f;
             width: 1px;
@@ -219,9 +216,6 @@
             user-select: none;
         }
 
-        /*.single-page-item:not(.layer-border):hover {*/
-        /*    box-shadow: 0 0 0 1px #28b9ff;*/
-        /*}*/
 
         .drag-item {
             position: absolute;
@@ -265,18 +259,15 @@
 
         .single-text span {
             display: inline-block;
+            text-decoration: inherit;
+            white-space: pre;
+            line-height: 1.4em;
         }
+
         .layer-border {
             box-shadow: 0 0 2px 2px white;
             outline: 1px solid black;
         }
-
-        /*amp-story{font-size: 4vw}*/
-        /*@media screen and (min-aspect-ratio:5/8){ amp-story{font-size: 3.7vw}}*/
-        /*@media screen and (min-aspect-ratio:3/4){amp-story{font-size: 3.35vw}}*/
-        /*@media screen and (min-width:1024px){amp-story{font-size: 2.3}}*/
-        /*@media screen and (min-width:1024px) and (max-height:660px){amp-story{font-size: 2vh}}*/
-        /*@media screen and (min-width:768px) and (max-width:1024px){amp-story{font-size:190%}}*/
 
         @media screen and (max-width: 1023px) {
             .single-text {
@@ -287,11 +278,6 @@
             }
             .rotate-wrapper {
                 font-size: 3.434vw;
-            }
-            @media screen and (max-aspect-ratio: 9/16) {
-                .single-text {
-                    font-size: 1.45vh;
-                }
             }
         }
         @media (max-width: 1023px) {
@@ -336,6 +322,6 @@
         }
     </style>
     <% if (ampStory.fromPreview || !v0Path.includes('https')) { %>
-    <link rel="stylesheet" href="/resize-files?path=amp-to-html/dist/style/subjx.css"/>
+        <link rel="stylesheet" href="/resize-files?path=amp-to-html/dist/style/subjx.css"/>
     <% } %>
 </head>

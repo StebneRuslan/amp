@@ -69,7 +69,7 @@
         }
     });
     window.onload = () => {
-        var css = '.i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
+        var css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
             head = document.head || document.getElementsByTagName('head')[0],
             style = document.createElement('style');
         style.type = 'text/css';
@@ -318,14 +318,7 @@ function getFullScreenElementOffsetX (layer) {
                 case 'text': %>
                 <amp-story-grid-layer template="horizontal">
                     <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
-                         class="drag-item single-page-item animate" <% if (layer.content.value !== '') { %>
-                         style="
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;" <% } %> <% if (layer.settings.animateIn && !preview){ %>
-                         animate-in="<%= layer.settings.animateIn %>" <% } %> <% if (layer.settings.animateDuration){ %>
-                         animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                    <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>>
+                         class="drag-item single-page-item animate">
                         <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                             <% include layers/text.ejs %>
@@ -340,12 +333,7 @@ function getFullScreenElementOffsetX (layer) {
                          class="drag-item single-page-item animate"
                          style="
                                  left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                    <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>"
-                            <% } %> <% if (layer.settings.animateDuration){ %>
-                         animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                    <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>>
+                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;">
                         <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                             <% include layers/text.ejs %>
@@ -363,12 +351,7 @@ function getFullScreenElementOffsetX (layer) {
                                  width: <%=getAnimationWidthEm(layer)%>;
                                  height: <%=getAnimationHeightEm(layer)%>;
                                  left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;
-                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;"
-                    <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>"
-                            <% } %> <% if (layer.settings.animateDuration){ %>
-                         animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                    <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>>
+                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;">
                         <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper " style="
                                 position: absolute;
                                 width: <%=getDraggableElementWidth(layer);%>;
@@ -384,120 +367,72 @@ function getFullScreenElementOffsetX (layer) {
 
                 case 'image': %>
                 <amp-story-grid-layer template="horizontal">
-                    <%if (layer.settings.layerSettings.fullscreen) { %>
-                    <div <% if (layer.settings.animateIn && !preview){ %>
-                        animate-in="<%= layer.settings.animateIn %>" <% } %> <% if (layer.settings.animateDuration){ %>
-                        animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                    <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %> <% if (layer.settings.animateIn === 'zoom-in'){ %> scale-start="1" scale-end="1.5" <% } %>
-                    <% if (layer.settings.animateIn === 'zoom-out'){ %> scale-start="1.5" scale-end="1" <% } %>
-                    <%if (layer.settings.animateIn === 'pan-up' || layer.settings.animateIn === 'pan-down') {%>
-                        style="width:100%;height:100%;position: absolute;left:50%;"
-                    <%} else {%>
-                        style="width:100%;height:100%;position: absolute;"
-                            <%}%>
-                    >
-                        <% }%>
-                        <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
-                             class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
-                             style="
-                                     position: absolute;
-                             <%if (layer.settings.layerSettings.fullscreen) {%>
-                                     width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
-                                     height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
-                             <% } else {%>
-                                     width: <%=getAnimationWidthEm(layer)%>;
-                                     height: <%=getAnimationHeightEm(layer)%>;
-                             <% }%>
-                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                        <% if (!layer.settings.layerSettings.fullscreen && layer.settings.animateIn && !preview){ %>
-                             animate-in="<%= layer.settings.animateIn %>" <% } %>
-                        <% if (!layer.settings.layerSettings.fullscreen && layer.settings.animateDuration){ %>
-                             animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                        <% if (!layer.settings.layerSettings.fullscreen && layer.settings.animateDelay){ %>
-                             animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
-                        >
-                            <div draggable="true" id="layer<%=layer.position%>"
-                                    <%if (layer.settings.layerSettings.fullscreen) {%> style="
-                                    position: absolute;
-                                    left: <%=getFullScreenElementOffsetX(layer) + '%'%>;
-                                    top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
-                                    width: <%=getDraggableElementWidth(layer) + '%'%>;
-                                    height: <%=getDraggableElementHeight(layer) + '%';%>;
-                                    transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                    " <% } else { %> class="rotate-wrapper" style="
-                                    position: absolute;
-                                    width: <%=getDraggableElementWidth(layer);%>;
-                                    height: <%=getDraggableElementHeight(layer);%>;
-                                    transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                    top: <%=getDeraggableElementOffsetY(layer);%>;
-                                    left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                                <% include layers/image.ejs %>
-                            </div>
+                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                         class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
+                         style="
+                                 position: absolute;
+                         <%if (layer.settings.layerSettings.fullscreen) {%>
+                                 width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
+                                 height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
+                         <% } else {%>
+                                 width: <%=getAnimationWidthEm(layer)%>;
+                                 height: <%=getAnimationHeightEm(layer)%>;
+                         <% }%>
+                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;">
+                        <div draggable="true" id="layer<%=layer.position%>"
+                                <%if (layer.settings.layerSettings.fullscreen) {%> style="
+                                position: absolute;
+                                left: <%=getFullScreenElementOffsetX(layer) + '%'%>;
+                                top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
+                                width: <%=getDraggableElementWidth(layer) + '%'%>;
+                                height: <%=getDraggableElementHeight(layer) + '%';%>;
+                                transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
+                                " <% } else { %> class="rotate-wrapper" style="
+                                position: absolute;
+                                width: <%=getDraggableElementWidth(layer);%>;
+                                height: <%=getDraggableElementHeight(layer);%>;
+                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
+                                top: <%=getDeraggableElementOffsetY(layer);%>;
+                                left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
+                            <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
                         </div>
-                        <%if (layer.settings.layerSettings.fullscreen){%>
                     </div>
-                    <%}%>
-
                 </amp-story-grid-layer>
                 <% break
 
                 case 'video': %>
                 <amp-story-grid-layer template="horizontal">
-                    <%if (layer.settings.layerSettings.fullscreen) { %>
-                    <div <% if (layer.settings.animateIn && !preview){ %>
-                        animate-in="<%= layer.settings.animateIn %>" <% } %> <% if (layer.settings.animateDuration){ %>
-                        animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                    <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %> <% if (layer.settings.animateIn === 'zoom-in'){ %> scale-start="1" scale-end="1.5" <% } %>
-                    <% if (layer.settings.animateIn === 'zoom-out'){ %> scale-start="1.5" scale-end="1" <% } %>
-                    <%if (layer.settings.animateIn === 'pan-up' || layer.settings.animateIn === 'pan-down') {%>
-                        style="width:100%;height:100%;position: absolute;left:50%;"
-                    <%} else {%>
-                        style="width:100%;height:100%;position: absolute;"
-                            <%}%>
+                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                         class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
+                         style="
+                                 position: absolute;
+                         <%if (layer.settings.layerSettings.fullscreen) {%>
+                                 width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
+                                 height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
+                         <% } else {%>
+                                 width: <%=getAnimationWidthEm(layer)%>;
+                                 height: <%=getAnimationHeightEm(layer)%>;
+                         <% }%>
+                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
                     >
-                        <% }%>
-                        <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
-                             class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
-                             style="
-                                     position: absolute;
-                             <%if (layer.settings.layerSettings.fullscreen) {%>
-                                     width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
-                                     height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
-                             <% } else {%>
-                                     width: <%=getAnimationWidthEm(layer)%>;
-                                     height: <%=getAnimationHeightEm(layer)%>;
-                             <% }%>
-                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
-                        <% if (!layer.settings.layerSettings.fullscreen && layer.settings.animateIn && !preview){ %>
-                             animate-in="<%= layer.settings.animateIn %>" <% } %>
-                        <% if (!layer.settings.layerSettings.fullscreen && layer.settings.animateDuration){ %>
-                             animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                        <% if (!layer.settings.layerSettings.fullscreen && layer.settings.animateDelay){ %>
-                             animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
-                        >
-                            <div draggable="true" id="layer<%=layer.position%>"
-                                    <%if (layer.settings.layerSettings.fullscreen) {%> style="
-                                    position: absolute;
-                                    width: <%=getDraggableElementWidth(layer)%>;
-                                    height: <%=getDraggableElementHeight(layer)%>;
-                                    transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                    " <% } else { %> class="rotate-wrapper" style="
-                                    position: absolute;
-                                    width: <%=getDraggableElementWidth(layer);%>;
-                                    height: <%=getDraggableElementHeight(layer);%>;
-                                    transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                    top: <%=getDeraggableElementOffsetY(layer);%>;
-                                    left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                                <% include layers/video.ejs %>
-                            </div>
+                        <div draggable="true" id="layer<%=layer.position%>"
+                                <%if (layer.settings.layerSettings.fullscreen) {%> style="
+                                position: absolute;
+                                width: <%=getDraggableElementWidth(layer)%>;
+                                height: <%=getDraggableElementHeight(layer)%>;
+                                transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
+                                " <% } else { %> class="rotate-wrapper" style="
+                                position: absolute;
+                                width: <%=getDraggableElementWidth(layer);%>;
+                                height: <%=getDraggableElementHeight(layer);%>;
+                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
+                                top: <%=getDeraggableElementOffsetY(layer);%>;
+                                left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
+                            <%- include('layers/video.ejs', {withAnimations: false, layer: layer }); %>
                         </div>
-                        <%if (layer.settings.layerSettings.fullscreen){%>
                     </div>
-                    <%}%>
                 </amp-story-grid-layer>
                 <% break
                 case 'cta-link': %>
@@ -509,32 +444,22 @@ function getFullScreenElementOffsetX (layer) {
                     display: grid;
                  "
                      id="<%=layer.position%>">
-                    <a
-                            onmousedown="selectLayer(event)"
-                    <% if (layer.settings.animateIn && !preview){ %>
-                            animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>
-                            style="
-                                    margin: auto;
-                                    padding: 10px 20px;
-                                    text-align: center;
-                                    font-size: 16px;
-                                    font-family: 'Verdana';
-                                    text-decoration: none;
-                                    background-color: <%=layer.settings.layerSettings.shapeStyles.fillColor%>;
-                                    color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                                    border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor%>;
-                                    text-align: center;
-                                    cursor: default;
-                                    z-index: <%=currentSlide.layers.length + 1%>;
-                                    border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
-                            href="<%=layer.settings.ctaLayerSettings.link%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
+                    <a onmousedown="selectLayer(event)"
+                       style="
+                               margin: auto;
+                               padding: 10px 20px;
+                               text-align: center;
+                               font-size: 16px;
+                               font-family: 'Verdana';
+                               text-decoration: none;
+                               background-color: <%=layer.settings.layerSettings.shapeStyles.fillColor%>;
+                               color: <%=layer.settings.ctaLayerSettings.fontColor%>;
+                               border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor%>;
+                               text-align: center;
+                               cursor: default;
+                               z-index: <%=currentSlide.layers.length + 1%>;
+                               border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
+                       href="<%=layer.settings.ctaLayerSettings.link%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
                 </div>
                 <% break } %>
             <% }) %>

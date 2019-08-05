@@ -48,6 +48,19 @@ let Amp = class Amp {
         });
     }
 
+    createSinglePageWithAnimations(data, calback) {
+        let resultHtml = ''
+        let fullData = this.setConfigPath(data);
+        app.render(path.resolve(__dirname, 'views', 'ampSinglePageWithAnimations.ejs'), fullData, function(err, html) {
+            if (err) {
+                console.log(err);
+            } else {
+                resultHtml = html.replace(/\n/g, '')
+            }
+            calback(resultHtml)
+        });
+    }
+
     createSinglePageWithoutScripts(data, calback) {
         let resultHtml = ''
         let fullData = this.setConfigPath(data);

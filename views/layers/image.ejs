@@ -1,31 +1,4 @@
-<% function getStyles (settings) {
-  let styles = ''
-  if (settings) {
-    if (settings.margin && !layer.settings.layerSettings.fullscreen) {
-      if (['1', '3', '13', '15', '2', '5', '11', '14'].includes(settings.position)) {
-        if (['1', '2', '3', '5'].includes(settings.position)) {
-          styles += `top:${settings.margin}px;`;
-        } else if (['11', '13', '14', '15'].includes(settings.position)) {
-          styles += `top:${-settings.margin}px;`;
-        }
-      }
-      if (['1', '4', '7', '10', '13'].includes(settings.position)) {
-        styles += `left:${settings.margin}px;`;
-      }
-      if (['3', '6', '9', '12', '15'].includes(settings.position)) {
-        styles += `right:${settings.margin}px;`;
-      }
-    }
-    if (settings.opacity) {
-      styles += `opacity:${settings.opacity / 100};`
-    }
-    styles += `z-index: ${layer.position}`
-  }
-  return styles
-}
-
-function getImageUrl (content) {
-  console.log('content', content)
+<% function getImageUrl (content) {
   if (layer.type === 'video') {
     if (content.thumbnail !== '') {
       console.log('thumbnail')
@@ -40,15 +13,28 @@ function getImageUrl (content) {
   }
 }
 if (layer.settings.layerSettings.fullscreen) { %>
-  <amp-img
-          src="<%= getImageUrl(layer.content) %>"
-          width="<%= layer.settings.layerSettings.originalWidth %>px"
-          height="<%= layer.settings.layerSettings.originalHeight %>px"
-          class=""
-          layout="responsive"
-          alt="an image"
-          style="width:100%;height:100%;object-fit:fill;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;">
-  </amp-img>
+  <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+  <div style="transform: translateX(50%);">
+    <% } %>
+    <amp-img
+    <% if (withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+      animate-in="<%= layer.settings.animateIn %>"
+      <% if (layer.settings.animateDuration){ %>
+      animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+      <% if (layer.settings.animateDelay){ %>
+      animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
+            <% } %>
+      src="<%= getImageUrl(layer.content) %>"
+      width="<%= layer.settings.layerSettings.width %>"
+      height="<%= layer.settings.layerSettings.height %>"
+      layout="fixed"
+      alt="an image"
+      style="width:100%;height:100%;object-fit:fill;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;">
+    </amp-img>
+    <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+  </div>
+  <% } %>
+
 <% } else { %>
   <amp-img
           class="small-image"

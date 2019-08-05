@@ -14,26 +14,39 @@ function getVideoUrl (content) {
   }
 }
 if (layer.settings.layerSettings.fullscreen) {%>
+  <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+<div style="transform: translateX(50%);">
+  <% } %>
   <amp-video
-          class="full-screen-video"
-          autoplay
-  <% if (layer.settings.layerSettings.mute) {%>
-          noaudio
+  <% if (withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+    animate-in="<%= layer.settings.animateIn %>"
+    <% if (layer.settings.animateDuration){ %>
+    animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+    <% if (layer.settings.animateDelay){ %>
+    animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
           <% } %>
-          layout="responsive"
+    class="full-screen-video"
+    autoplay
+  <% if (layer.settings.layerSettings.mute) {%>
+    noaudio
+          <% } %>
+    layout="responsive"
   <% if (ampStory.fromPreview) { %>
-          src="<%= getVideoUrl(layer.content)%>"
+    src="<%= getVideoUrl(layer.content)%>"
           <% }%>
-          width="<%= layer.settings.layerSettings.width %>"
-          height="<%= layer.settings.layerSettings.height %>"
-          poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
-          style="height: inherit;opacity:<%= layer.settings.generalSettings.opacity / 100 %>">
+    width="<%= layer.settings.layerSettings.width %>"
+    height="<%= layer.settings.layerSettings.height %>"
+    poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
+    style="height: inherit;opacity:<%= layer.settings.generalSettings.opacity / 100 %>">
     <source src="<%= getVideoUrl(layer.content)%>"
             type="video/mp4">
     <div fallback>
       <p>This browser does not support the video element.</p>
     </div>
   </amp-video>
+  <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+</div>
+  <% } %>
 <% } else { %>
   <amp-video
           autoplay
