@@ -607,7 +607,7 @@ function getFullScreenElementOffsetX (layer) {
                                     position: absolute;
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
-                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.width) === 0) {%>
+                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
                                 bottom: 0;
                                         top: initial;
                             <% } else {%>
@@ -632,7 +632,8 @@ function getFullScreenElementOffsetX (layer) {
                 </amp-story-grid-layer>
                 <% break;
 
-                case 'image': %>
+                case 'image':
+                case 'gifs': %>
                 <% if (!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) { %>
                 <amp-story-grid-layer template="horizontal">
                     <div
@@ -646,7 +647,7 @@ function getFullScreenElementOffsetX (layer) {
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
                             <% }%>
-                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.width) === 0) {%>
+                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
                                 bottom: 0;
                                         top: initial;
                             <% } else {%>
@@ -705,7 +706,7 @@ function getFullScreenElementOffsetX (layer) {
                                     width: <%=getAnimationWidthEm(layer)%>;
                                     height: <%=getAnimationHeightEm(layer)%>;
                             <% }%>
-                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.width) === 0) {%>
+                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
                                 bottom: 0;
                                         top: initial;
                             <% } else {%>
