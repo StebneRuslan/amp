@@ -111,12 +111,14 @@ export default class Draggable extends Subject {
 
         _el.css(css);
         Helper(controls).css(css);
-        window.parent.postMessage({event: 'resize-on-mouseup', position: {
+        window.parent.postMessage({
+            event: 'resize-on-mouseup', position: {
                 width: controls.style.width,
                 height: controls.style.height,
                 diffLeft,
                 diffTop
-            } }, 'http://127.0.0.1:3978/#/edit');
+            }
+        }, 'http://127.0.0.1:3978/#/edit');
         this.storage.cached = null;
     }
 
@@ -277,7 +279,8 @@ function _compute(e) {
 
     const _el = Helper(el);
     const styleList = el.style;
-
+    console.log(111, styleList, [el], _el)
+    console.log(styleList.top || _el.css('top'))
     const dimens = {
         top: getUnitDimension(styleList.top || _el.css('top')),
         left: getUnitDimension(styleList.left || _el.css('left')),
@@ -353,7 +356,7 @@ function refreshState(factor, revX, revY) {
 
     const _sel = Helper(this.el);
     const styleList = this.el.style;
-
+    console.log(2222)
     return {
         transform: transform,
         parentTransform: parseMatrix(parent),
@@ -413,7 +416,7 @@ function processResize(
 
     const scaleHeight = storage.ch / storage.cw;
     if (height !== null) {
-        if(storage.shiftKey && canResizeWithShiftKey) {
+        if (storage.shiftKey && canResizeWithShiftKey) {
             height = width * scaleHeight;
         }
         style.height = `${snapToGrid(height, snap.y)}px`;
@@ -428,17 +431,28 @@ function processResize(
         revX,
         revY
     );
-    const resultY = top - (coords.top - coordY),
-        resultX = left - (coords.left - coordX);
+    let resultY = top - (coords.top - coordY);
+    let resultX = left - (coords.left - coordX);
 
     const matrix = [...transform];
-
+    if (el.querySelector('.text-container')) {
+        const text = el.querySelector('span')
+        if (parseFloat(style.height) <= text.clientHeight) {
+            style.height = text.clientHeight + 'px'
+        }
+        if (parseFloat(style.width) <= text.clientWidth) {
+            style.width = text.clientWidth + 'px'
+        }
+        resultX = resultX > 0 ? 0 : resultX;
+        resultY = resultY > 0 ? 0 : resultY;
+    }
     matrix[4] = resultX;
     matrix[5] = resultY;
 
     const css = matrixToCSS(matrix);
 
     Helper(controls).css(css);
+
 
     css.width = fromPX(
         style.width,
@@ -459,7 +473,7 @@ function processResize(
 
 
     Helper(el).css(css);
-    window.parent.postMessage({event: 'resize-from-package', size: size}, 'http://127.0.0.1:3978/#/edit');
+    window.parent.postMessage({ event: 'resize-from-package', size: size }, 'http://127.0.0.1:3978/#/edit');
 
     storage.cached = matrix;
 }
@@ -556,14 +570,13 @@ function processRotate(radians) {
     const matrix = [...transform];
 
     const angle = snapToGrid(refang + radians, snap.angle);
-
     //rotate(Xdeg) = matrix(cos(X), sin(X), -sin(X), cos(X), 0, 0);
     matrix[0] = floatToFixed(Math.cos(angle));
     matrix[1] = floatToFixed(Math.sin(angle));
     matrix[2] = - floatToFixed(Math.sin(angle));
     matrix[3] = floatToFixed(Math.cos(angle));
 
-    window.parent.postMessage({event: 'rotate-from-resizer', value: angle * (180 / Math.PI)}, 'http://127.0.0.1:3978/#/edit');
+    window.parent.postMessage({ event: 'rotate-from-resizer', value: angle * (180 / Math.PI) }, 'http://127.0.0.1:3978/#/edit');
     const css = matrixToCSS(matrix);
 
     Helper(controls).css(css);
