@@ -14,7 +14,7 @@
             <% } %>
         </filter>
 
-        <linearGradient id='<%=`linearfillColor${currentSlide.position}${layer.position}`%>' x1="0%" y1="0%" x2="<%=`${layer.settings.layerSettings.shapeStyles.fillColor.angle}%`%>" y2="<%=`${layer.settings.layerSettings.shapeStyles.fillColor.angle}%`%>">
+        <linearGradient id='<%=`linearfillColor${currentSlide.position}${layer.position}`%>' x1="<%= setCoordinates('x1') %>" y1="<%= setCoordinates('y1') %>" x2="<%= setCoordinates('x2') %>" y2="<%= setCoordinates('y2') %>">
             <stop offset="<%=`${layer.settings.layerSettings.shapeStyles.fillColor.leftColorPercent}%`%>" style="stop-color:<%=`${layer.settings.layerSettings.shapeStyles.fillColor.leftColor};stop-opacity:1`%>"/>
             <stop offset="<%=`${layer.settings.layerSettings.shapeStyles.fillColor.rightColorPercent}%`%>" style="stop-color:<%=`${layer.settings.layerSettings.shapeStyles.fillColor.rightColor};stop-opacity:1`%>"/>
         </linearGradient>
@@ -24,7 +24,7 @@
             <stop offset="<%=`${layer.settings.layerSettings.shapeStyles.fillColor.rightColorPercent}%`%>" style="stop-color:<%=`${layer.settings.layerSettings.shapeStyles.fillColor.rightColor};stop-opacity:1`%>"/>
         </radialGradient>
 
-        <linearGradient id='<%=`linearborderColor${currentSlide.position}${layer.position}`%>' x1="0%" y1="0%" x2="<%=`${layer.settings.layerSettings.shapeStyles.fillColor.angle}%`%>" y2="<%=`${layer.settings.layerSettings.shapeStyles.borderColor.angle}%`%>">
+        <linearGradient id='<%=`linearborderColor${currentSlide.position}${layer.position}`%>' x1="<%= setCoordinates('x1') %>" y1="<%= setCoordinates('y1') %>" x2="<%= setCoordinates('x2') %>" y2="<%= setCoordinates('y2') %>">
             <stop offset="<%=`${layer.settings.layerSettings.shapeStyles.borderColor.leftColorPercent}%`%>" style="stop-color:<%=`${layer.settings.layerSettings.shapeStyles.borderColor.leftColor};stop-opacity:1`%>"/>
             <stop offset="<%=`${layer.settings.layerSettings.shapeStyles.borderColor.rightColorPercent}%`%>" style="stop-color:<%=`${layer.settings.layerSettings.shapeStyles.borderColor.rightColor};stop-opacity:1`%>"/>
         </linearGradient>
@@ -63,5 +63,19 @@
                 `url(#${layer.settings.layerSettings.shapeStyles[type].type === 'linear' ? 'linear' : 'radial'}${type}${currentSlide.position}${layer.position})`
     } else {
         return 'black'
+    }
+} %>
+
+<%function setCoordinates(type) {
+    const anglePI = -layer.settings.layerSettings.shapeStyles.fillColor.angle * (Math.PI / 180);
+    switch (type) {
+        case 'x1':
+            return Math.round(50 + Math.sin(anglePI) * 50) + '%';
+        case 'y1':
+            return Math.round(50 + Math.cos(anglePI) * 50) + '%';
+        case 'x2':
+            return Math.round(50 + Math.sin(anglePI + Math.PI) * 50) + '%'
+        case 'y2':
+            return Math.round(50 + Math.cos(anglePI + Math.PI) * 50) + '%'
     }
 } %>
