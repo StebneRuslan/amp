@@ -279,7 +279,6 @@ function _compute(e) {
 
     const _el = Helper(el);
     const styleList = el.style;
-    console.log(111, styleList, [el], _el)
     console.log(styleList.top || _el.css('top'))
     const dimens = {
         top: getUnitDimension(styleList.top || _el.css('top')),
@@ -436,12 +435,17 @@ function processResize(
 
     const matrix = [...transform];
     if (el.querySelector('.text-container')) {
-        const text = el.querySelector('span')
-        if (parseFloat(style.height) <= text.clientHeight) {
-            style.height = text.clientHeight + 'px'
+        const width = [].map.call(el.querySelectorAll('span'), (el) => {
+            return el.clientWidth
+        }).reduce((a, b) => a + b)
+        const height = [].map.call(el.querySelector('span').parentNode.parentNode.children, (el) => {
+            return el.clientHeight
+        }).reduce((a, b) => a + b)
+        if (parseFloat(style.height) <= height) {
+            style.height = height + 1 + 'px'
         }
-        if (parseFloat(style.width) <= text.clientWidth) {
-            style.width = text.clientWidth + 'px'
+        if (parseFloat(style.width) <= width) {
+            style.width = width + 1 + 'px'
         }
         resultX = resultX > 0 ? 0 : resultX;
         resultY = resultY > 0 ? 0 : resultY;
