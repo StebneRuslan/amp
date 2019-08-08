@@ -36,6 +36,54 @@
                         y: 1
                     }
                 });
+                const father = currentLayer.parentNode;
+                if (currentLayer.querySelector('.text-container')) {
+                    currentLayer.parentElement.parentElement.addEventListener('dblclick', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        console.log(2, event, [event.target]);
+                        console.log(3, [father]);
+                        const a = document.createElement('textarea');
+                        a.setAttribute('style', 'position: absolute; background-color: transparent; outline: none; border: 0;' + currentLayer.style.cssText);
+                        let text = [].map.call(father.children[1].querySelectorAll('span'), (el) => el.innerText).reduce((a, b) => a + b);
+                        console.log(4, text);
+                        a.setAttribute('value', text);
+                        father.children[1].setAttribute('style', father.children[1].style.cssText + 'opacity: 0 !important;');
+                        a.innerText = text;
+                        let timeout = null;
+                        a.addEventListener('change', (event) => {
+                            clearTimeout(timeout);
+                            timeout = setTimeout(() => {
+                                console.log(4, event);
+                                window.parent.postMessage({ event: 'textchanged', value: JSON.parse(JSON.stringify(event)) }, '*');
+                            }, 300);
+                        });
+                        currentLayer.parentElement.appendChild(a);
+                        a.focus();
+                    });
+                    currentLayer.parentElement.parentElement.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        console.log(1, 'CLEAN');
+                        [].forEach.call(currentLayer.parentElement.children, (el) => {
+                            if (el.nodeName === 'TEXTAREA') {
+                                father.children[1].setAttribute('style', father.children[1].style.cssText.replace('opacity: 0 !important;', 'opacity: 1 !important;'));
+                                el.remove();
+                            }
+                        });
+                    });
+                    currentLayer.parentElement.parentElement.addEventListener('mouseleave', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        console.log(1, 'CLEAN');
+                        [].forEach.call(currentLayer.parentElement.children, (el) => {
+                            if (el.nodeName === 'TEXTAREA') {
+                                father.children[1].setAttribute('style', father.children[1].style.cssText.replace('opacity: 0 !important;', 'opacity: 1 !important;'));
+                                el.remove();
+                            }
+                        });
+                    });
+                }
             }
             if (currentLayer) {
                 if ([].includes.call(currentLayer.parentNode.classList, 'fullscreen')) {
