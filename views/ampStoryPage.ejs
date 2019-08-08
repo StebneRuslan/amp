@@ -158,6 +158,16 @@ function getFullScreenElementOffsetX (layer) {
     const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
     return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
 }
+
+function setLinkBgColor (data) {
+    if (data.type === 'solid') {
+        return data.leftColor;
+    } else if (data.type === 'linear') {
+        return `linear-gradient(${data.angle}deg, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
+    } else if (data.type === 'radial') {
+        return `radial-gradient(circle at ${data.horizontalDirection}% ${data.verticalDirection}%, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
+    }
+}
 %>
 
 <%let preview = false;
@@ -385,9 +395,9 @@ ampStory.cuts.map(currentSlide => { %>
                         font-size: 16px;
                         font-family: 'Verdana';
                         text-decoration: none;
-                        background-color: <%=layer.settings.layerSettings.shapeStyles.fillColor%>;
+                        background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
                         color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                        border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor%>;
+                        border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
                         text-align: center;
                         bottom:10%;
                         border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
