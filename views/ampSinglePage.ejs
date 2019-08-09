@@ -43,22 +43,6 @@
                         event.preventDefault();
                         event.stopPropagation();
                         father.children[1].setAttribute('contenteditable', true);
-                        changeProperty(father.children[1], 'textarea', 'span');
-                        function changeProperty(elements, nodeTag, prevNodeTag) {
-                            if (elements.children && elements.children.length) {
-                                [].forEach.call(elements.children, (el) => changeProperty(el, nodeTag, prevNodeTag));
-                            } else {
-                                if (elements.nodeName.toLowerCase() !== prevNodeTag) {
-                                    elements = elements.parentNode;
-                                }
-                                if (elements.children && elements.children[0] && elements.children[0].nodeName.toLowerCase() === 'br') {
-                                    return;
-                                }
-                                if (elements.nodeName.toLowerCase() === prevNodeTag) {
-                                    elements.setAttribute('style', `white-space: normal; word-wrap: normal;`);
-                                }
-                            }
-                        }
                         father.children[1].focus();
                         father.children[1].addEventListener('click', (e) => {
                             event.preventDefault();
