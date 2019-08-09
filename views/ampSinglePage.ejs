@@ -37,50 +37,43 @@
                     }
                 });
                 const father = currentLayer.parentNode;
+
                 if (currentLayer.querySelector('.text-container')) {
                     currentLayer.parentElement.parentElement.addEventListener('dblclick', (event) => {
                         event.preventDefault();
                         event.stopPropagation();
-                        console.log(2, event, [event.target]);
-                        console.log(3, [father]);
-                        const a = document.createElement('textarea');
-                        a.setAttribute('style', 'position: absolute; background-color: transparent; outline: none; border: 0;' + currentLayer.style.cssText);
-                        let text = [].map.call(father.children[1].querySelectorAll('span'), (el) => el.innerText).reduce((a, b) => a + b);
-                        console.log(4, text);
-                        a.setAttribute('value', text);
-                        father.children[1].setAttribute('style', father.children[1].style.cssText + 'opacity: 0 !important;');
-                        a.innerText = text;
-                        let timeout = null;
-                        a.addEventListener('change', (event) => {
-                            clearTimeout(timeout);
-                            timeout = setTimeout(() => {
-                                console.log(4, event);
-                                window.parent.postMessage({ event: 'textchanged', value: JSON.parse(JSON.stringify(event)) }, '*');
-                            }, 300);
-                        });
-                        currentLayer.parentElement.appendChild(a);
-                        a.focus();
-                    });
-                    currentLayer.parentElement.parentElement.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        console.log(1, 'CLEAN');
-                        [].forEach.call(currentLayer.parentElement.children, (el) => {
-                            if (el.nodeName === 'TEXTAREA') {
-                                father.children[1].setAttribute('style', father.children[1].style.cssText.replace('opacity: 0 !important;', 'opacity: 1 !important;'));
-                                el.remove();
+                        father.children[1].setAttribute('contenteditable', true);
+                        changeProperty(father.children[1], 'textarea', 'span');
+                        function changeProperty(elements, nodeTag, prevNodeTag) {
+                            if (elements.children && elements.children.length) {
+                                [].forEach.call(elements.children, (el) => changeProperty(el, nodeTag, prevNodeTag));
+                            } else {
+                                if (elements.nodeName.toLowerCase() !== prevNodeTag) {
+                                    elements = elements.parentNode;
+                                }
+                                if (elements.children && elements.children[0] && elements.children[0].nodeName.toLowerCase() === 'br') {
+                                    return;
+                                }
+                                if (elements.nodeName.toLowerCase() === prevNodeTag) {
+                                    elements.setAttribute('style', `white-space: normal; word-wrap: normal;`);
+                                }
                             }
+                        }
+                        father.children[1].focus();
+                        father.children[1].addEventListener('click', (e) => {
+                            event.preventDefault();
+                            event.stopPropagation();
                         });
-                    });
-                    currentLayer.parentElement.parentElement.addEventListener('mouseleave', (event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        console.log(1, 'CLEAN');
-                        [].forEach.call(currentLayer.parentElement.children, (el) => {
-                            if (el.nodeName === 'TEXTAREA') {
-                                father.children[1].setAttribute('style', father.children[1].style.cssText.replace('opacity: 0 !important;', 'opacity: 1 !important;'));
-                                el.remove();
-                            }
+                        father.children[1].addEventListener('keydown', (e) => {
+                            window.parent.postMessage({ event: 'textselected', value: true }, '*');
+                        });
+                        document.querySelector('.amp-mode-mouse').addEventListener('click', (event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            father.children[1].setAttribute('contenteditable', false);
+                            father.children[1].removeEventListener('keydown', () => { });
+                            window.parent.postMessage({ event: 'textselected', value: false }, '*');
+                            document.querySelector('.amp-mode-mouse').removeEventListener('click', () => { });
                         });
                     });
                 }
