@@ -36,6 +36,31 @@
                         y: 1
                     }
                 });
+                const father = currentLayer.parentNode;
+
+                if (currentLayer.querySelector('.text-container')) {
+                    currentLayer.parentElement.parentElement.addEventListener('dblclick', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        father.children[1].setAttribute('contenteditable', true);
+                        father.children[1].focus();
+                        father.children[1].addEventListener('click', (e) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        });
+                        father.children[1].addEventListener('keydown', (e) => {
+                            window.parent.postMessage({ event: 'textselected', value: true }, '*');
+                        });
+                        document.querySelector('.amp-mode-mouse').addEventListener('click', (event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            father.children[1].setAttribute('contenteditable', false);
+                            father.children[1].removeEventListener('keydown', () => { });
+                            window.parent.postMessage({ event: 'textselected', value: false }, '*');
+                            document.querySelector('.amp-mode-mouse').removeEventListener('click', () => { });
+                        });
+                    });
+                }
             }
             if (currentLayer) {
                 if ([].includes.call(currentLayer.parentNode.classList, 'fullscreen')) {
@@ -294,6 +319,16 @@ function getFullScreenElementOffsetX (layer) {
     const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
     return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
 }
+
+function setLinkBgColor (data) {
+    if (data.type === 'solid') {
+        return data.leftColor;
+    } else if (data.type === 'linear') {
+        return `linear-gradient(${data.angle}deg, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
+    } else if (data.type === 'radial') {
+        return `radial-gradient(circle at ${data.horizontalDirection}% ${data.verticalDirection}%, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
+    }
+}
 %>
 
     <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
@@ -478,9 +513,9 @@ function getFullScreenElementOffsetX (layer) {
                                font-size: 16px;
                                font-family: 'Verdana';
                                text-decoration: none;
-                               background-color: <%=layer.settings.layerSettings.shapeStyles.fillColor%>;
+                               background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
                                color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                               border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor%>;
+                               border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
                                text-align: center;
                                cursor: default;
                                z-index: <%=currentSlide.layers.length + 1%>;

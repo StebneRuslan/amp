@@ -443,11 +443,11 @@ function processResize(
         }).reduce((a, b) => a + b)
         if (parseFloat(style.height) <= height) {
             style.height = height + 1 + 'px'
+            if (parseFloat(style.width) <= width) {
+                style.width = width + 1 + 'px'
+                resultX = resultX > 0 ? 0 : resultX;
+            }
         }
-        if (parseFloat(style.width) <= width) {
-            style.width = width + 1 + 'px'
-        }
-        resultX = resultX > 0 ? 0 : resultX;
         resultY = resultY > 0 ? 0 : resultY;
     }
     matrix[4] = resultX;
