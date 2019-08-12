@@ -85,6 +85,7 @@ export default class Draggable extends Subject {
         matrix[4] = 0;
         matrix[5] = 0;
 
+        console.log('END');
         const css = matrixToCSS(matrix);
 
         const pW = parent.css('width'),
@@ -109,7 +110,9 @@ export default class Draggable extends Subject {
             dimens.top
         );
 
+        console.log('111111', _el);
         _el.css(css);
+        console.log('222222', _el);
         Helper(controls).css(css);
         window.parent.postMessage({
             event: 'resize-on-mouseup', position: {
@@ -123,7 +126,6 @@ export default class Draggable extends Subject {
     }
 
     onRefreshState(data) {
-
         const store = this.storage;
 
         const recalc = refreshState.call(this,
@@ -139,7 +141,6 @@ export default class Draggable extends Subject {
 }
 
 function _init(sel) {
-
     const wrapper = document.createElement('div');
 
     addClass(wrapper, 'dg-wrapper');
@@ -196,7 +197,6 @@ function _init(sel) {
 }
 
 function _destroy() {
-
     const { controls } = this.storage;
 
     Helper(controls).off('mousedown', this._onMouseDown)
@@ -342,7 +342,7 @@ function refreshState(factor, revX, revY) {
 
     const transform = parseMatrix(Helper(ctrls));
 
-    //getting current coordinates considering rotation angle                                                                                                  
+    //getting current coordinates considering rotation angle
     const coords = rotatedTopLeft(
         transform[4],
         transform[5],
@@ -355,7 +355,6 @@ function refreshState(factor, revX, revY) {
 
     const _sel = Helper(this.el);
     const styleList = this.el.style;
-    console.log(2222)
     return {
         transform: transform,
         parentTransform: parseMatrix(parent),
@@ -435,20 +434,29 @@ function processResize(
 
     const matrix = [...transform];
     if (el.querySelector('.text-container')) {
-        const width = [].map.call(el.querySelectorAll('span'), (el) => {
-            return el.clientWidth
-        }).reduce((a, b) => a + b)
-        const height = [].map.call(el.querySelector('span').parentNode.parentNode.children, (el) => {
-            return el.clientHeight
-        }).reduce((a, b) => a + b)
-        if (parseFloat(style.height) <= height) {
-            style.height = height + 1 + 'px'
+        let width = 0;
+        if (el.querySelector('span')) {
+            [].forEach.call(el.querySelectorAll('span'), (el) => {
+                console.log('el', el);
+                if (parseFloat(el.clientWidth) >= parseFloat(width)) {
+                    console.log(el.clientWidth)
+                    width = el.clientWidth
+                }
+            })
+            const height = [].map.call(el.querySelector('span').parentNode.parentNode.children, (el) => {
+                return el.clientHeight
+            }).reduce((a, b) => a + b)
+            if (parseFloat(style.height) <= height) {
+                style.height = height + 1 + 'px'
+                if (parseFloat(style.width) <= width) {
+                    resultX = resultX > 0 ? 0 : resultX;
+                }
+            }
             if (parseFloat(style.width) <= width) {
                 style.width = width + 1 + 'px'
-                resultX = resultX > 0 ? 0 : resultX;
             }
+            resultY = resultY > 0 ? 0 : resultY;
         }
-        resultY = resultY > 0 ? 0 : resultY;
     }
     matrix[4] = resultX;
     matrix[5] = resultY;
@@ -478,7 +486,7 @@ function processResize(
 
     Helper(el).css(css);
     window.parent.postMessage({ event: 'resize-from-package', size: size }, 'http://127.0.0.1:3978/#/edit');
-
+    console.log('resize');
     storage.cached = matrix;
 }
 
@@ -548,7 +556,6 @@ function processMove(
         matrix[4] = snapToGrid(transform[4] + left, snap.x);
         matrix[5] = snapToGrid(transform[5] + top, snap.y);
     }
-
     const css = matrixToCSS(matrix);
 
     Helper(controls).css(css);
@@ -590,7 +597,6 @@ function processRotate(radians) {
 }
 
 function matrixToCSS(arr) {
-
     const style = `matrix(${arr.join()})`;
 
     return {
