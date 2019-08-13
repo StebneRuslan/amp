@@ -325,26 +325,20 @@ function setLinkBgColor (data) {
             <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                 <% var page = null
                         switch (layer.type) {
+                    case 'html':
                 case 'text': %>
                 <amp-story-grid-layer template="horizontal">
-                    <div
-                            class="drag-item single-page-item animate">
-                        <div id="layer<%=layer.position%>"
-                             style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
-                            <% include layers/text.ejs %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% break;
-
-                case 'html': %>
-                <amp-story-grid-layer template="horizontal">
-                    <div
-                            class="drag-item single-page-item animate"
-                            style="
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                    top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;">
-                        <div id="layer<%=layer.position%>"
+                    <div class="drag-item single-page-item animate"
+                         style="
+                                 width: <%=getAnimationWidthEm(layer)%>;
+                                 height: <%=getAnimationHeightEm(layer)%>;
+                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
+                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                    <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>" <% } %>
+                    <% if (layer.settings.animateDuration){ %> animate-in-duration="<%= layer.settings.animateDuration %>s"
+                            <% } %> <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
+                            <% } %>>
+                        <div draggable="true" id="layer<%=layer.position%>"
                              style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                             <% include layers/text.ejs %>
                         </div>

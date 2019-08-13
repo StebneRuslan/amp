@@ -85,7 +85,6 @@ export default class Draggable extends Subject {
         matrix[4] = 0;
         matrix[5] = 0;
 
-        console.log('END');
         const css = matrixToCSS(matrix);
 
         const pW = parent.css('width'),
@@ -110,9 +109,7 @@ export default class Draggable extends Subject {
             dimens.top
         );
 
-        console.log('111111', _el);
         _el.css(css);
-        console.log('222222', _el);
         Helper(controls).css(css);
         window.parent.postMessage({
             event: 'resize-on-mouseup', position: {
@@ -279,7 +276,7 @@ function _compute(e) {
 
     const _el = Helper(el);
     const styleList = el.style;
-    console.log(styleList.top || _el.css('top'))
+
     const dimens = {
         top: getUnitDimension(styleList.top || _el.css('top')),
         left: getUnitDimension(styleList.left || _el.css('left')),
@@ -437,9 +434,7 @@ function processResize(
         let width = 0;
         if (el.querySelector('span')) {
             [].forEach.call(el.querySelectorAll('span'), (el) => {
-                console.log('el', el);
                 if (parseFloat(el.clientWidth) >= parseFloat(width)) {
-                    console.log(el.clientWidth)
                     width = el.clientWidth
                 }
             })
@@ -486,7 +481,6 @@ function processResize(
 
     Helper(el).css(css);
     window.parent.postMessage({ event: 'resize-from-package', size: size }, 'http://127.0.0.1:3978/#/edit');
-    console.log('resize');
     storage.cached = matrix;
 }
 

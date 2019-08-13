@@ -29,29 +29,17 @@
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
         const father = currentLayer.parentNode;
         function keyDownOperation(e) {
-            if (e.keyCode === 13) {
-                changeEditorContainerHeight();
-            }
-            if (!father.children[1].querySelector('span')) {
-                father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
-            }
-            window.parent.postMessage({ event: 'textselected', value: true }, '*');
-        }
-        function keyUpOperation() {
-            let width = 0;
-            [].forEach.call(currentLayer.querySelectorAll('span'), (el) => {
-                if (parseFloat(el.clientWidth) >= width) {
-                    width = el.clientWidth;
+            if (false) {
+                if (e.keyCode === 13) {
+                    changeEditorContainerHeight();
                 }
-            });
-            document.querySelector('.dg-controls').style.width = width + 'px';
-        }
-        if (event.data.message === 'KEY_PRESS_TEXT_EDITOR') {
-            keyUpOperation();
-            if (event.data.keyCode && event.data.keyCode === 13) {
-                changeEditorContainerHeight(father.querySelector('.text-container').children[0].children[0].children[event.data.currentNodeId]);
+                if (!father.children[1].querySelector('span')) {
+                    father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
+                }
             }
+            window.parent.postMessage({event: 'textselected', value: true}, '*');
         }
+
         if (currentLayer && event.data.message !== 'KEY_PRESS_TEXT_EDITOR') {
             Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
                 element.classList.remove('draggable');
@@ -75,7 +63,6 @@
                     event.stopPropagation();
                     father.children[1].setAttribute('contenteditable', false);
                     father.children[1].removeEventListener('keydown', keyDownOperation);
-                    father.children[1].removeEventListener('keyup', keyUpOperation);
                     father.children[1].removeEventListener('click', stopPropagation);
                     window.parent.postMessage({ event: 'textselected', value: false }, '*');
                     window.parent.document.querySelector('body').removeEventListener('click', apmModeMouseClick);
@@ -86,7 +73,6 @@
                 }
                 function dbEvent() {
                     father.children[1].removeEventListener('keydown', keyDownOperation);
-                    father.children[1].removeEventListener('keyup', keyUpOperation);
                     if (!father.children[1].querySelector('span')) {
                         father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
                     }
@@ -94,7 +80,6 @@
                     father.children[1].focus();
                     father.children[1].addEventListener('click', stopPropagation);
                     father.children[1].addEventListener('keydown', keyDownOperation);
-                    father.children[1].addEventListener('keyup', keyUpOperation);
                     window.parent.document.querySelector('body').addEventListener('click', apmModeMouseClick);
 
                 }
@@ -391,7 +376,8 @@ function setLinkBgColor (data) {
             <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                 <% var page = null
                         switch (layer.type) {
-                case 'text': %>
+                    case 'text':
+                case 'html': %>
                 <amp-story-grid-layer template="horizontal">
                     <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
                          class="drag-item single-page-item animate"
@@ -412,21 +398,6 @@ function setLinkBgColor (data) {
                                 height: <%=getDraggableElementHeight(layer);%>;
                                 top: <%=getDeraggableElementOffsetY(layer);%>;
                                 left: <%=getDeraggableElementOffsetX(layer);%>;">
-                            <% include layers/text.ejs %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% break;
-
-                case 'html': %>
-                <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
-                         class="drag-item single-page-item animate"
-                         style="
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;">
-                        <div draggable="true" id="layer<%=layer.position%>"
-                             style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                             <% include layers/text.ejs %>
                         </div>
                     </div>
