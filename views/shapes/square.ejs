@@ -3,14 +3,16 @@
         xmlns:xlink='http://www.w3.org/1999/xlink'
         width='<%= getSvgSizeInProcentage('width') %>'
         height='<%= getSvgSizeInProcentage('height') %>'
-        style='<%=`overflow: visible; filter: url(#shadow${layer.position}); transform: translate(${getSvgTranslate()}px, ${getSvgTranslate()}px); width: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px); height: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px);`%>'
+        style='<%=`overflow: visible; filter: url(#shadow${currentSlide.position}${layer.position}); transform: translate(${getSvgTranslate()}px, ${getSvgTranslate()}px); width: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px); height: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px);`%>'
         viewBox='0 0 33 33'
         preserveAspectRatio='none'
 >
     <defs>
-        <filter id='<%=`shadow${layer.position}`%>' width='200%' height='200%' x='-40%' y='-40%'>
+        <filter id='<%=`shadow${currentSlide.position}${layer.position}`%>' width='200%' height='200%' x='-40%' y='-40%'>
             <%if (layer.settings.generalSettings.shadow !== '0') { %>
-            <feDropShadow flood-opacity='<%=layer.settings.generalSettings.shadow == '0' ? '0' : '1'%>' dx='0' dy='0' stdDeviation='<%= layer.settings.generalSettings.shadow / 10 %>' />
+                <feDropShadow flood-opacity='<%=layer.settings.generalSettings.shadow == '0' ? '0' : '1'%>' dx='0' dy='0' stdDeviation='<%= layer.settings.generalSettings.shadow / 10 %>' />
+            <% } else {%>
+                <feDropShadow flood-opacity='0' dx='0' dy='0' stdDeviation='0' />
             <% } %>
         </filter>
 
@@ -38,7 +40,7 @@
         <g transform='translate(-1013 -228.25)'>
             <use fill='transparent' />
             <path
-                    d='M 1013 261.25, v-33h33v33z'
+                    d='M1013, 261.25 v-33h33v33z'
                     stroke='<%= setColor('borderColor') %>'
                     fill='<%= setColor('fillColor') %>'
                     stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? layer.settings.layerSettings.shapeStyles.thickness : 0 %>'
