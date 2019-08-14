@@ -430,27 +430,44 @@ function processResize(
     let resultX = left - (coords.left - coordX);
 
     const matrix = [...transform];
-    if (el.querySelector('.text-container')) {
-        let width = 0;
-        if (el.querySelector('span')) {
-            [].forEach.call(el.querySelectorAll('span'), (el) => {
-                if (parseFloat(el.clientWidth) >= parseFloat(width)) {
-                    width = el.clientWidth
-                }
-            })
-            const height = [].map.call(el.querySelector('span').parentNode.parentNode.children, (el) => {
-                return el.clientHeight
-            }).reduce((a, b) => a + b)
-            if (parseFloat(style.height) <= height) {
-                style.height = height + 1 + 'px'
-                if (parseFloat(style.width) <= width) {
-                    resultX = resultX > 0 ? 0 : resultX;
-                }
+    const container = el.querySelector('.text-container');
+    if (container
+        && !canResizeWithShiftKey
+        && (handle[0].classList.contains('dg-hdl-r')
+            || handle[0].classList.contains('dg-hdl-l')
+            || handle[0].classList.contains('dg-hdl-t')
+            || handle[0].classList.contains('dg-hdl-b'))
+    ) {
+        style.height = `${container.clientHeight}px`;
+        // let width = 0;
+        // if (el.querySelector('span')) {
+        //     [].forEach.call(el.querySelectorAll('span'), (el) => {
+        //         if (parseFloat(el.clientWidth) >= parseFloat(width)) {
+        //             width = el.clientWidth
+        //         }
+        //     })
+        //     const height = [].map.call(el.querySelector('span').parentNode.parentNode.children, (el) => {
+        //         return el.clientHeight
+        //     }).reduce((a, b) => a + b)
+        //     if (parseFloat(style.height) <= height) {
+        //         style.height = height + 1 + 'px'
+        //         if (parseFloat(style.width) <= width) {
+        //             resultX = resultX > 0 ? 0 : resultX;
+        //         }
+        //     }
+        //     if (parseFloat(style.width) <= width) {
+        //         style.width = width + 1 + 'px'
+        //     }
+        //     resultY = resultY > 0 ? 0 : resultY;
+        // }
+    }
+    if (canResizeWithShiftKey) {
+        const scaleHeight = storage.ch / storage.cw;
+        if (height !== null) {
+            if (canResizeWithShiftKey) {
+                height = width * scaleHeight;
             }
-            if (parseFloat(style.width) <= width) {
-                style.width = width + 1 + 'px'
-            }
-            resultY = resultY > 0 ? 0 : resultY;
+            style.height = `${snapToGrid(height, snap.y)}px`;
         }
     }
     matrix[4] = resultX;
