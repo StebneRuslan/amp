@@ -60,7 +60,7 @@ export default class Draggable extends Subject {
     }
 
     _apply() {
-
+        window.parent.postMessage({ event: 'apply-from-iframe' }, 'http://127.0.0.1:3978/#/edit');
         const {
             storage,
             el
@@ -203,7 +203,7 @@ function _destroy() {
 }
 
 function _compute(e) {
-
+    window.parent.postMessage({ event: 'compute-from-iframe' }, 'http://127.0.0.1:3978/#/edit');
     const {
         el,
         storage
@@ -429,6 +429,7 @@ function processResize(
     let resultY = top - (coords.top - coordY);
     let resultX = left - (coords.left - coordX);
 
+    let isText = false;
     const matrix = [...transform];
     const container = el.querySelector('.text-container');
     if (container
@@ -439,34 +440,12 @@ function processResize(
             || handle[0].classList.contains('dg-hdl-b'))
     ) {
         style.height = `${container.clientHeight}px`;
-        // let width = 0;
-        // if (el.querySelector('span')) {
-        //     [].forEach.call(el.querySelectorAll('span'), (el) => {
-        //         if (parseFloat(el.clientWidth) >= parseFloat(width)) {
-        //             width = el.clientWidth
-        //         }
-        //     })
-        //     const height = [].map.call(el.querySelector('span').parentNode.parentNode.children, (el) => {
-        //         return el.clientHeight
-        //     }).reduce((a, b) => a + b)
-        //     if (parseFloat(style.height) <= height) {
-        //         style.height = height + 1 + 'px'
-        //         if (parseFloat(style.width) <= width) {
-        //             resultX = resultX > 0 ? 0 : resultX;
-        //         }
-        //     }
-        //     if (parseFloat(style.width) <= width) {
-        //         style.width = width + 1 + 'px'
-        //     }
-        //     resultY = resultY > 0 ? 0 : resultY;
-        // }
     }
-    if (canResizeWithShiftKey) {
+    if (container && canResizeWithShiftKey) {
         const scaleHeight = storage.ch / storage.cw;
         if (height !== null) {
-            if (canResizeWithShiftKey) {
-                height = width * scaleHeight;
-            }
+            height = width * scaleHeight;
+            isText = true;
             style.height = `${snapToGrid(height, snap.y)}px`;
         }
     }
@@ -497,7 +476,7 @@ function processResize(
 
 
     Helper(el).css(css);
-    window.parent.postMessage({ event: 'resize-from-package', size: size }, 'http://127.0.0.1:3978/#/edit');
+    window.parent.postMessage({ event: 'resize-from-package', size: size, isText: isText }, 'http://127.0.0.1:3978/#/edit');
     storage.cached = matrix;
 }
 

@@ -48,7 +48,6 @@
                 element.remove();
             });
             currentLayer.classList.add('draggable');
-            console.log('12312312312312');
             const Draggables = Subjx('.draggable').drag({
                 each: {
                     resize: true
@@ -59,6 +58,8 @@
                 }
             });
             if (currentLayer.querySelector('.text-container')) {
+                document.querySelector('.dg-controls .dg-hdl.dg-hdl-b.dg-hdl-c.dg-hdl-bc').style.display = 'none';
+                document.querySelector('.dg-controls .dg-hdl.dg-hdl-t.dg-hdl-c.dg-hdl-tc').style.display = 'none';
                 function apmModeMouseClick(event) {
                     event.preventDefault();
                     event.stopPropagation();
