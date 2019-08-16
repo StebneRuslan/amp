@@ -408,13 +408,25 @@ function processResize(
         handle[0].classList.contains('dg-hdl-tr') ||
         handle[0].classList.contains('dg-hdl-bl') ||
         handle[0].classList.contains('dg-hdl-tl');
-
+    let isText = false;
+    const container = el.querySelector('.text-container');
+    if (container && canResizeWithShiftKey) {
+        isText = true;
+    }
     const scaleHeight = storage.ch / storage.cw;
     if (height !== null) {
-        if (storage.shiftKey && canResizeWithShiftKey) {
+        if ((storage.shiftKey || isText) && canResizeWithShiftKey) {
             height = width * scaleHeight;
         }
         style.height = `${snapToGrid(height, snap.y)}px`;
+    }
+
+    if (container && (handle[0].classList.contains('dg-hdl-mr') || handle[0].classList.contains('dg-hdl-ml'))) {
+        let newHeight = 0;
+        [].forEach.call(container.querySelectorAll('.simple-text-line'), (el) => {
+            newHeight += el.clientHeight;
+        })
+        style.height = `${snapToGrid(newHeight, snap.y)}px`;
     }
 
     const coords = rotatedTopLeft(
@@ -429,26 +441,8 @@ function processResize(
     let resultY = top - (coords.top - coordY);
     let resultX = left - (coords.left - coordX);
 
-    let isText = false;
     const matrix = [...transform];
-    const container = el.querySelector('.text-container');
-    if (container
-        && !canResizeWithShiftKey
-        && (handle[0].classList.contains('dg-hdl-r')
-            || handle[0].classList.contains('dg-hdl-l')
-            || handle[0].classList.contains('dg-hdl-t')
-            || handle[0].classList.contains('dg-hdl-b'))
-    ) {
-        style.height = `${container.clientHeight}px`;
-    }
-    if (container && canResizeWithShiftKey) {
-        const scaleHeight = storage.ch / storage.cw;
-        if (height !== null) {
-            height = width * scaleHeight;
-            isText = true;
-            style.height = `${snapToGrid(height, snap.y)}px`;
-        }
-    }
+
     matrix[4] = resultX;
     matrix[5] = resultY;
 
