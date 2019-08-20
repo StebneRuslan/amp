@@ -26,7 +26,7 @@
     let oldLayerId = -1;
     window.addEventListener('message', function (event) {
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-        const father = currentLayer.parentNode;
+        const father = currentLayer ? currentLayer.parentNode : null;
         if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
             father.children[1].setAttribute('contenteditable', false);
             document.querySelector('.dg-controls').style.zIndex = '10000';
