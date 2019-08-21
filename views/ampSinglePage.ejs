@@ -26,11 +26,14 @@
     let oldLayerId = -1;
     window.addEventListener('message', function (event) {
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
+        console.log(currentLayer.parentElement.parentElement.eventListenerList);
+        console.log(window.eventListenerList);
         const father = currentLayer ? currentLayer.parentNode : null;
         if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
             father.children[1].setAttribute('contenteditable', false);
             document.querySelector('.dg-controls').style.zIndex = '10000';
         }
+        console.log('oldLayerIdoldLayerIdoldLayerIdoldLayerId', oldLayerId, event.data.currentId);
         if (oldLayerId !== event.data.currentId) {
             oldLayerId = event.data.currentId;
             function changeEditorContainerHeight(activeNode = null) {
@@ -48,15 +51,8 @@
             }
 
             function keyDownOperation(e) {
+                console.log('11111');
                 e.stopPropagation();
-                if (false) {
-                    if (e.keyCode === 13) {
-                        changeEditorContainerHeight();
-                    }
-                    if (!father.children[1].querySelector('span')) {
-                        father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
-                    }
-                }
                 window.parent.postMessage({event: 'textselected', value: true}, '*');
             }
 
@@ -68,7 +64,7 @@
                     element.remove();
                 });
                 currentLayer.classList.add('draggable');
-                const Draggables = Subjx('.draggable').drag({
+                Subjx('.draggable').drag({
                     each: {
                         resize: true
                     },
@@ -95,12 +91,23 @@
                     }
 
                     function stopEditing(e) {
-                        if (e.target.tagName !== 'SPAN' && e.target.tagName !== 'DIV' && e.target.tagName !== 'B' && e.target.tagName !== 'I' && e.target.tagName !== 'U') {
-                            father.children[1].setAttribute('contenteditable', false);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        const selectedNode = getDraggableNode(e.path);
+                        if ((selectedNode && selectedNode.classList && [].includes.call(selectedNode.classList, 'animate')) ||
+                            (e.target.tagName !== 'SPAN' && e.target.tagName !== 'DIV' && e.target.tagName !== 'B' && e.target.tagName !== 'I' && e.target.tagName !== 'U')) {
+                            const previousContenteditable = father.children.length > 1 ? father.children[1] : father.children[0];
+                            previousContenteditable.setAttribute('contenteditable', false);
                             document.querySelector('.dg-controls').style.zIndex = '10000';
                             window.parent.postMessage({event: 'textselected', value: false}, '*');
-                            father.children[1].removeEventListener('keydown', keyDownOperation);
-                            father.children[1].removeEventListener('click', stopPropagation);
+                            previousContenteditable.removeEventListener('keydown', keyDownOperation);
+                            previousContenteditable.removeEventListener('click', stopPropagation);
+                            console.log('========== stopEditing ==============');
+                            window.removeEventListener('click', stopEditing);
+                            father.onmousedown = selectLayer;
+                            if (oldLayerId !== event.data.currentId) {
+                                currentLayer.parentElement.parentElement.removeEventListener('dblclick', dbEvent);
+                            }
                         }
                         window.parent.postMessage({event: 'textselected', value: true}, '*');
                     }
@@ -119,11 +126,11 @@
                         father.children[1].addEventListener('click', stopPropagation);
                         father.children[1].addEventListener('keydown', keyDownOperation);
                         father.children[1].addEventListener('mouseup', keyDownOperation);
-                        document.addEventListener('click', stopEditing);
+                        father.setAttribute('onmousedown', null);
+                        window.addEventListener('click', stopEditing);
                         window.parent.document.querySelector('body').addEventListener('click', apmModeMouseClick);
                     }
-
-                    currentLayer.parentElement.parentElement.addEventListener('dblclick', dbEvent);
+                    currentLayer.parentElement.parentElement.ondblclick = dbEvent;
                 }
             }
             if (currentLayer) {
@@ -174,6 +181,7 @@
     }
 
     function selectLayer(event) {
+        console.log('selectLayer');
         let position = 0;
         if (event.target.id === 'cta-link') {
             Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
