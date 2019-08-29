@@ -52,7 +52,7 @@ function getFullScreenElementOffsetX (layer) {
 function getAnimationWidthEm (layer) {
     let thickness = 0;
     if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 1.5;
     }
     return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
@@ -62,7 +62,7 @@ function getAnimationWidthEm (layer) {
 function getAnimationHeightEm (layer) {
     let thickness = 0;
     if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 1.5;
     }
     return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +

@@ -26,54 +26,43 @@
     let oldLayerId = -1;
     window.addEventListener('message', function (event) {
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-        console.log(currentLayer.parentElement.parentElement.eventListenerList);
-        console.log(window.eventListenerList);
+        Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
+            if (element) {
+                element.classList.remove('draggable');
+            }
+        });
+        Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
+            element.remove();
+        });
+        if (currentLayer) {
+            currentLayer.classList.add('draggable');
+            Subjx('.draggable').drag({
+                each: {
+                    resize: true
+                },
+                snap: {
+                    x: 1,
+                    y: 1
+                }
+            });
+        }
         const father = currentLayer ? currentLayer.parentNode : null;
         if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
             father.children[1].setAttribute('contenteditable', false);
             document.querySelector('.dg-controls').style.zIndex = '10000';
         }
-        console.log('oldLayerIdoldLayerIdoldLayerIdoldLayerId', oldLayerId, event.data.currentId);
         if (oldLayerId !== event.data.currentId) {
             oldLayerId = event.data.currentId;
-            function changeEditorContainerHeight(activeNode = null) {
-                if (!activeNode) {
-                    const sel = window.getSelection();
-                    const range = sel.getRangeAt(0);
-                    activeNode = range.commonAncestorContainer.parentNode;
-                }
-                document.querySelector('.dg-controls').style.height = parseInt(document.querySelector('.dg-controls').style.height) + activeNode.clientHeight + 'px';
-            }
-
             function selectText() {
                 document.addEventListener('mouseup', mouseUpOnSelection);
                 father.children[1].addEventListener('mouseup', keyDownOperation);
             }
 
             function keyDownOperation(e) {
-                console.log('11111');
                 e.stopPropagation();
                 window.parent.postMessage({event: 'textselected', value: true}, '*');
             }
-
             if (currentLayer && event.data.message !== 'KEY_PRESS_TEXT_EDITOR') {
-                Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
-                    element.classList.remove('draggable');
-                });
-                Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
-                    element.remove();
-                });
-                currentLayer.classList.add('draggable');
-                Subjx('.draggable').drag({
-                    each: {
-                        resize: true
-                    },
-                    snap: {
-                        x: 1,
-                        y: 1
-                    }
-                });
-
                 currentLayer.onmousedown = null;
                 if (currentLayer.querySelector('.text-container')) {
                     document.querySelector('.dg-controls .dg-hdl.dg-hdl-b.dg-hdl-c.dg-hdl-bc').style.display = 'none';
@@ -102,7 +91,6 @@
                             window.parent.postMessage({event: 'textselected', value: false}, '*');
                             previousContenteditable.removeEventListener('keydown', keyDownOperation);
                             previousContenteditable.removeEventListener('click', stopPropagation);
-                            console.log('========== stopEditing ==============');
                             window.removeEventListener('click', stopEditing);
                             father.onmousedown = selectLayer;
                             if (oldLayerId !== event.data.currentId) {
@@ -143,11 +131,9 @@
             }
             if (event.data.previousId !== null && event.data.previousId !== undefined) {
                 const previousLayer = document.getElementById(`layer${event.data.previousId}`);
-                previousLayer.classList.remove('resizable');
                 if (previousLayer) {
+                    previousLayer.classList.remove('resizable');
                     previousLayer.classList.remove('draggable');
-                }
-                if (previousLayer) {
                     previousLayer.parentNode.classList.remove('layer-border');
                 }
             }
@@ -181,7 +167,6 @@
     }
 
     function selectLayer(event) {
-        console.log('selectLayer');
         let position = 0;
         if (event.target.id === 'cta-link') {
             Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
@@ -247,7 +232,7 @@ function getFullScreenAnimationContainerHeight (layer) {
 function getAnimationWidthEm (layer) {
     let thickness = 0;
     if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 1.5;
     }
     return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
@@ -257,7 +242,7 @@ function getAnimationWidthEm (layer) {
 function getAnimationHeightEm (layer) {
     let thickness = 0;
     if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+        thickness = layer.settings.layerSettings.shapeStyles.thickness * 1.5;
     }
     return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
@@ -431,6 +416,7 @@ function setLinkBgColor (data) {
 
                     case 'image':
                 case 'gifs': %>
+                <% if (layer.content.image.url) { %>
                 <amp-story-grid-layer template="horizontal">
                     <div onmousedown="selectLayer(event)"
                          class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
@@ -469,9 +455,11 @@ function setLinkBgColor (data) {
                         </div>
                     </div>
                 </amp-story-grid-layer>
+                <% } %>
                 <% break
 
                 case 'video': %>
+                <% if (layer.content.video.url) { %>
                 <amp-story-grid-layer template="horizontal">
                     <div onmousedown="selectLayer(event)"
                          class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
@@ -508,6 +496,7 @@ function setLinkBgColor (data) {
                         </div>
                     </div>
                 </amp-story-grid-layer>
+                <% } %>
                 <% break
                 case 'cta-link': %>
                 <div style="

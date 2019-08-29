@@ -16,7 +16,7 @@
             <% } %>
         </filter>
 
-        <linearGradient id='<%=`linearfillColor${currentSlide.position}${layer.position}`%>' x1="<%= setCoordinates('x1') %>" y1="<%= setCoordinates('y1') %>" x2="<%= setCoordinates('x2') %>" y2="<%= setCoordinates('y2') %>">
+        <linearGradient id='<%=`linearfillColor${currentSlide.position}${layer.position}`%>' x1="<%= setCoordinates('x1', 'fillColor') %>" y1="<%= setCoordinates('y1', 'fillColor') %>" x2="<%= setCoordinates('x2', 'fillColor') %>" y2="<%= setCoordinates('y2', 'fillColor') %>">
             <stop offset="<%=`${layer.settings.layerSettings.shapeStyles.fillColor.leftColorPercent || 0}%`%>" style="stop-color:<%=`${layer.settings.layerSettings.shapeStyles.fillColor.leftColor || 'rgba(255, 255, 255, 1)'};stop-opacity:1`%>"/>
             <stop offset="<%=`${layer.settings.layerSettings.shapeStyles.fillColor.rightColorPercent || 0}%`%>" style="stop-color:<%=`${layer.settings.layerSettings.shapeStyles.fillColor.rightColor || 'rgba(255, 255, 255, 1)'};stop-opacity:1`%>"/>
         </linearGradient>
@@ -26,7 +26,7 @@
             <stop offset="<%=`${layer.settings.layerSettings.shapeStyles.fillColor.rightColorPercent || 0}%`%>" style="stop-color:<%=`${layer.settings.layerSettings.shapeStyles.fillColor.rightColor || 'rgba(255, 255, 255, 1)'};stop-opacity:1`%>"/>
         </radialGradient>
 
-        <linearGradient id='<%=`linearborderColor${currentSlide.position}${layer.position}`%>' x1="<%= setCoordinates('x1') %>" y1="<%= setCoordinates('y1') %>" x2="<%= setCoordinates('x2') %>" y2="<%= setCoordinates('y2') %>">
+        <linearGradient id='<%=`linearborderColor${currentSlide.position}${layer.position}`%>' x1="<%= setCoordinates('x1', 'borderColor') %>" y1="<%= setCoordinates('y1', 'borderColor') %>" x2="<%= setCoordinates('x2', 'borderColor') %>" y2="<%= setCoordinates('y2', 'borderColor') %>">
             <stop offset="<%=`${layer.settings.layerSettings.shapeStyles.borderColor.leftColorPercent || 0}%`%>" style="stop-color:<%=`${layer.settings.layerSettings.shapeStyles.borderColor.leftColor || 'rgba(255, 255, 255, 1)'};stop-opacity:1`%>"/>
             <stop offset="<%=`${layer.settings.layerSettings.shapeStyles.borderColor.rightColorPercent || 0}%`%>" style="stop-color:<%=`${layer.settings.layerSettings.shapeStyles.borderColor.rightColor || 'rgba(255, 255, 255, 1)'};stop-opacity:1`%>"/>
         </linearGradient>
@@ -72,11 +72,11 @@
     }
 } %>
 
-<%function setCoordinates(type) {
-    if (isNaN(layer.settings.layerSettings.shapeStyles.fillColor.angle)) {
+<%function setCoordinates(type, colorType) {
+    if (isNaN(layer.settings.layerSettings.shapeStyles[colorType].angle)) {
         return 0
     }
-    const anglePI = -layer.settings.layerSettings.shapeStyles.fillColor.angle * (Math.PI / 180);
+    const anglePI = -layer.settings.layerSettings.shapeStyles[colorType].angle * (Math.PI / 180);
     switch (type) {
         case 'x1':
             return Math.round(50 + Math.sin(anglePI) * 50) + '%';
