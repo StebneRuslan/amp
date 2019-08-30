@@ -65,9 +65,6 @@
             if (currentLayer && event.data.message !== 'KEY_PRESS_TEXT_EDITOR') {
                 currentLayer.onmousedown = null;
                 if (currentLayer.querySelector('.text-container')) {
-                    document.querySelector('.dg-controls .dg-hdl.dg-hdl-b.dg-hdl-c.dg-hdl-bc').style.display = 'none';
-                    document.querySelector('.dg-controls .dg-hdl.dg-hdl-t.dg-hdl-c.dg-hdl-tc').style.display = 'none';
-
                     function apmModeMouseClick() {
                         window.parent.document.querySelector('body').removeEventListener('click', apmModeMouseClick);
                         father.children[1].removeEventListener('selectstart', selectText);

@@ -72,6 +72,7 @@ export default class Draggable extends Subject {
             cached,
             parent,
             dimens,
+            handle,
             controls
         } = storage;
 
@@ -111,13 +112,16 @@ export default class Draggable extends Subject {
 
         _el.css(css);
         Helper(controls).css(css);
+        const container = el.querySelector('.text-container');
+        const isTextDrag = handle[0].classList.contains('dg-controls') || !container || (!handle[0].classList.contains('dg-hdl-ml') && !handle[0].classList.contains('dg-hdl-mr'))
         window.parent.postMessage({
             event: 'resize-on-mouseup', position: {
                 width: controls.style.width,
                 height: controls.style.height,
                 diffLeft,
                 diffTop
-            }
+            },
+            isTextDrag: isTextDrag
         }, 'http://127.0.0.1:3978/#/edit');
         this.storage.cached = null;
     }
@@ -191,6 +195,11 @@ function _init(sel) {
 
     _controls.on('mousedown', this._onMouseDown)
         .on('touchstart', this._onTouchStart);
+    const textContainer = _sel[0].querySelector('.text-container');
+    if (textContainer) {
+        _container.find('.dg-hdl-bc')[0].style.display = 'none';
+        _container.find('.dg-hdl-tc')[0].style.display = 'none';
+    }
 }
 
 function _destroy() {
@@ -217,7 +226,12 @@ function _compute(e) {
     } = storage;
 
     const handle = Helper(e.target);
-
+    const container = el.querySelector('.text-container');
+    const leftSide = handle[0].classList.contains('dg-hdl-ml');
+    const rightSide = handle[0].classList.contains('dg-hdl-mr');
+    if (container && !leftSide && !rightSide) {
+        container.style.width = `${el.clientWidth}px`;
+    }
     let factor = 1;
 
     //reverse axis
@@ -443,6 +457,10 @@ function processResize(
 
     const matrix = [...transform];
 
+    if (isText) {
+        container.style.transformOrigin = `top left`;
+        container.style.transform = `scale(${parseFloat(style.width) / storage.cw})`;
+    }
     matrix[4] = resultX;
     matrix[5] = resultY;
 
