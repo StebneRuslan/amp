@@ -308,9 +308,7 @@ if (ampStory.cuts.length === 2) {
     ampStory.cuts = []
     ampStory.cuts[0] = cut
 }
-let currentSlide = ampStory.cuts.find(cut => {
-    return cut.position === +current
-})
+let currentSlide = ampStory.cuts[0]
 %>
 
 <body>
