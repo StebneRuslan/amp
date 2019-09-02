@@ -183,7 +183,7 @@ ampStory.cuts.map(currentSlide => { %>
     <% console.log(1, currentSlide) %>
     <% console.log(2, currentSlide.layers) %>
     <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
-    <% console.log(3, layer.type) %>
+    <% console.log(3, layer.type, layer) %>
     <% switch (layer.type) {
         case 'text':
         case 'html': %>
