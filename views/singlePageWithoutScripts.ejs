@@ -494,7 +494,6 @@ function getFullScreenElementOffsetX (layer) {
                             animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
                     <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>>
-                <% console.log(4) %>
                         <div draggable="true" id="layer<%=layer.position%>" style="
                                 outline: none;
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
@@ -502,7 +501,6 @@ function getFullScreenElementOffsetX (layer) {
                                 height: <%=getDraggableElementHeight(layer);%>;
                                 top: <%=getDeraggableElementOffsetY(layer);%>;
                                 left: <%=getDeraggableElementOffsetX(layer);%>;">
-                <% console.log(5) %>
                             <% include layers/text.ejs %>
                         </div>
                     </div>
