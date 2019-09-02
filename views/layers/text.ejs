@@ -1,6 +1,5 @@
 <% function getStyles(settings) {
   let styles = ''
-  console.log(9, settings)
   if (settings) {
     if (settings.opacity) {
       styles += `opacity:${settings.opacity / 100};`
@@ -16,11 +15,7 @@
         style="<%= getStyles(layer.settings.generalSettings)%>; position: relative"
         id="text<%= layer.settings.generalSettings.position ? `${layer.settings.generalSettings.position}${currentSlide ? currentSlide.position : ''}` : '' %>"
 >
-    <% console.log(10) %>
   <div
           class="single-text"
-  >
-      <% console.log(11) %>
-
-  <%- (layer.content.value || layer.content.html) || '' %></div>
+  ><%- (layer.content.value || layer.content.html) || '' %></div>
 </div>
