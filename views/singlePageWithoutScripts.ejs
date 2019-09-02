@@ -465,11 +465,9 @@ function getFullScreenElementOffsetX (layer) {
                 return 0;
             })
         } %>
-        <% console.log(1, currentSlide) %>
         <% if (currentSlide) { %>
             <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                 <% var page = null
-                console.log(2, layer.type)
                         switch (layer.type) {
                     case 'text':
                 case 'html': %>
