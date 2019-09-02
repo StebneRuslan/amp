@@ -180,6 +180,9 @@ ampStory.cuts.map(currentSlide => { %>
             if(keyA > keyB) return 1;
             return 0;
         }) %>
+    <% console.log(1, currentSlide) %>
+    <% console.log(2, currentSlide.layers) %>
+    <% console.log(3, currentSlide && currentSlide.layers) %>
     <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
     <% switch (layer.type) {
         case 'text':
@@ -350,52 +353,27 @@ ampStory.cuts.map(currentSlide => { %>
             } %>
     <% }) %>
     <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
-    <%if (currentSlide.position >= 1 && ampStory.type !== 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link') {%>
-    <amp-story-cta-layer>
+    <%if (currentSlide.position >= 1 && layer.settings.ctaLayerSettings && layer.type === 'cta-link') {%>
+    <amp-story-cta-layer <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>"
+        <% } %> <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>>
         <a style="
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-                padding: 10px 20px;
-                text-align: center;
-                font-size: 16px;
-                font-family: 'Verdana';
-                text-decoration: none;
-                background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
-                color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-                text-align: center;
-                bottom:10%;
-                border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
-           href="<%=layer.settings.ctaLayerSettings.link%>"
-           id="<%=`cta-${currentSlide.position}`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        padding: 10px 20px;
+                        text-align: center;
+                        font-size: 16px;
+                        font-family: 'Verdana';
+                        text-decoration: none;
+                        background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
+                        color: <%=layer.settings.ctaLayerSettings.fontColor%>;
+                        border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
+                        text-align: center;
+                        bottom:10%;
+                        border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
+            href="<%=layer.settings.ctaLayerSettings.link%>"
+            id="<%=`cta-${currentSlide.position}`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
     </amp-story-cta-layer>
-    <% } else if (ampStory.type === 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link') {%>
-    <div style="
-                    width: 100%;
-                    position: absolute;
-                    height: 10vh;
-                    top: 90%;
-                    display: grid;
-                 "
-         id="<%=layer.position%>">
-        <a style="
-                margin: auto;
-                padding: 0.5em 0.9em;
-                text-align: center;
-                font-size: 0.9em;
-                font-family: 'Verdana';
-                text-decoration: none;
-                background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
-                color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-                text-align: center;
-                cursor: default;
-                transform-origin: center;
-                z-index: <%=currentSlide.layers.length + 1%>;
-                border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px';%>"
-           href="<%=layer.settings.ctaLayerSettings.link%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
-    </div>
     <% } %>
     <% }) %>
 </amp-story-page>
