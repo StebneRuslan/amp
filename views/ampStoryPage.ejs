@@ -182,12 +182,14 @@ ampStory.cuts.map(currentSlide => { %>
         }) %>
     <% console.log(1, currentSlide) %>
     <% console.log(2, currentSlide.layers) %>
-    <% console.log(3, currentSlide && currentSlide.layers) %>
     <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
+    <% console.log(3) %>
     <% switch (layer.type) {
         case 'text':
         case 'html': %>
+    <% console.log(4) %>
         <amp-story-grid-layer template="horizontal">
+    <% console.log(5) %>
             <div
                     class="drag-item single-page-item animate"
                     style="
@@ -205,6 +207,7 @@ ampStory.cuts.map(currentSlide => { %>
                     animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
             <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
                     <% } %>>
+    <% console.log(6) %>
                 <div draggable="true" id="layer<%=layer.position%>" style="
                         outline: none;
                         transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
@@ -212,6 +215,7 @@ ampStory.cuts.map(currentSlide => { %>
                         height: <%=getDraggableElementHeight(layer);%>;
                         top: <%=getDeraggableElementOffsetY(layer);%>;
                         left: <%=getDeraggableElementOffsetX(layer);%>;">
+    <% console.log(7) %>
                     <% include layers/text.ejs %>
                 </div>
             </div>
@@ -251,8 +255,10 @@ ampStory.cuts.map(currentSlide => { %>
 
             case 'image':
             case 'gifs': %>
+    <% console.log(12) %>
     <% if (!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) { %>
     <amp-story-grid-layer template="horizontal">
+    <% console.log(13) %>
         <div class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
             style="
                                 position: absolute;
@@ -276,6 +282,7 @@ ampStory.cuts.map(currentSlide => { %>
             animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
             <%if (['zoom-in'].includes(layer.settings.animateIn)) { %> scale-start="1" scale-end="1.4" <% } %>
             <%if (['zoom-out'].includes(layer.settings.animateIn)) { %> scale-start="1.4" scale-end="1" <% } %>>
+    <% console.log(14) %>
             <div draggable="true" id="layer<%=layer.position%>" <%if (layer.settings.layerSettings.fullscreen) {%>
                 style="
                             position: absolute;
@@ -291,6 +298,7 @@ ampStory.cuts.map(currentSlide => { %>
                             transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
                             top: <%=getDeraggableElementOffsetY(layer);%>;
                             left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
+    <% console.log(15) %>
                 <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
             </div>
         </div>
