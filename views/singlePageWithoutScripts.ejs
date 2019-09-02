@@ -471,11 +471,10 @@ function getFullScreenElementOffsetX (layer) {
         <% if (currentSlide) { %>
             <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                 <% var page = null
-        <% console.log(2, layer.type) %>
+                console.log(2, layer.type)
                         switch (layer.type) {
                     case 'text':
                 case 'html': %>
-                <% console.log(3, currentSlide) %>
                 <amp-story-grid-layer template="horizontal">
                     <div
                             class="drag-item single-page-item animate"
@@ -542,7 +541,6 @@ function getFullScreenElementOffsetX (layer) {
 
                     case 'image':
                 case 'gifs': %>
-                <% console.log(6) %>
                 <% if (!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) { %>
                 <amp-story-grid-layer template="horizontal">
                     <div
@@ -576,7 +574,6 @@ function getFullScreenElementOffsetX (layer) {
                             scale-start="1.4" scale-end="1"
                             <% } %>
                     >
-                <% console.log(8) %>
                         <div draggable="true" id="layer<%=layer.position%>"
                                 <%if (layer.settings.layerSettings.fullscreen) {%> style="
                                 position: absolute;
@@ -592,7 +589,6 @@ function getFullScreenElementOffsetX (layer) {
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
                                 top: <%=getDeraggableElementOffsetY(layer);%>;
                                 left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                <% console.log(9) %>
                             <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
                         </div>
                     </div>
