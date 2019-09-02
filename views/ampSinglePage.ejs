@@ -84,6 +84,7 @@
                             (e.target.tagName !== 'SPAN' && e.target.tagName !== 'DIV' && e.target.tagName !== 'B' && e.target.tagName !== 'I' && e.target.tagName !== 'U')) {
                             const previousContenteditable = father.children.length > 1 ? father.children[1] : father.children[0];
                             previousContenteditable.setAttribute('contenteditable', false);
+                            previousContenteditable.firstElementChild.style.width = '';
                             document.querySelector('.dg-controls').style.zIndex = '10000';
                             window.parent.postMessage({event: 'textselected', value: false}, '*');
                             previousContenteditable.removeEventListener('keydown', keyDownOperation);
