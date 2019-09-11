@@ -319,6 +319,23 @@
     <% if (ampStory.fromPreview || !v0Path.includes('https')) { %>
         <link rel="stylesheet" href="/resize-files?path=amp-to-html/dist/style/subjx.css" />
     <% } %>
+    <script>
+            function clickSlide() {
+                x = window.innerWidth - 1;
+                y = window.innerHeight - 1;
+                const ev = document.createEvent("MouseEvent");
+                const el = document.elementFromPoint(x, y);
+                ev.initMouseEvent(
+                    "click",
+                    true, true,
+                    window, null,
+                    x, y, x, y,
+                    false, false, false, false,
+                    0, null
+                );
+                el.dispatchEvent(ev);
+            }
+    </script>
 </head>
 
 <%
@@ -485,6 +502,7 @@ function getFullScreenElementOffsetX (layer) {
                 return 0;
             })
         } %>
+        
         <% if (currentSlide) { %>
             <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                 <% var page = null
