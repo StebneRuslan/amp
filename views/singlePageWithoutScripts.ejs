@@ -473,7 +473,8 @@ function getFullScreenElementOffsetX (layer) {
 %>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-    <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="10s" class="container">
+    <%for (let i = 0; i < 2; i++) {%>
+        <amp-story-page style="text-rendering: auto;background: #eeeeee"  id="<%=`story${i}`%>" auto-advance-after="10s" class="container">
         <% let preview = false;
         if (currentSlide) {
             currentSlide.layers.sort((first, second) => {
@@ -674,6 +675,7 @@ function getFullScreenElementOffsetX (layer) {
             <% }) %>
         <% } %>
     </amp-story-page>
+    <% } %>
 </amp-story>
 </body>
 
