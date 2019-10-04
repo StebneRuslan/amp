@@ -1,66 +1,30 @@
 <!doctype html>
 <html lang="en">
 <% include ampViewerHead.ejs %>
-<% let currentSlide = ampStory.cuts.find(cut => {
-    return cut.position === +current
-})
-%>
+<% let currentSlide = ampStory.cuts.find(cut => cut.position === +current) %>
 
 <body>
 <script>
-    document.addEventListener('dragover', function (event) {
-        event.preventDefault();
-        return false;
-    }, false);
+    function mouseUpOnSelection(e) {
+        e.stopPropagation();
+        window.parent.postMessage({ event: 'text-was-selected', value: true }, '*');
+        document.removeEventListener('mouseup', mouseUpOnSelection);
+    }
 
-    document.addEventListener('drop', function (event) {
-        event.preventDefault();
-        return false;
-    }, false);
+    let oldLayerId = -1;
     window.addEventListener('message', function (event) {
-        function changeEditorContainerHeight(activeNode = null) {
-            if (!activeNode) {
-                const sel = window.getSelection();
-                const range = sel.getRangeAt(0);
-                activeNode = range.commonAncestorContainer.parentNode;
-            }
-            document.querySelector('.dg-controls').style.height = parseInt(document.querySelector('.dg-controls').style.height) + activeNode.clientHeight + 'px';
-        }
         const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-        const father = currentLayer.parentNode;
-        function keyDownOperation(e) {
-            if (e.keyCode === 13) {
-                changeEditorContainerHeight();
-            }
-            if (!father.children[1].querySelector('span')) {
-                father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
-            }
-            window.parent.postMessage({ event: 'textselected', value: true }, '*');
-        }
-        function keyUpOperation() {
-            let width = 0;
-            [].forEach.call(currentLayer.querySelectorAll('span'), (el) => {
-                if (parseFloat(el.clientWidth) >= width) {
-                    width = el.clientWidth;
-                }
-            });
-            document.querySelector('.dg-controls').style.width = width + 'px';
-        }
-        if (event.data.message === 'KEY_PRESS_TEXT_EDITOR') {
-            keyUpOperation();
-            if (event.data.keyCode && event.data.keyCode === 13) {
-                changeEditorContainerHeight(father.querySelector('.text-container').children[0].children[0].children[event.data.currentNodeId]);
-            }
-        }
-        if (currentLayer && event.data.message !== 'KEY_PRESS_TEXT_EDITOR') {
-            Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
+        Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
+            if (element) {
                 element.classList.remove('draggable');
-            });
-            Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
-                element.remove();
-            });
+            }
+        });
+        Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
+            element.remove();
+        });
+        if (currentLayer) {
             currentLayer.classList.add('draggable');
-            const Draggables = Subjx('.draggable').drag({
+            Subjx('.draggable').drag({
                 each: {
                     resize: true
                 },
@@ -69,63 +33,138 @@
                     y: 1
                 }
             });
-            if (currentLayer.querySelector('.text-container')) {
-                function apmModeMouseClick(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    father.children[1].setAttribute('contenteditable', false);
-                    father.children[1].removeEventListener('keydown', keyDownOperation);
-                    father.children[1].removeEventListener('keyup', keyUpOperation);
-                    father.children[1].removeEventListener('click', stopPropagation);
-                    window.parent.postMessage({ event: 'textselected', value: false }, '*');
-                    window.parent.document.querySelector('body').removeEventListener('click', apmModeMouseClick);
+        }
+
+        const father = currentLayer ? currentLayer.parentNode : null;
+        if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
+            father.children[1].setAttribute('contenteditable', false);
+            father.querySelector('.text-container').style.width = '';
+            document.querySelector('.dg-controls').style.zIndex = '10000';
+        }
+        if (oldLayerId !== event.data.currentId) {
+            oldLayerId = event.data.currentId;
+            function selectText() {
+                document.addEventListener('mouseup', mouseUpOnSelection);
+                father.children[1].addEventListener('mouseup', keyDownOperation);
+            }
+            function convertTextSizeToPx(selectorContainer) {
+              const iframeWidth = document.documentElement.clientWidth;
+              [].map.call(selectorContainer.querySelectorAll('*'), (node) => {
+                if (node.style.fontSize && !node.style.fontSize.includes('em') && node.nodeName !== 'DIV' && node.style.fontSize !== node.parentNode.style.fontSize) {
+                  node.style.fontSize = `${parseFloat(node.style.fontSize) / (2.6 * iframeWidth / 100)}em`;
+                } else if (node.nodeName === 'DIV') {
+                  node.style.fontSize = '';
                 }
-                function stopPropagation(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
+              });
+            }
+            function handlePaste(e) {
+                let clipboardData, pastedData;
+                e.stopPropagation();
+                e.preventDefault();
+                clipboardData = e.clipboardData;
+                pastedData = clipboardData.getData('text/html');
+                const selectorContainer = document.createElement('DIV');
+                selectorContainer.innerHTML = pastedData;
+                convertTextSizeToPx(selectorContainer);
+                document.execCommand('insertHTML', false, selectorContainer.innerHTML);
+                window.parent.postMessage({event: 'textselected', value: true}, '*');
+            }
+            function keyDownOperation(e) {
+                console.log('12312312312312');
+                if ((e.target.innerText.length <= 1 && (e.keyCode === 8 || e.which === 8))) {
+                    e.preventDefault();
                 }
-                function dbEvent() {
-                    father.children[1].removeEventListener('keydown', keyDownOperation);
-                    father.children[1].removeEventListener('keyup', keyUpOperation);
-                    if (!father.children[1].querySelector('span')) {
-                        father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
+                window.addEventListener('click', stopEditing);
+                e.stopPropagation();
+                convertTextSizeToPx(e.target);
+
+                window.parent.postMessage({event: 'textselected', value: true}, '*');
+            }
+            if (currentLayer && event.data.message !== 'KEY_PRESS_TEXT_EDITOR') {
+                currentLayer.onmousedown = null;
+                if (currentLayer.querySelector('.text-container')) {
+                    function apmModeMouseClick() {
+                        window.parent.document.querySelector('body').removeEventListener('click', apmModeMouseClick);
+                        father.children[1].removeEventListener('selectstart', selectText);
+                        father.children[1].addEventListener('mouseup', keyDownOperation);
                     }
-                    father.children[1].setAttribute('contenteditable', true);
-                    father.children[1].focus();
-                    father.children[1].addEventListener('click', stopPropagation);
-                    father.children[1].addEventListener('keydown', keyDownOperation);
-                    father.children[1].addEventListener('keyup', keyUpOperation);
-                    window.parent.document.querySelector('body').addEventListener('click', apmModeMouseClick);
 
+                    function stopPropagation(event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    function stopEditing(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                          const selectedNode = getDraggableNode(e.path);
+                              if ((selectedNode && selectedNode.classList && [].includes.call(selectedNode.classList, 'animate')) ||
+                                  (e.target.tagName !== 'SPAN' && e.target.tagName !== 'DIV' && e.target.tagName !== 'B' && e.target.tagName !== 'I' && e.target.tagName !== 'U')) {
+                                  const previousContenteditable = father.children.length > 1 ? father.children[1] : father.children[0];
+                                  previousContenteditable.setAttribute('contenteditable', false);
+                                  previousContenteditable.firstElementChild.style.width = '';
+                                  document.querySelector('.dg-controls').style.zIndex = '10000';
+                                  previousContenteditable.removeEventListener('keydown', keyDownOperation);
+                                  previousContenteditable.removeEventListener('paste', handlePaste);
+                                  window.removeEventListener('click', stopEditing);
+                                  father.onmousedown = selectLayer;
+                                  if (oldLayerId !== event.data.currentId) {
+                                      currentLayer.parentElement.parentElement.removeEventListener('dblclick', dbEvent);
+                                  }
+                              }
+                              window.parent.postMessage({event: 'textselected', value: false}, '*');
+                    }
+                    function handleSelectStart() {
+                       window.removeEventListener('click', stopEditing);
+                    }
+
+                    function handleSelectEnd() {
+                      window.addEventListener('click', stopEditing);
+                    }
+
+                    function dbEvent(event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        document.querySelector('.dg-controls').style.zIndex = '0';
+                        father.children[1].removeEventListener('keydown', keyDownOperation);
+                        if (!father.children[1].querySelector('span')) {
+                            father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre-wrap; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
+                        }
+                        father.children[1].setAttribute('contenteditable', true);
+                        father.children[1].addEventListener('selectstart', selectText);
+                        father.children[1].focus();
+                        father.children[1].addEventListener('click', stopPropagation);
+                        father.children[1].addEventListener('keydown', keyDownOperation);
+                        father.children[1].addEventListener('selectstart', handleSelectStart);
+                        father.children[1].addEventListener('mouseup', keyDownOperation);
+                        father.children[1].addEventListener('paste', handlePaste);
+                        father.setAttribute('onmousedown', null);
+                        window.addEventListener('click', stopEditing);
+                        window.addEventListener('click', handleSelectEnd);
+                        window.parent.document.querySelector('body').addEventListener('click', apmModeMouseClick);
+                    }
+                    currentLayer.parentElement.parentElement.ondblclick = dbEvent;
                 }
-                currentLayer.parentElement.parentElement.addEventListener('dblclick', (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    dbEvent();
-                });
             }
-        }
-        if (currentLayer) {
-            if ([].includes.call(currentLayer.parentNode.classList, 'fullscreen')) {
-                Array.prototype.forEach.call(document.querySelectorAll('.dg-hdl'), (element) => {
-                    element.style.display = 'none';
-                });
-                document.querySelector('.dg-controls').style.border = '1px dashed transparent';
+            if (currentLayer) {
+                if ([].includes.call(currentLayer.parentNode.classList, 'fullscreen')) {
+                    Array.prototype.forEach.call(document.querySelectorAll('.dg-hdl'), (element) => {
+                        element.style.display = 'none';
+                    });
+                    document.querySelector('.dg-controls').style.border = '1px dashed transparent';
+                }
             }
-        }
-        if (event.data.previousId !== null && event.data.previousId !== undefined) {
-            const previousLayer = document.getElementById(`layer${event.data.previousId}`);
-            previousLayer.classList.remove('resizable');
-            if (previousLayer) {
-
-                previousLayer.classList.remove('draggable');
-
-            }
-            if (previousLayer) {
-                previousLayer.parentNode.classList.remove('layer-border');
+            if (event.data.previousId !== null && event.data.previousId !== undefined) {
+                const previousLayer = document.getElementById(`layer${event.data.previousId}`);
+                if (previousLayer) {
+                    previousLayer.classList.remove('resizable');
+                    previousLayer.classList.remove('draggable');
+                    previousLayer.parentNode.classList.remove('layer-border');
+                }
             }
         }
     });
+
     window.addEventListener('keydown', (e) => {
         if (e.keyCode === 90 && (e.ctrlKey || e.metaKey) && e.shiftKey) {
             window.parent.postMessage({ event: 'redoStep' }, '*');
@@ -133,8 +172,9 @@
             window.parent.postMessage({ event: 'undoStep' }, '*');
         }
     });
+
     window.onload = () => {
-        var css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
+        let css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
             head = document.head || document.getElementsByTagName('head')[0],
             style = document.createElement('style');
         style.type = 'text/css';
@@ -146,10 +186,6 @@
         head.appendChild(style);
     };
     const element = null;
-
-    function preventImageDragging(event) {
-        event.preventDefault();
-    }
 
     function selectLayer(event) {
         let position = 0;
@@ -173,57 +209,10 @@
             }
         }
     }
-
-    function mouseDown(event) {
-        event.preventDefault();
-        selectLayer(event);
-        const ampStoryWidth = document.querySelector('body').clientWidth;
-        const ampStoryHeight = document.querySelector('body').clientHeight;
-        const target = getDraggableNode(event.path);
-        const divParams = target.getBoundingClientRect();
-        let centerX = event.x - divParams.left;
-        let centerY = event.y - divParams.top;
-
-        if (!target.classList.contains('fullscreen')) {
-            document.onmousemove = (moveEvent) => {
-                drag(event,
-                    getDraggableNode(event.path),
-                    moveEvent, centerX, centerY,
-                    iframeParams = { ampStoryWidth: ampStoryWidth, ampStoryHeight: ampStoryHeight }
-                );
-            };
-            document.onmouseleave = (moveEvent) => {
-                mouseUp(event);
-            };
-            document.onmousedovn = (moveEvent) => {
-                mouseUp(event);
-            };
-        }
-
-    };
-
-    function mouseUp(event) {
-        event.preventDefault();
-        document.onmousemove = null;
-        document.onmouseleave = null;
-    };
-
-    function drag(event, target, moveEvent, centerX, centerY) {
-        if (event.screenX !== 0) {
-            let leftInPx = (moveEvent.x - centerX);
-            let topInPx = (moveEvent.y - centerY);
-            target.style.left = ((leftInPx / iframeParams.ampStoryWidth) * 100) + '%';
-            target.style.top = ((topInPx / iframeParams.ampStoryHeight) * 100) + '%';
-            drop({ offsetX: parseInt(leftInPx, 10), offsetY: parseInt(topInPx, 10) });
-        }
-    };
-
-    function drop(coordinates) {
-        window.parent.postMessage({ event: 'move', coordinates: coordinates }, 'http://127.0.0.1:3978/#/edit');
-    }
 </script>
 
-<% function getRotateValue (layer) {
+<%
+function getRotateValue (layer) {
     if (layer.settings.layerSettings.fullscreen) {
         var dist = Math.sqrt((Math.pow(ampStory.initialWidth, 2)) + (Math.pow(ampStory.initialHeight, 2)));
         var diagAngle = Math.asin((ampStory.initialHeight) / dist);
@@ -365,12 +354,25 @@ function getFullScreenElementOffsetX (layer) {
 
 function setLinkBgColor (data) {
     if (data.type === 'solid') {
+        console.log('1111', data.leftColor);
         return data.leftColor;
     } else if (data.type === 'linear') {
         return `linear-gradient(${data.angle}deg, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
     } else if (data.type === 'radial') {
         return `radial-gradient(circle at ${data.horizontalDirection}% ${data.verticalDirection}%, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
     }
+}
+
+function getFullScreenContainerX(layer) {
+    return layer.settings.layerSettings.fullscreen
+            ? `${(100 * (ampStory.initialWidth - layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / 2) / ampStory.initialWidth}`
+            : `${((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100)}`
+}
+
+function getFullScreenContainerY(layer) {
+    return layer.settings.layerSettings.fullscreen
+            ? `${(100 * (ampStory.initialHeight - layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / 2) / ampStory.initialHeight}`
+            : `${((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100)}`
 }
 %>
 
@@ -391,9 +393,10 @@ function setLinkBgColor (data) {
             <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                 <% var page = null
                         switch (layer.type) {
-                case 'text': %>
+                    case 'text':
+                case 'html': %>
                 <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                    <div onmousedown="selectLayer(event)"
                          class="drag-item single-page-item animate"
                          style="
                                  width: <%=getAnimationWidthEm(layer)%>;
@@ -405,7 +408,7 @@ function setLinkBgColor (data) {
                              top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
                          <% }%>
                                  left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
-                        <div draggable="true" id="layer<%=layer.position%>" style="
+                        <div id="layer<%=layer.position%>" style="
                                 outline: none;
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
                                 width: <%=getDraggableElementWidth(layer);%>;
@@ -418,24 +421,9 @@ function setLinkBgColor (data) {
                 </amp-story-grid-layer>
                 <% break;
 
-                case 'html': %>
-                <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
-                         class="drag-item single-page-item animate"
-                         style="
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;">
-                        <div draggable="true" id="layer<%=layer.position%>"
-                             style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
-                            <% include layers/text.ejs %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% break;
-
                 case 'shape': %>
                 <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                    <div onmousedown="selectLayer(event)"
                          class="drag-item single-page-item animate"
                          style="
                                  position: absolute;
@@ -463,8 +451,9 @@ function setLinkBgColor (data) {
 
                     case 'image':
                 case 'gifs': %>
+                <% if (layer.content.image.url) { %>
                 <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                    <div onmousedown="selectLayer(event)"
                          class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
                          style="
                                  position: absolute;
@@ -479,9 +468,9 @@ function setLinkBgColor (data) {
                              bottom: 0;
                                      top: initial;
                          <% } else {%>
-                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
+                             top: <%= getFullScreenContainerY(layer) + '%' %>;
                          <% }%>
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
+                                 left: <%= getFullScreenContainerX(layer) + '%' %>;">
                         <div draggable="true" id="layer<%=layer.position%>"
                                 <%if (layer.settings.layerSettings.fullscreen) {%> style="
                                 position: absolute;
@@ -501,11 +490,13 @@ function setLinkBgColor (data) {
                         </div>
                     </div>
                 </amp-story-grid-layer>
+                <% } %>
                 <% break
 
                 case 'video': %>
+                <% if (layer.content.video.url) { %>
                 <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
+                    <div onmousedown="selectLayer(event)"
                          class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
                          style="
                                  position: absolute;
@@ -536,10 +527,11 @@ function setLinkBgColor (data) {
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
                                 top: <%=getDeraggableElementOffsetY(layer);%>;
                                 left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                            <%- include('layers/video.ejs', {withAnimations: false, layer: layer }); %>
+                            <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
                         </div>
                     </div>
                 </amp-story-grid-layer>
+                <% } %>
                 <% break
                 case 'cta-link': %>
                 <div style="
@@ -551,19 +543,23 @@ function setLinkBgColor (data) {
                  " id="<%=layer.position%>">
                     <a onmousedown="selectLayer(event)"
                        style="
-                               margin: auto;
-                               padding: 10px 20px;
-                               text-align: center;
-                               font-size: 16px;
-                               font-family: 'Verdana';
-                               text-decoration: none;
-                               background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
-                               color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                               border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-                               text-align: center;
-                               cursor: default;
-                               z-index: <%=currentSlide.layers.length + 1%>;
-                               border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
+                           position: absolute;
+                           left: 50%;
+                           bottom: 10%;
+                           transform: translateX(-50%);
+                           margin: auto;
+                           padding: 10px 20px;
+                           text-align: center;
+                           font-size: 16px;
+                           font-family: 'Verdana';
+                           text-decoration: none;
+                           background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
+                           color: <%=layer.settings.ctaLayerSettings.fontColor%>;
+                           border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
+                           text-align: center;
+                           cursor: default;
+                           z-index: <%=currentSlide.layers.length + 1%>;
+                           border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
                        href="<%=layer.settings.ctaLayerSettings.link%>"
                        id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
                 </div>

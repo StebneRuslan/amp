@@ -85,6 +85,11 @@ function _css(prop) {
             if (obj[len].currentStyle) {
                 return obj[len].currentStyle[prop];
             } else if (document.defaultView && document.defaultView.getComputedStyle) {
+                if (prop.includes('transform')) {
+                    const exponentRegexp180 = /-?1.22465e-16/g;
+                    const exponentRegexp90 = /6.12323e-17/g;
+                    return document.defaultView.getComputedStyle(obj[len], '')[prop].replace(exponentRegexp180, '0').replace(exponentRegexp90, '0');
+                }
                 return document.defaultView.getComputedStyle(obj[len], '')[prop];
             } else {
                 return obj[len].style[prop];

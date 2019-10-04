@@ -1,7 +1,6 @@
 <% function getImageUrl (content) {
   if (layer.type === 'video') {
     if (content.thumbnail !== '') {
-      console.log('thumbnail')
       return content.thumbnail || content.image.thumbnail
     } else if (content.image.thumbnail) {
       return content.image.thumbnail || ''

@@ -218,7 +218,6 @@ export default class Subject {
                     revX = dox;
 
                     revY = false;
-                    console.log('bl', revX, revY);
                 }
 
 

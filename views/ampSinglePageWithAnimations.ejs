@@ -296,10 +296,28 @@ function getFullScreenElementOffsetX (layer) {
     const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
     return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
 }
+
+function setLinkBgColor (data) {
+    if (data.type === 'solid') {
+        return data.leftColor;
+    } else if (data.type === 'linear') {
+        return `linear-gradient(${data.angle}deg, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
+    } else if (data.type === 'radial') {
+        return `radial-gradient(circle at ${data.horizontalDirection}% ${data.verticalDirection}%, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
+    }
+}
+
+function changeCtaLink (link) {
+    if (link.match('^https?:\/\/')) {
+        return link;
+    } else {
+        return `https://${link}`;
+    }
+}
 %>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-    <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="10s" class="container">
+    <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="<%=currentSlide.duration || 10%>s" class="container">
         <% let preview = false;
         if (currentSlide) {
             currentSlide.layers.sort((first, second) => {
@@ -314,39 +332,33 @@ function getFullScreenElementOffsetX (layer) {
             <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                 <% var page = null
                         switch (layer.type) {
-                case 'text': %>
-                <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
-                         class="drag-item single-page-item animate" <% if (layer.content.value !== '') { %>
-                         style="
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;" <% } %> <% if (layer.settings.animateIn && !preview){ %>
-                         animate-in="<%= layer.settings.animateIn %>" <% } %> <% if (layer.settings.animateDuration){ %>
-                         animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                    <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>>
-                        <div draggable="true" id="layer<%=layer.position%>"
-                             style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
-                            <% include layers/text.ejs %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% break;
-
+                    case 'text':
                 case 'html': %>
                 <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="mouseDown(event)" onmouseup="mouseUp(event)"
-                         class="drag-item single-page-item animate"
-                         style="
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%'%>;
-                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%'%>;"
+                    <div
+                            class="drag-item single-page-item animate"
+                            style="
+                                    width: <%=getAnimationWidthEm(layer)%>;
+                                    height: <%=getAnimationHeightEm(layer)%>;
+                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
+                                bottom: 0;
+                                        top: initial;
+                            <% } else {%>
+                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
+                            <% }%>
+                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;"
                     <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>"
                             <% } %> <% if (layer.settings.animateDuration){ %>
-                         animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+                            animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
                     <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
                             <% } %>>
-                        <div draggable="true" id="layer<%=layer.position%>"
-                             style=" transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
+                        <div draggable="true" id="layer<%=layer.position%>" style="
+                                outline: none;
+                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
+                                width: <%=getDraggableElementWidth(layer);%>;
+                                height: <%=getDraggableElementHeight(layer);%>;
+                                top: <%=getDeraggableElementOffsetY(layer);%>;
+                                left: <%=getDeraggableElementOffsetX(layer);%>;">
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -493,13 +505,13 @@ function getFullScreenElementOffsetX (layer) {
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
                                 top: <%=getDeraggableElementOffsetY(layer);%>;
                                 left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                            <%- include('layers/video.ejs', {withAnimations: true, layer: layer }); %>
+                            <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
                         </div>
                     </div>
                 </amp-story-grid-layer>
                 <% } else { %>
                     <amp-story-grid-layer template="fill">
-                        <%- include('layers/video.ejs', {withAnimations: true, layer: layer }); %>
+                        <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
                     </amp-story-grid-layer>
                 <% } %>
                 <% break
@@ -510,34 +522,27 @@ function getFullScreenElementOffsetX (layer) {
                     height: 10vh;
                     top: 90%;
                     display: grid;
-                 "
-                     id="<%=layer.position%>">
-                    <a
-                            onmousedown="selectLayer(event)"
-                    <% if (layer.settings.animateIn && !preview){ %>
-                            animate-in="<%= layer.settings.animateIn %>"
-                            <% } %>
-                    <% if (layer.settings.animateDuration){ %>
-                            animate-in-duration="<%= layer.settings.animateDuration %>s"
-                            <% } %>
-                    <% if (layer.settings.animateDelay){ %>
-                            animate-in-delay="<%= layer.settings.animateDelay %>s"
-                            <% } %>
-                            style="
-                                    margin: auto;
-                                    padding: 10px 20px;
-                                    text-align: center;
-                                    font-size: 16px;
-                                    font-family: 'Verdana';
-                                    text-decoration: none;
-                                    background-color: <%=layer.settings.layerSettings.shapeStyles.fillColor%>;
-                                    color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                                    border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor%>;
-                                    text-align: center;
-                                    cursor: default;
-                                    z-index: <%=currentSlide.layers.length + 1%>;
-                                    border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
-                            href="<%=layer.settings.ctaLayerSettings.link%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
+                 " id="<%=layer.position%>">
+                    <a style="
+                        position: absolute;
+                        left: 50%;
+                        bottom: 10%;
+                        transform: translateX(-50%);
+                        margin: auto;
+                        padding: 10px 20px;
+                        text-align: center;
+                        font-size: 16px;
+                        font-family: 'Verdana';
+                        text-decoration: none;
+                        background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
+                        color: <%=layer.settings.ctaLayerSettings.fontColor%>;
+                        border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
+                        text-align: center;
+                        cursor: default;
+                        z-index: <%=currentSlide.layers.length + 1%>;
+                        border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
+                       href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>"
+                       id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
                 </div>
                 <% break } %>
             <% }) %>

@@ -60,7 +60,7 @@ export default class Draggable extends Subject {
     }
 
     _apply() {
-
+        window.parent.postMessage({ event: 'apply-from-iframe' }, 'http://127.0.0.1:3978/#/edit');
         const {
             storage,
             el
@@ -72,6 +72,7 @@ export default class Draggable extends Subject {
             cached,
             parent,
             dimens,
+            handle,
             controls
         } = storage;
 
@@ -82,10 +83,9 @@ export default class Draggable extends Subject {
         const diffLeft = matrix[4];
         const diffTop = matrix[5];
 
-        matrix[4] = 0;
-        matrix[5] = 0;
+        // matrix[4] = 0;
+        // matrix[5] = 0;
 
-        console.log('END');
         const css = matrixToCSS(matrix);
 
         const pW = parent.css('width'),
@@ -109,18 +109,19 @@ export default class Draggable extends Subject {
             pH,
             dimens.top
         );
+        // _el.css(css);
+        // Helper(controls).css(css);
+        const container = el.querySelector('.text-container');
+        const isTextDrag = handle[0].classList.contains('dg-controls') || !container || (!handle[0].classList.contains('dg-hdl-ml') && !handle[0].classList.contains('dg-hdl-mr'))
 
-        console.log('111111', _el);
-        _el.css(css);
-        console.log('222222', _el);
-        Helper(controls).css(css);
         window.parent.postMessage({
             event: 'resize-on-mouseup', position: {
                 width: controls.style.width,
                 height: controls.style.height,
                 diffLeft,
                 diffTop
-            }
+            },
+            isTextDrag: isTextDrag
         }, 'http://127.0.0.1:3978/#/edit');
         this.storage.cached = null;
     }
@@ -194,6 +195,11 @@ function _init(sel) {
 
     _controls.on('mousedown', this._onMouseDown)
         .on('touchstart', this._onTouchStart);
+    const textContainer = _sel[0].querySelector('.text-container');
+    if (textContainer) {
+        _container.find('.dg-hdl-bc')[0].style.display = 'none';
+        _container.find('.dg-hdl-tc')[0].style.display = 'none';
+    }
 }
 
 function _destroy() {
@@ -206,7 +212,7 @@ function _destroy() {
 }
 
 function _compute(e) {
-
+    window.parent.postMessage({ event: 'compute-from-iframe' }, 'http://127.0.0.1:3978/#/edit');
     const {
         el,
         storage
@@ -220,7 +226,12 @@ function _compute(e) {
     } = storage;
 
     const handle = Helper(e.target);
-
+    const container = el.querySelector('.text-container');
+    const leftSide = handle[0].classList.contains('dg-hdl-ml');
+    const rightSide = handle[0].classList.contains('dg-hdl-mr');
+    if (container && !leftSide && !rightSide) {
+        container.style.width = `${el.clientWidth}px`;
+    }
     let factor = 1;
 
     //reverse axis
@@ -279,7 +290,7 @@ function _compute(e) {
 
     const _el = Helper(el);
     const styleList = el.style;
-    console.log(styleList.top || _el.css('top'))
+
     const dimens = {
         top: getUnitDimension(styleList.top || _el.css('top')),
         left: getUnitDimension(styleList.left || _el.css('left')),
@@ -411,13 +422,25 @@ function processResize(
         handle[0].classList.contains('dg-hdl-tr') ||
         handle[0].classList.contains('dg-hdl-bl') ||
         handle[0].classList.contains('dg-hdl-tl');
-
+    let isText = false;
+    const container = el.querySelector('.text-container');
+    if (container && canResizeWithShiftKey) {
+        isText = true;
+    }
     const scaleHeight = storage.ch / storage.cw;
     if (height !== null) {
-        if (storage.shiftKey && canResizeWithShiftKey) {
+        if ((storage.shiftKey || isText) && canResizeWithShiftKey) {
             height = width * scaleHeight;
         }
         style.height = `${snapToGrid(height, snap.y)}px`;
+    }
+
+    if (container && (handle[0].classList.contains('dg-hdl-mr') || handle[0].classList.contains('dg-hdl-ml'))) {
+        let newHeight = 0;
+        [].forEach.call(container.querySelectorAll('.simple-text-line'), (el) => {
+            newHeight += el.clientHeight;
+        })
+        style.height = !newHeight ? `${snapToGrid(container.parentNode.clientHeight, snap.y)}px` : `${snapToGrid(newHeight, snap.y)}px`;
     }
 
     const coords = rotatedTopLeft(
@@ -433,30 +456,10 @@ function processResize(
     let resultX = left - (coords.left - coordX);
 
     const matrix = [...transform];
-    if (el.querySelector('.text-container')) {
-        let width = 0;
-        if (el.querySelector('span')) {
-            [].forEach.call(el.querySelectorAll('span'), (el) => {
-                console.log('el', el);
-                if (parseFloat(el.clientWidth) >= parseFloat(width)) {
-                    console.log(el.clientWidth)
-                    width = el.clientWidth
-                }
-            })
-            const height = [].map.call(el.querySelector('span').parentNode.parentNode.children, (el) => {
-                return el.clientHeight
-            }).reduce((a, b) => a + b)
-            if (parseFloat(style.height) <= height) {
-                style.height = height + 1 + 'px'
-                if (parseFloat(style.width) <= width) {
-                    resultX = resultX > 0 ? 0 : resultX;
-                }
-            }
-            if (parseFloat(style.width) <= width) {
-                style.width = width + 1 + 'px'
-            }
-            resultY = resultY > 0 ? 0 : resultY;
-        }
+
+    if (isText) {
+        container.style.transformOrigin = `top left`;
+        container.style.transform = `scale(${parseFloat(style.width) / storage.cw})`;
     }
     matrix[4] = resultX;
     matrix[5] = resultY;
@@ -485,8 +488,7 @@ function processResize(
 
 
     Helper(el).css(css);
-    window.parent.postMessage({ event: 'resize-from-package', size: size }, 'http://127.0.0.1:3978/#/edit');
-    console.log('resize');
+    window.parent.postMessage({ event: 'resize-from-package', size: size, isText: isText }, 'http://127.0.0.1:3978/#/edit');
     storage.cached = matrix;
 }
 
