@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Neuton';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Neuton-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Neuton-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Neuton';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Neuton-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Neuton-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Neuton';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Neuton-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Neuton-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Neuton';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Neuton-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Neuton-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

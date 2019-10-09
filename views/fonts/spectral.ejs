@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Spectral';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Spectral-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Spectral-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Spectral';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Spectral-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Spectral-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Spectral';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Spectral-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Spectral-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Spectral';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Spectral-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Spectral-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

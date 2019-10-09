@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'CrimsonText';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/CrimsonText-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/CrimsonText-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'CrimsonText';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/CrimsonText-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/CrimsonText-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'CrimsonText';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/CrimsonText-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/CrimsonText-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'CrimsonText';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/CrimsonText-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/CrimsonText-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

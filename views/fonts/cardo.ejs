@@ -1,0 +1,30 @@
+@font-face {
+    font-family: 'Cardo';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cardo-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cardo-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Cardo';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cardo-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cardo-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Cardo';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Cardo-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Cardo-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}

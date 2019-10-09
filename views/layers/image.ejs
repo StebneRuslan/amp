@@ -1,159 +1,54 @@
-<% function getStyles (settings) {
-    let styles = ''
-    if (settings) {
-        if (settings.margin && !layer.settings.layerSettings.fullscreen) {
-            if (['1', '3', '13', '15', '2', '5', '11', '14'].includes(settings.position)) {
-                if (['1', '2', '3', '5'].includes(settings.position)) {
-                    styles += `top:${settings.margin}px;`;
-                } else if (['11', '13', '14', '15'].includes(settings.position)) {
-                    styles += `top:${-settings.margin}px;`;
-                }
-            }
-            if (['1', '4', '7', '10', '13'].includes(settings.position)) {
-                styles += `left:${settings.margin}px;`;
-            }
-            if (['3', '6', '9', '12', '15'].includes(settings.position)) {
-                styles += `right:${settings.margin}px;`;
-            }
-        }
-        if (settings.opacity) {
-            styles += `opacity:${settings.opacity / 100};`
-        }
-        if (layer.settings.layerSettings.fullscreen) {
-            var dist = Math.sqrt((Math.pow(ampStory.editorWidth, 2) || Math.pow(400, 2)) + (Math.pow(ampStory.editorHeight, 2) || Math.pow(711, 2)));
-            var diagAngle = Math.asin((ampStory.editorHeight || 711) / dist);
-
-            var a1 = (((settings.rotate * Math.PI / 180) % (Math.PI * 2)) + Math.PI * 4) % (Math.PI * 2);
-            console.log('a1', a1)
-            if (a1 > Math.PI) {
-                a1 -= Math.PI;
-            }
-            if (a1 > Math.PI / 2 && a1 <= Math.PI) {
-                a1 = (Math.PI / 2) - (a1 - (Math.PI / 2));
-            }
-
-            var ang1 = Math.PI / 2 - diagAngle - Math.abs(a1)
-            var ang2 = Math.abs(diagAngle - Math.abs(a1))
-
-            var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.height
-            var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.width
-            var scale = Math.max(scale1, scale2)
-            styles += `transform: rotate(${settings.rotate}deg) scale(${scale});`
-        }
-        if (!layer.settings.layerSettings.fullscreen) {
-            styles += `transform: rotate(${settings.rotate}deg);`
-        }
-        styles += `z-index: ${layer.position}`
-    }
-    return styles
-}
-function getImageUrl (content) {
-    console.log('content', content)
-    if (layer.type === 'video') {
-        if (content.thumbnail !== '') {
-            console.log('thumbnail')
-            return content.thumbnail || content.image.thumbnail
-        } else if (content.image.thumbnail) {
-            return content.image.thumbnail || ''
-        } else {
-            return ''
-        }
+<% function getImageUrl (content) {
+  if (layer.type === 'video') {
+    if (content.thumbnail !== '') {
+      return content.thumbnail || content.image.thumbnail
+    } else if (content.image.thumbnail) {
+      return content.image.thumbnail || ''
     } else {
-        return content.value || ''
+      return ''
     }
+  } else {
+    return (content.value || content.image) || ''
+  }
 }
 if (layer.settings.layerSettings.fullscreen) { %>
-    <div
-    <% if (layer.settings.generalSettings.rotate !== '-180' &&
-            layer.settings.generalSettings.rotate !== '0' &&
-            layer.settings.generalSettings.rotate !== '180'
-    ) { %>
-        class="image flex-container position8"
-        style="<%= getStyles(layer.settings.generalSettings) %>; overflow: hidden; "
-    <% } else { %>
-        class="image-full flex-container-full position8"
-        style="<%= getStyles(layer.settings.generalSettings) %>; transform: none;"
+  <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+  <div style="transform: translateX(50%);">
+    <% } %>
+    <amp-img
+    <% if (withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+      animate-in="<%= layer.settings.animateIn %>"
+      <% if (layer.settings.animateDuration){ %>
+      animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+      <% if (layer.settings.animateDelay){ %>
+      animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
             <% } %>
-    >
-        <amp-img
-                src="<%= getImageUrl(layer.content) %>"
-        <% if (layer.settings.generalSettings.rotate === '-180' ||
-                layer.settings.generalSettings.rotate === '0' ||
-                layer.settings.generalSettings.rotate === '180'
-        ) { %>
-                width='100'
-                height='100'
-                layout="responsive"
-                class="amp-img-full"
-        <% } else { %>
-                width="<%= layer.settings.layerSettings.width %>px"
-                height="<%= layer.settings.layerSettings.height %>px"
-                class=""
-                layout="fixed"
-                <% } %>
+      src="<%= getImageUrl(layer.content) %>"
+      width="<%= layer.settings.layerSettings.width %>"
+      height="<%= layer.settings.layerSettings.height %>"
+      layout="fixed"
+      alt="an image"
+      style="width:100%;height:100%;object-fit:fill;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;">
+    </amp-img>
+    <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+  </div>
+  <% } %>
 
-                alt="an image"
-        <% if (layer.settings.animateIn && !preview){ %>
-                animate-in="<%= layer.settings.animateIn %>"
-                <% } %>
-        <% if (layer.settings.animateDuration){ %>
-                animate-in-duration="<%= layer.settings.animateDuration %>s"
-                <% } %>
-        <% if (layer.settings.animateDelay){ %>
-                animate-in-delay="<%= layer.settings.animateDelay %>s"
-                <% } %>
-        >
-        </amp-img>
-    </div>
 <% } else { %>
-    <div class="image flex-container position<%= layer.settings.generalSettings.position %>"
-         style="width:100%;height:100%;"
-    >
-        <div
-        <% if (['5', '8', '11'].includes(layer.settings.generalSettings.position)) { %>
-            style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"
-        <% } else if (['2', '14'].includes(layer.settings.generalSettings.position)) { %>
-            style="position:absolute;<%= layer.setttings.generalSettings.position === '2' ? 'top:0' : 'bottom:0' %>;left:50%;transform:translate(-50%,0)"
-        <% } else if (['4', '7', '10'].includes(layer.settings.generalSettings.position)) { %>
-            style="position:absolute;top:50%;left:0;transform:translate(0,-50%);"
-        <% } else if (['6', '9', '12'].includes(layer.settings.generalSettings.position)) { %>
-            style="position:absolute;top:50%;right:0;transform:translate(0,-50%);"
-        <% } else if (['1', '3'].includes(layer.settings.generalSettings.position)) { %>
-            style="position:absolute;top:0;<%= layer.settings.generalSettings.position === '1' ? 'left:0' : 'right:0' %>;transform:translate(0,0);"
-        <% } else if (['13', '15'].includes(layer.settings.generalSettings.position)) { %>
-            style="position:absolute;bottom:0;<%= layer.settings.generalSettings.position === '13' ? 'left:0' : 'right:0' %>;transform:translate(0,0)"
-                <% } %>
-        >
-            <div
-                    class="rotate-wrapper"
-                    style="position:relative;<%= getStyles(layer.settings.generalSettings); %>"
-            >
-                <div
-                <% if (layer.settings.animateIn && !preview){ %>
-                    animate-in="<%= layer.settings.animateIn %>"
-                        <% } %>
-                <% if (layer.settings.animateDuration){ %>
-                    animate-in-duration="<%= layer.settings.animateDuration %>s"
-                        <% } %>
-                <% if (layer.settings.animateDelay){ %>
-                    animate-in-delay="<%= layer.settings.animateDelay %>s"
-                        <% } %>
-                >
-                    <amp-img
-                            class="small-image"
-                            src="<%= getImageUrl(layer.content) %>"
-                            width="<%= layer.settings.layerSettings.width %>"
-                            height="<%= layer.settings.layerSettings.height %>"
-                            layout="fixed"
-                            alt="an image"
-                    <% if (layer.settings.generalSettings.shadow === '0') {%>
-                            style="''"
-                    <% } else { %>
-                            style="filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));"
-                            <% } %>
-                    ></amp-img>
-                </div>
-            </div>
-        </div>
-    </div>
+  <amp-img
+          class="small-image"
+          src="<%= getImageUrl(layer.content) %>"
+          width="<%= layer.settings.layerSettings.width %>"
+          height="<%= layer.settings.layerSettings.height %>"
+          layout="responsive"
+          alt="an image"
+  <% if (layer.settings.generalSettings.shadow !== '0') { %>
+          style="
+                  filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));
+                  position: initial;
+                  opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+          <% } else { %>
+          style="position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+          <% } %>
+  ></amp-img>
 <% } %>

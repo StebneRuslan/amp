@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Chivo';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Chivo-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Chivo-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Chivo';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Chivo-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Chivo-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Chivo';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Chivo-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Chivo-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Chivo';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Chivo-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Chivo-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

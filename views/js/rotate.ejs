@@ -1,0 +1,60 @@
+<script>
+    let targetElement = null;
+    let targetElementParams = null;
+    let angleOnShift = 15;
+    let firstAngle = 0;
+    document.addEventListener('DOMContentLoaded', ready);
+    function ready() {
+        const elements = document.querySelectorAll('.rotate');
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].addEventListener('mousedown', selectElement);
+        }
+    };
+
+
+    function selectElement(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        targetElement = e.target.parentNode;
+        firstAngle = getAngle({x: e.clientX, y: e.clientY});
+        targetElementParams = e.target.parentNode.getBoundingClientRect();
+        document.addEventListener('mousemove', moveRotateElement);
+        document.addEventListener('mouseup', dropElement);
+    }
+
+    function getAngle(secondPoint) {
+        const centerX = (targetElement.getBoundingClientRect().left) + (targetElement.getBoundingClientRect().width / 2);
+        const centerY = (targetElement.getBoundingClientRect().top) + (targetElement.getBoundingClientRect().height / 2);
+        return (Math.atan2(secondPoint.x - centerX, secondPoint.y - centerY) * (180 / Math.PI) * -1) - 180;
+    }
+
+    function moveRotateElement(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        let secondPoint = {x: e.clientX, y: e.clientY};
+        const agile = getAngle(secondPoint);
+        if (e.shiftKey) {
+            if (agile - firstAngle >= 15 && 360 - (agile - firstAngle) >= 15 || agile - firstAngle <= -15) {
+                postToEditor(parseInt(agile, 10));
+                firstAngle = agile;
+            }
+        } else if(!e.shiftKey) {
+            postToEditor(agile);
+        }
+    }
+
+    function postToEditor(data) {
+        if (data > 180) {
+            data = 360 - data;
+        } else if (data < -180) {
+            data = 360 - (data * -1);
+        }
+        window.parent.postMessage({event: 'rotate', value: parseInt(data, 10)}, 'http://127.0.0.1:3978/#/edit');
+    }
+
+    function dropElement(e) {
+        e.stopPropagation();
+        document.removeEventListener('mousemove', moveRotateElement);
+        document.removeEventListener('mouseup', dropElement);
+    }
+</script>

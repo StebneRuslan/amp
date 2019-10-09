@@ -1,0 +1,29 @@
+<%if (ampStory && ampStory.userFonts) { %>
+    <% ampStory.userFonts.forEach(font => { %>
+        @font-face {
+        <% if (!font.family.includes(' ')) { %>
+        font-family: <%=font.family%>;
+        <% } else { %>
+        font-family: "<%=font.family%>";
+        <% } %>
+        src: url('/local-fonts?path=<%=font.name%>');
+        font-weight: <%= +font.weight === 400 ? 'normal' : 'bold' %>;
+        font-style: <%= font.style %>;
+        }
+    <% })%>
+<% } %>
+
+<%if (ampStory && ampStory.fonts) { %>
+    <% ampStory.fonts.forEach(font => { %>
+        @font-face {
+        <% if (!font.family.includes(' ')) { %>
+        font-family: <%=font.family%>;
+        <% } else { %>
+        font-family: "<%=font.family%>";
+        <% } %>
+        src: url('<%=font.path%>');
+        font-weight: <%= +font.weight === 400 ? 'normal' : 'bold' %>;
+        font-style: <%= font.style %>;
+        }
+    <% })%>
+<% } %>

@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Karla';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Karla-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Karla-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Karla';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Karla-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Karla-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Karla';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Karla-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Karla-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Karla';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Karla-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Karla-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

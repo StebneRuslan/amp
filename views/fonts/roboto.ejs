@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Roboto';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Roboto-Regular.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Roboto-Regular.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Roboto';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Roboto-Italic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Roboto-Italic.ttf') format('truetype');
+    <% } %>
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Roboto';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Roboto-Bold.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Roboto-Bold.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Roboto';
+    <% if (fontPath.includes('/fonts')) { %>
+        src: url('<%=fontPath%>/Roboto-BoldItalic.ttf') format('truetype');
+    <% } else { %>
+        src: url('<%=fontPath%>/src/public/fonts/Roboto-BoldItalic.ttf') format('truetype');
+    <% } %>
+    font-weight: bold;
+    font-style: italic;
+}

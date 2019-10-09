@@ -3,9 +3,10 @@
 // const data = require('./src/data.js')
 
 const path = require('path')
+const data = require('./src/data')
 const express = require('express')
 const app = express()
-let amp = class Amp {
+let Amp = class Amp {
     constructor(type, configPaths) {
         this.type = type;
         this.configPaths = configPaths
@@ -47,12 +48,36 @@ let amp = class Amp {
         });
     }
 
+    createSinglePageWithAnimations(data, calback) {
+        let resultHtml = ''
+        let fullData = this.setConfigPath(data);
+        app.render(path.resolve(__dirname, 'views', 'ampSinglePageWithAnimations.ejs'), fullData, function(err, html) {
+            if (err) {
+                console.log(err);
+            } else {
+                resultHtml = html.replace(/\n/g, '')
+            }
+            calback(resultHtml)
+        });
+    }
+
+    createSinglePageWithoutScripts(data, calback) {
+        let resultHtml = ''
+        let fullData = this.setConfigPath(data);
+        app.render(path.resolve(__dirname, 'views', 'singlePageWithoutScripts.ejs'), fullData, function(err, html) {
+            if (err) {
+                console.log(err);
+            } else {
+                resultHtml = html.replace(/\n/g, '')
+            }
+            calback(resultHtml)
+        });
+    }
+
     createFullStory(data, calback) {
-        console.log('dataaaaaaaa', data)
         let resultHtml = ''
         data.type = this.type
         let fullData = this.setConfigPath(data);
-        console.log('fullDatafullData', fullData)
         app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function(err, html) {
             if (err) {
                 console.log(err);
@@ -64,14 +89,14 @@ let amp = class Amp {
     }
 }
 
-module.exports = {amp}
+module.exports = Amp
 // const amp = new Amp('cdn', {
-//     v0Path: '/assets/libs/v0.js',
-//     ampStoryPath: '/assets/libs/amp-story-0.1.js',
-//     ampVideoPath: '/assets/libs/amp-video-0.1.js'
+//     v0Path: 'https://cdn.ampproject.org/v0.js',
+//     ampStoryPath: 'https://cdn.ampproject.org/v0/amp-story-1.0.js',
+//     ampVideoPath: 'https://cdn.ampproject.org/v0/amp-video-0.1.js',
+//     ampAnimationPath: null,
+//     fontPath: '..'
 // })
-// let single = amp.createSinglePage(data.data)
-// let full = amp.createFullStory(data.data)
-// console.log(amp)
+// let single = amp.createSinglePageWithoutScripts(data.data, (resultHtml)=> {console.log(resultHtml)})
 // console.log('____________!!!!!!_____________')
 // console.log(single)
