@@ -201,20 +201,20 @@ function getAnimationWidthEm (layer) {
     if (layer.settings.layerSettings.shapeStyles) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
-    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
+    return (parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
+                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100)).toFixed(1) + 'em';
 }
 function getAnimationHeightEm (layer) {
     let thickness = 0;
     if (layer.settings.layerSettings.shapeStyles) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
-    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
+    return (parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
             Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
+                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100)).toFixed(1) + 'em';
 }
 
 function getAnimationContainerWidth (layer) {

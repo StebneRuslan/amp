@@ -438,7 +438,7 @@ function processResize(
     if (container && (handle[0].classList.contains('dg-hdl-mr') || handle[0].classList.contains('dg-hdl-ml'))) {
         let newHeight = 0;
         [].forEach.call(container.querySelectorAll('.simple-text-line'), (el) => {
-            newHeight += el.clientHeight;
+            newHeight += el.clientHeight || el.offsetHeight;
         })
         style.height = !newHeight ? `${snapToGrid(container.parentNode.clientHeight, snap.y)}px` : `${snapToGrid(newHeight, snap.y)}px`;
     }
