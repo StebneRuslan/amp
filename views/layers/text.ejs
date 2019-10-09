@@ -13,9 +13,8 @@
 <div
         class="text-container"
         style="<%= getStyles(layer.settings.generalSettings)%>; position: relative"
-        id="text<%= layer.settings.generalSettings.position ? `${layer.settings.generalSettings.position}${currentSlide ? currentSlide.position : ''}` : '' %>"
 >
   <div
-          class="single-text"
-  ><%- (layer.content.value || layer.content.html) || '_' %></div>
+          class="single-text" id="text<%= layer.position%>"
+  ><%- (layer.content.value || layer.content.html) || '' %></div>
 </div>
