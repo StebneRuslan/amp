@@ -1,5 +1,5 @@
-// const getStory = require('./src/storyPage.js')
-// const getSinglePage = require('./src/singlePage.js')
+const getStory = require('./src/storyPage.js')
+const getSinglePage = require('./src/singlePage.js')
 // const data = require('./src/data.js')
 
 const path = require('path')
@@ -74,18 +74,20 @@ let Amp = class Amp {
         });
     }
 
-    createFullStory(data, calback) {
+    createFullStory(data, analytics = null, calback) {
         let resultHtml = ''
         data.type = this.type
-        let fullData = this.setConfigPath(data);
+        let fullData = this.setConfigPath(data)
+        fullData.analytics = analytics
+        console.log(fullData.analytics)
         app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function(err, html) {
             if (err) {
-                console.log(err);
+                console.log(err)
             } else {
                 resultHtml = html.replace(/\n/g, '')
             }
             calback(resultHtml)
-        });
+        })
     }
 }
 
@@ -97,6 +99,6 @@ module.exports = Amp
 //     ampAnimationPath: null,
 //     fontPath: '..'
 // })
-// let single = amp.createSinglePageWithoutScripts(data.data, (resultHtml)=> {console.log(resultHtml)})
+// let single = amp.createFullStory(data.data, null, (resultHtml)=> {console.log('resultHtml')})
 // console.log('____________!!!!!!_____________')
 // console.log(single)
