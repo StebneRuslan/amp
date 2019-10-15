@@ -78,8 +78,7 @@ let Amp = class Amp {
         let resultHtml = ''
         data.type = this.type
         let fullData = this.setConfigPath(data)
-        fullData.analytics = analytics
-        console.log(fullData.analytics)
+        fullData.analytics = 'werewrwerwerew'
         app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function(err, html) {
             if (err) {
                 console.log(err)
