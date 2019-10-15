@@ -79,6 +79,7 @@ let Amp = class Amp {
         data.type = this.type
         let fullData = this.setConfigPath(data)
         data.ampStory.googleAnalytics = googleAnalytics
+        console.log('#$#$#$#$#$#$#$#', data.ampStory.googleAnalytics)
         app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function(err, html) {
             if (err) {
                 console.log(err)
