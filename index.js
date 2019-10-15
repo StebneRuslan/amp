@@ -19,7 +19,6 @@ let Amp = class Amp {
         data.ampVideoPath = this.configPaths.ampVideoPath
         data.ampAnimationPath = this.configPaths.ampAnimationPath
         data.fontPath = this.configPaths.fontPath
-        data.analytics = 'this.configPaths.fontPath'
         return data;
     }
 
@@ -79,8 +78,7 @@ let Amp = class Amp {
         let resultHtml = ''
         data.type = this.type
         let fullData = this.setConfigPath(data)
-        console.log(fullData)
-        console.log(fullData.analytics)
+        data.ampStory.analytics = 'this.configPaths.fontPath'
         app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function(err, html) {
             if (err) {
                 console.log(err)
