@@ -357,7 +357,7 @@ ampStory.cuts.map(currentSlide => { %>
         <% break
         } %>
     <% }) %>
-    <%- include('analytics.ejs', {analyticsKey: 'UA-149167447-2'})%>
+    <%- include('analytics.ejs', {analyticsKey: ampStory.googleAnalytics.trackingProductId})%>
     <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
     <%if (currentSlide.position >= 1 && ampStory.type !== 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link') {%>
     <amp-story-cta-layer>

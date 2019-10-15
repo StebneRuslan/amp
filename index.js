@@ -74,11 +74,11 @@ let Amp = class Amp {
         });
     }
 
-    createFullStory(data, analytics = null, calback) {
+    createFullStory(data, googleAnalytics = null, calback) {
         let resultHtml = ''
         data.type = this.type
         let fullData = this.setConfigPath(data)
-        data.ampStory.analytics = analytics
+        data.ampStory.googleAnalytics = googleAnalytics
         app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function(err, html) {
             if (err) {
                 console.log(err)
