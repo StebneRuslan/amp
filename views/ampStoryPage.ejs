@@ -357,44 +357,7 @@ ampStory.cuts.map(currentSlide => { %>
         <% break
         } %>
     <% }) %>
-    <%console.log('=============2222', ampStory.analytics)%>
-    <amp-analytics type="gtag" data-credentials="include">
-     <script type="application/json">
-       {
-         "vars": {
-           "gtag_id": "UA-149167447-2",
-           "config": {
-             "UA-149167447-2": {
-               "groups": "default"
-             }
-           }
-         },
-         "triggers": {
-           "storyProgress": {
-              "on": "story-page-visible",
-              "vars": {
-                "event_name": "custom",
-                "event_action": "story_progress",
-                "event_category": "${title}",
-                "event_label": "${storyPageId}",
-                "event_value": "${storyProgress}",
-                "send_to": ["UA-149167447-2"]
-              }
-            },
-           "storyEnd": {
-             "on": "story-last-page-visible",
-             "vars": {
-               "event_name": "custom",
-               "event_action": "story_complete",
-               "event_label": "story_complete",
-               "event_category": "${title}",
-               "send_to": ["UA-149167447-2"]
-             }
-           }
-         }
-       }
-     </script>
-    </amp-analytics>
+    <%- include('analytics.ejs', {analyticsKey: 'UA-149167447-2'})%>
     <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
     <%if (currentSlide.position >= 1 && ampStory.type !== 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link') {%>
     <amp-story-cta-layer>
