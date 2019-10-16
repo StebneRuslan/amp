@@ -1,94 +1,89 @@
-const getStory = require('./src/storyPage.js')
-const getSinglePage = require('./src/singlePage.js')
-// const data = require('./src/data.js')
-
 const path = require('path')
-const data = require('./src/data')
+// const data = require('./src/data')
 const express = require('express')
 const app = express()
 let Amp = class Amp {
-    constructor(type, configPaths) {
-        this.type = type;
-        this.configPaths = configPaths
-    }
+  constructor (type, configPaths) {
+    this.type = type
+    this.configPaths = configPaths
+  }
 
-    setConfigPath(data) {
-        data.type = this.type
-        data.v0Path = this.configPaths.v0Path
-        data.ampStoryPath = this.configPaths.ampStoryPath
-        data.ampVideoPath = this.configPaths.ampVideoPath
-        data.ampAnimationPath = this.configPaths.ampAnimationPath
-        data.fontPath = this.configPaths.fontPath
-        return data;
-    }
+  setConfigPath (data) {
+    data.type = this.type
+    data.v0Path = this.configPaths.v0Path
+    data.ampStoryPath = this.configPaths.ampStoryPath
+    data.ampVideoPath = this.configPaths.ampVideoPath
+    data.ampAnimationPath = this.configPaths.ampAnimationPath
+    data.fontPath = this.configPaths.fontPath
+    return data
+  }
 
-    createSinglePage(data, calback) {
-        let resultHtml = ''
-        let fullData = this.setConfigPath(data);
-        app.render(path.resolve(__dirname, 'views', 'ampSinglePage.ejs'), fullData, function(err, html) {
-            if (err) {
-                console.log(err);
-            } else {
-                resultHtml = html.replace(/\n/g, '')
-            }
-            calback(resultHtml)
-        });
-    }
+  createSinglePage (data, calback) {
+    let resultHtml = ''
+    let fullData = this.setConfigPath(data)
+    app.render(path.resolve(__dirname, 'views', 'ampSinglePage.ejs'), fullData, function (err, html) {
+      if (err) {
+        console.log(err)
+      } else {
+        resultHtml = html.replace(/\n/g, '')
+      }
+      calback(resultHtml)
+    })
+  }
 
-    createStaticSinglePage(data, calback) {
-        let resultHtml = ''
-        let fullData = this.setConfigPath(data);
-        app.render(path.resolve(__dirname, 'views', 'ampPupeteerSinglePage.ejs'), fullData, function(err, html) {
-            if (err) {
-                console.log(err);
-            } else {
-                resultHtml = html.replace(/\n/g, '')
-            }
-            calback(resultHtml)
-        });
-    }
+  createStaticSinglePage (data, calback) {
+    let resultHtml = ''
+    let fullData = this.setConfigPath(data)
+    app.render(path.resolve(__dirname, 'views', 'ampPupeteerSinglePage.ejs'), fullData, function (err, html) {
+      if (err) {
+        console.log(err)
+      } else {
+        resultHtml = html.replace(/\n/g, '')
+      }
+      calback(resultHtml)
+    })
+  }
 
-    createSinglePageWithAnimations(data, calback) {
-        let resultHtml = ''
-        let fullData = this.setConfigPath(data);
-        app.render(path.resolve(__dirname, 'views', 'ampSinglePageWithAnimations.ejs'), fullData, function(err, html) {
-            if (err) {
-                console.log(err);
-            } else {
-                resultHtml = html.replace(/\n/g, '')
-            }
-            calback(resultHtml)
-        });
-    }
+  createSinglePageWithAnimations (data, calback) {
+    let resultHtml = ''
+    let fullData = this.setConfigPath(data)
+    app.render(path.resolve(__dirname, 'views', 'ampSinglePageWithAnimations.ejs'), fullData, function (err, html) {
+      if (err) {
+        console.log(err)
+      } else {
+        resultHtml = html.replace(/\n/g, '')
+      }
+      calback(resultHtml)
+    })
+  }
 
-    createSinglePageWithoutScripts(data, calback) {
-        let resultHtml = ''
-        let fullData = this.setConfigPath(data);
-        app.render(path.resolve(__dirname, 'views', 'singlePageWithoutScripts.ejs'), fullData, function(err, html) {
-            if (err) {
-                console.log(err);
-            } else {
-                resultHtml = html.replace(/\n/g, '')
-            }
-            calback(resultHtml)
-        });
-    }
+  createSinglePageWithoutScripts (data, calback) {
+    let resultHtml = ''
+    let fullData = this.setConfigPath(data)
+    app.render(path.resolve(__dirname, 'views', 'singlePageWithoutScripts.ejs'), fullData, function (err, html) {
+      if (err) {
+        console.log(err)
+      } else {
+        resultHtml = html.replace(/\n/g, '')
+      }
+      calback(resultHtml)
+    })
+  }
 
-    createFullStory(data, googleAnalytics = null, calback) {
-        let resultHtml = ''
-        data.type = this.type
-        let fullData = this.setConfigPath(data)
-        data.ampStory.googleAnalytics = googleAnalytics
-        console.log('#$#$#$#$#$#$#$#', data.ampStory.googleAnalytics)
-        app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function(err, html) {
-            if (err) {
-                console.log(err)
-            } else {
-                resultHtml = html.replace(/\n/g, '')
-            }
-            calback(resultHtml)
-        })
-    }
+  createFullStory (data, googleAnalytics = null, calback) {
+    let resultHtml = ''
+    data.type = this.type
+    let fullData = this.setConfigPath(data)
+    data.ampStory.googleAnalytics = googleAnalytics
+    app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function (err, html) {
+      if (err) {
+        console.log(err)
+      } else {
+        resultHtml = html.replace(/\n/g, '')
+      }
+      calback(resultHtml)
+    })
+  }
 }
 
 module.exports = Amp
@@ -99,6 +94,4 @@ module.exports = Amp
 //     ampAnimationPath: null,
 //     fontPath: '..'
 // })
-// let single = amp.createFullStory(data.data, null, (resultHtml)=> {console.log('resultHtml')})
-// console.log('____________!!!!!!_____________')
-// console.log(single)
+// let single = amp.createFullStory(data.data, null, (resultHtml) => {console.log('resultHtml')})

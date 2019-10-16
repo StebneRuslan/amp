@@ -539,6 +539,7 @@ function changeCtaLink (link) {
                         border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
                         text-align: center;
                         cursor: default;
+                        max-width: 35%;
                         z-index: <%=currentSlide.layers.length + 1%>;
                         border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
                        href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>"

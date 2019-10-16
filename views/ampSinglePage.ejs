@@ -559,6 +559,7 @@ function getFullScreenContainerY(layer) {
                            text-align: center;
                            cursor: default;
                            z-index: <%=currentSlide.layers.length + 1%>;
+                           max-width: 35%;
                            border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
                        href="<%=layer.settings.ctaLayerSettings.link%>"
                        id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>

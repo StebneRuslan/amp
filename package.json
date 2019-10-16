@@ -64,9 +64,7 @@
   },
   "scripts": {
     "build": "webpack --mode production",
-    "standard": "standard",
-    "standard:fix": "standard --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "standard": "standard views/ampViewer.ejs index.js"
   },
-  "version": "4.5.20"
+  "version": "4.5.22"
 }
