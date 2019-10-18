@@ -142,6 +142,7 @@
                         window.addEventListener('click', stopEditing);
                         window.addEventListener('click', handleSelectEnd);
                         window.parent.document.querySelector('body').addEventListener('click', apmModeMouseClick);
+                        window.parent.postMessage({ event: 'text-was-selected', value: true }, '*');
                     }
                     currentLayer.parentElement.parentElement.ondblclick = dbEvent;
                 }
@@ -364,15 +365,15 @@ function setLinkBgColor (data) {
 }
 
 function getFullScreenContainerX(layer) {
-    return layer.settings.layerSettings.fullscreen
-            ? `${(100 * (ampStory.initialWidth - layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / 2) / ampStory.initialWidth}`
-            : `${((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100)}`
+  return layer.settings.layerSettings.fullscreen
+    ? `${(100 * layer.settings.generalSettings.offsetX) / ampStory.initialWidth}`
+    : `${((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100)}`
 }
 
 function getFullScreenContainerY(layer) {
-    return layer.settings.layerSettings.fullscreen
-            ? `${(100 * (ampStory.initialHeight - layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / 2) / ampStory.initialHeight}`
-            : `${((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100)}`
+  return layer.settings.layerSettings.fullscreen
+    ? `${(100 * layer.settings.generalSettings.offsetY) / ampStory.initialHeight}`
+    : `${((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100)}`
 }
 %>
 
