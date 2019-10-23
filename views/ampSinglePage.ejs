@@ -29,8 +29,8 @@
                     resize: true
                 },
                 snap: {
-                    x: 1,
-                    y: 1
+                    x: 4,
+                    y: 4
                 }
             });
         }
@@ -452,7 +452,7 @@ function getFullScreenContainerY(layer) {
 
                     case 'image':
                 case 'gifs': %>
-                <% if (layer.content.image.url) { %>
+                <% if (layer.content.image && layer.content.image.url) { %>
                 <amp-story-grid-layer template="horizontal">
                     <div onmousedown="selectLayer(event)"
                          class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
@@ -495,7 +495,7 @@ function getFullScreenContainerY(layer) {
                 <% break
 
                 case 'video': %>
-                <% if (layer.content.video.url) { %>
+                <% if (layer.content.video && layer.content.video.url) { %>
                 <amp-story-grid-layer template="horizontal">
                     <div onmousedown="selectLayer(event)"
                          class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
