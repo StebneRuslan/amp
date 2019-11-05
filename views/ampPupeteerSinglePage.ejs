@@ -334,35 +334,24 @@ function changeCtaLink (link) {
                 </amp-story-grid-layer>
                 <% break
                 case 'cta-link': %>
-                <div style="
-                    width: 100%;
-                    position: absolute;
-                    height: 10vh;
-                    top: 90%;
-                    display: grid;
-                 "
-                     id="<%=layer.position%>">
-                    <a style="
+                <%if (layer.settings.ctaLayerSettings.link) {%>
+                    <div style="
+                        width: 100%;
                         position: absolute;
-                        left: 50%;
-                        bottom: 10%;
-                        transform: translateX(-50%);
-                        margin: auto;
-                        padding: 10px 20px;
-                        text-align: center;
-                        font-size: 16px;
-                        font-family: 'Verdana';
-                        text-decoration: none;
-                        background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
-                        color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                        border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-                        text-align: center;
-                         max-width: 35%;
-                        cursor: default;
-                        z-index: <%=currentSlide.layers.length + 1%>;
-                        border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
-                       href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
-                </div>
+                        height: 10vh;
+                        top: 90%;
+                        display: grid;
+                     "
+                         id="<%=layer.position%>">
+                        <a class='cta-link' style="
+                                background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
+                                color: <%=layer.settings.ctaLayerSettings.fontColor%>;
+                                border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
+                                z-index: <%=currentSlide.layers.length + 1%>;
+                                border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
+                           href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
+                    </div>
+                <% } %>
                 <% break } %>
             <% }) %>
         <% } %>

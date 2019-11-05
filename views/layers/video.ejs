@@ -33,7 +33,7 @@ if (layer.settings.layerSettings.fullscreen) {%>
           <% }%>
     width="<%= layer.settings.layerSettings.width %>"
     height="<%= layer.settings.layerSettings.height %>"
-    poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
+    poster="<%= layer.content.thumbnail || (layer.content.image ? layer.content.image.url : '') %>"
     style="height: inherit;opacity:<%= layer.settings.generalSettings.opacity / 100 %>">
     <source src="<%= getVideoUrl(layer.content)%>"
             type="video/mp4">
@@ -56,7 +56,7 @@ if (layer.settings.layerSettings.fullscreen) {%>
                   opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
           width="<%= layer.settings.layerSettings.width %>"
           height="<%= layer.settings.layerSettings.height %>"
-          poster="<%= layer.content.thumbnail || layer.content.image ? layer.content.image.url : '' %>"
+          poster="<%= layer.content.thumbnail || (layer.content.image ? layer.content.image.url : '') %>"
           layout="responsive"
   <% if (ampStory.fromPreview) { %>
           src="<%= getVideoUrl(layer.content)%>"
