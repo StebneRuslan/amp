@@ -13,7 +13,7 @@
     <% })%>
 <% } %>
 
-<%if (ampStory && ampStory.fonts) { %>
+<%if (ampStory && ampStory.fonts && !ampStory.fromPreview) { %>
     <% ampStory.fonts.forEach(font => { %>
         @font-face {
         <% if (!font.family.includes(' ')) { %>
