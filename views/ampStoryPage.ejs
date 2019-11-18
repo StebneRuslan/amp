@@ -364,6 +364,9 @@ ampStory.cuts.map(currentSlide => { %>
     <%if (ampStory.googleAnalytics && ampStory.googleAnalytics.trackingAccountId) {%>
         <%- include('analytics.ejs', {analyticsKey: ampStory.googleAnalytics.trackingAccountId})%>
     <% } %>
+    <%if (ampStory.customerAnalyticsKey) {%>
+        <%- include('customerAnalytics.ejs', {analyticsKey: ampStory.customerAnalyticsKey})%>
+    <% } %>
     <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
     <%if (currentSlide.position >= 1 && ampStory.type !== 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link' && layer.settings.ctaLayerSettings.link) {%>
     <amp-story-cta-layer>
