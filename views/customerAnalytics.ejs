@@ -2,9 +2,9 @@
     <script type="application/json">
     {
       "vars": {
-        "gtag_id": "<%=analyticsKey%>",
+        "gtag_id": "UA-97508922-1",
         "config": {
-            "<%analyticsKey%>": {
+            "UA-97508922-1": {
             "groups": "default"
           }
         }
@@ -14,24 +14,24 @@
           "on": "story-page-visible",
           "vars": {
             "event_name": "custom",
-            "event_action": "story_progress",
+            "event_action": "<%=analyticsKey%>_story_progress",
             "event_category": "${title}",
             "event_label": "${storyPageId}",
             "event_value": "${storyProgress}",
-            "send_to": ["<%=analyticsKey%>"]
+            "send_to": ["UA-97508922-1"]
           }
         },
         "storyEnd": {
           "on": "story-last-page-visible",
           "vars": {
             "event_name": "custom",
-            "event_action": "story_complete",
+            "event_action": "<%=analyticsKey%>_story_complete",
             "event_label": "story_complete",
             "event_category": "${title}",
-            "send_to": ["<%=analyticsKey%>"]
+            "send_to": ["UA-97508922-1"]
           }
         }
       }
     }
-  </script>
+    </script>
 </amp-analytics>
