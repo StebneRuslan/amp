@@ -374,8 +374,8 @@ ampStory.cuts.map(currentSlide => { %>
                 background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
                 color: <%=layer.settings.ctaLayerSettings.fontColor%>;
                 border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-                bottom:10%;
-                border-radius: <%=(layer.settings.layerSettings.shapeStyles.round / 16 || 1.5) + 'em';%>"
+                bottom: 10%;
+                border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 1.5 : layer.settings.layerSettings.shapeStyles.round / 16) + 'em';%>"
            href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>"
            id="<%=`cta-${currentSlide.position}`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
     </amp-story-cta-layer>
@@ -393,7 +393,7 @@ ampStory.cuts.map(currentSlide => { %>
                 color: <%=layer.settings.ctaLayerSettings.fontColor%>;
                 border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
                 z-index: <%=currentSlide.layers.length + 1%>;
-                border-radius: <%=(layer.settings.layerSettings.shapeStyles.round / 16 || 1.5) + 'em';%>"
+                border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 1.5 : layer.settings.layerSettings.shapeStyles.round / 16) + 'em';%>"
            href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
     </div>
     <% } %>
