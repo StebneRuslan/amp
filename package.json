@@ -35,12 +35,12 @@
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "standard": "^12.0.1",
     "uglifyjs-webpack-plugin": "^2.0.1"
   },
   "deprecated": false,
   "description": "",
   "devDependencies": {
+    "standard": "^12.0.1",
     "@babel/core": "^7.0.0-beta.42",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.42",
     "@babel/preset-env": "^7.0.0-beta.42",
@@ -66,5 +66,5 @@
     "build": "webpack --mode production",
     "standard": "standard views/ampViewer.ejs index.js"
   },
-  "version": "4.6.2"
+  "version": "4.6.3"
 }
