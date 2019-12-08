@@ -66,5 +66,5 @@
     "build": "webpack --mode production",
     "standard": "standard views/ampViewer.ejs index.js"
   },
-  "version": "4.6.3"
+  "version": "4.6.11"
 }

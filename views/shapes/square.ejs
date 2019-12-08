@@ -3,7 +3,7 @@
         xmlns:xlink='http://www.w3.org/1999/xlink'
         width='<%= getSvgSizeInProcentage('width') %>'
         height='<%= getSvgSizeInProcentage('height') %>'
-        style='<%=`overflow: visible; filter: url(#shadow${currentSlide.position}${layer.position}); transform: translate(${getSvgTranslate()}px, ${getSvgTranslate()}px); width: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px); height: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness}px);`%>'
+        style='<%=`overflow: visible; filter: url(#shadow${currentSlide.position}${layer.position}); transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(1)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(1)}em);`%>'
         viewBox='0 0 33 33'
         preserveAspectRatio='none'
 >
@@ -43,7 +43,7 @@
                     d='M1013, 261.25 v-33h33v33z'
                     stroke='<%= setColor('borderColor') %>'
                     fill='<%= setColor('fillColor') %>'
-                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? layer.settings.layerSettings.shapeStyles.thickness : 0 %>'
+                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(2)}em` : 0 %>'
                     vector-effect='non-scaling-stroke'
             ></path>
         </g>
@@ -56,7 +56,7 @@
 } %>
 
 <%function getSvgTranslate() {
-    return layer.settings.layerSettings.shapeStyles.thickness / 2;
+    return ((layer.settings.layerSettings.shapeStyles.thickness / 2) / 16).toFixed(2);
 } %>
 
 <%function setColor(type) {

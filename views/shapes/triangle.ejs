@@ -3,14 +3,14 @@
         xmlns:xlink='http://www.w3.org/1999/xlink'
         width='<%= getSvgSizeInProcentage('width') %>'
         height='<%= getSvgSizeInProcentage('height') %>'
-        style='<%=`overflow: visible; filter: url(#shadow${currentSlide.position}${layer.position}); transform: translate(0px, 0px); width: calc(100%); height: calc(100% - ${layer.settings.layerSettings.shapeStyles.thickness / 2}px);`%>'
+        style='<%=`overflow: visible; filter: url(#shadow${currentSlide.position}${layer.position}); transform: translate(0px, 0px); width: calc(100%); height: calc(100% - ${((layer.settings.layerSettings.shapeStyles.thickness / 2) / 16).toFixed(1)}em);`%>'
         viewBox='0 0 50 50'
         preserveAspectRatio='none'
 >
     <defs>
         <filter id='<%=`shadow${currentSlide.position}${layer.position}`%>' width='200%' height='200%' x='-40%' y='-40%'>
             <%if (layer.settings.generalSettings.shadow !== '0') { %>
-                <feDropShadow flood-opacity='<%=layer.settings.generalSettings.shadow == '0' ? '0' : '1'%>' dx='0' dy='0' stdDeviation='<%= layer.settings.generalSettings.shadow / 10 %>' />
+            <feDropShadow flood-opacity='<%=layer.settings.generalSettings.shadow == '0' ? '0' : '1'%>' dx='0' dy='0' stdDeviation='<%= layer.settings.generalSettings.shadow / 10 %>' />
             <% } else {%>
                 <feDropShadow flood-opacity='0' dx='0' dy='0' stdDeviation='0' />
             <% } %>
@@ -43,7 +43,7 @@
                     d='M1125, 228.25 l25 50h -50z'
                     stroke='<%= setColor('borderColor') %>'
                     fill='<%= setColor('fillColor') %>'
-                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? layer.settings.layerSettings.shapeStyles.thickness : 0 %>'
+                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(2)}em` : 0 %>'
                     vector-effect='non-scaling-stroke'>
             </path>
         </g>
@@ -56,7 +56,7 @@
 } %>
 
 <%function getSvgTranslate() {
-    return layer.settings.layerSettings.shapeStyles.thickness / 2;
+    return ((layer.settings.layerSettings.shapeStyles.thickness / 2) / 16).toFixed(2);
 } %>
 
 <%function setColor(type) {

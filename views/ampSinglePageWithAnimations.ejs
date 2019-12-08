@@ -390,29 +390,15 @@ function changeCtaLink (link) {
                     position: absolute;
                     height: 10vh;
                     top: 90%;
-                    display: grid;
-                 " id="<%=layer.position%>">
-                    <a style="
-                        position: absolute;
-                        left: 50%;
-                        bottom: 10%;
-                        transform: translateX(-50%);
-                        margin: auto;
-                        padding: 10px 20px;
-                        text-align: center;
-                        font-size: 16px;
-                        font-family: 'Verdana';
-                        text-decoration: none;
-                        background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
-                        color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                        border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-                        text-align: center;
-                        cursor: default;
-                        max-width: 35%;
-                        word-wrap: break-word;
-                        z-index: <%=currentSlide.layers.length + 1%>;
-                        border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 25 : layer.settings.layerSettings.shapeStyles.round) + 'px';%>"
-                       href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>"
+                    display: grid;" id="<%=layer.position%>">
+                    <a class='cta-link' onmousedown="selectLayer(event)"
+                       style="
+                               background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
+                               color: <%=layer.settings.ctaLayerSettings.fontColor%>;
+                               border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
+                               z-index: <%=currentSlide.layers.length + 1%>;
+                               border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 25 : layer.settings.layerSettings.shapeStyles.round) + 'px';%>"
+                       href="<%=layer.settings.ctaLayerSettings.link%>"
                        id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
                 </div>
                 <% break } %>

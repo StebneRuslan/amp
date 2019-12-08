@@ -5,211 +5,211 @@
 
 <body>
 <script>
-    function mouseUpOnSelection(e) {
+  function mouseUpOnSelection(e) {
+    e.stopPropagation();
+    window.parent.postMessage({ event: 'text-was-selected', value: true }, '*');
+    document.removeEventListener('mouseup', mouseUpOnSelection);
+  }
+
+  let oldLayerId = -1;
+  window.addEventListener('message', function (event) {
+    const currentLayer = document.getElementById(`layer${event.data.currentId}`);
+    Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
+      if (element) {
+        element.classList.remove('draggable');
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
+      element.remove();
+    });
+    if (currentLayer) {
+      currentLayer.classList.add('draggable');
+      Subjx('.draggable').drag({
+        each: {
+          resize: true
+        },
+        snap: {
+          x: 1,
+          y: 1
+        }
+      });
+    }
+
+    const father = currentLayer ? currentLayer.parentNode : null;
+    if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
+      father.children[1].setAttribute('contenteditable', false);
+      father.querySelector('.text-container').style.width = '';
+      document.querySelector('.dg-controls').style.zIndex = '10000';
+    }
+    if (oldLayerId !== event.data.currentId) {
+      oldLayerId = event.data.currentId;
+      function selectText() {
+        document.addEventListener('mouseup', mouseUpOnSelection);
+        father.children[1].addEventListener('mouseup', keyDownOperation);
+      }
+      function convertTextSizeToPx(selectorContainer) {
+        const iframeWidth = document.documentElement.clientWidth;
+        [].map.call(selectorContainer.querySelectorAll('*'), (node) => {
+          if (node.style.fontSize && !node.style.fontSize.includes('em') && node.nodeName !== 'DIV' && node.style.fontSize !== node.parentNode.style.fontSize) {
+            node.style.fontSize = `${parseFloat(node.style.fontSize) / (2.6 * iframeWidth / 100)}em`;
+          } else if (node.nodeName === 'DIV') {
+            node.style.fontSize = '';
+          }
+        });
+      }
+      function handlePaste(e) {
+        let clipboardData, pastedData;
         e.stopPropagation();
-        window.parent.postMessage({ event: 'text-was-selected', value: true }, '*');
-        document.removeEventListener('mouseup', mouseUpOnSelection);
+        e.preventDefault();
+        clipboardData = e.clipboardData;
+        pastedData = clipboardData.getData('text/html');
+        const selectorContainer = document.createElement('DIV');
+        selectorContainer.innerHTML = pastedData;
+        convertTextSizeToPx(selectorContainer);
+        document.execCommand('insertHTML', false, selectorContainer.innerHTML);
+        window.parent.postMessage({event: 'textselected', value: true}, '*');
+      }
+      function keyDownOperation(e) {
+        console.log('12312312312312');
+        if ((e.target.innerText.length <= 1 && (e.keyCode === 8 || e.which === 8))) {
+          e.preventDefault();
+        }
+        window.addEventListener('click', stopEditing);
+        e.stopPropagation();
+        convertTextSizeToPx(e.target);
+
+        window.parent.postMessage({event: 'textselected', value: true}, '*');
+      }
+      if (currentLayer && event.data.message !== 'KEY_PRESS_TEXT_EDITOR') {
+        currentLayer.onmousedown = null;
+        if (currentLayer.querySelector('.text-container')) {
+          function apmModeMouseClick() {
+            window.parent.document.querySelector('body').removeEventListener('click', apmModeMouseClick);
+            father.children[1].removeEventListener('selectstart', selectText);
+            father.children[1].addEventListener('mouseup', keyDownOperation);
+          }
+
+          function stopPropagation(event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          function stopEditing(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            const selectedNode = getDraggableNode(e.path);
+            if ((selectedNode && selectedNode.classList && [].includes.call(selectedNode.classList, 'animate')) ||
+              (e.target.tagName !== 'SPAN' && e.target.tagName !== 'DIV' && e.target.tagName !== 'B' && e.target.tagName !== 'I' && e.target.tagName !== 'U')) {
+              const previousContenteditable = father.children.length > 1 ? father.children[1] : father.children[0];
+              previousContenteditable.setAttribute('contenteditable', false);
+              previousContenteditable.firstElementChild.style.width = '';
+              document.querySelector('.dg-controls').style.zIndex = '10000';
+              previousContenteditable.removeEventListener('keydown', keyDownOperation);
+              previousContenteditable.removeEventListener('paste', handlePaste);
+              window.removeEventListener('click', stopEditing);
+              father.onmousedown = selectLayer;
+              if (oldLayerId !== event.data.currentId) {
+                currentLayer.parentElement.parentElement.removeEventListener('dblclick', dbEvent);
+              }
+            }
+            window.parent.postMessage({event: 'textselected', value: false}, '*');
+          }
+          function handleSelectStart() {
+            window.removeEventListener('click', stopEditing);
+          }
+
+          function handleSelectEnd() {
+            window.addEventListener('click', stopEditing);
+          }
+
+          function dbEvent(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            document.querySelector('.dg-controls').style.zIndex = '0';
+            father.children[1].removeEventListener('keydown', keyDownOperation);
+            if (!father.children[1].querySelector('span')) {
+              father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre-wrap; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
+            }
+            father.children[1].setAttribute('contenteditable', true);
+            father.children[1].addEventListener('selectstart', selectText);
+            father.children[1].focus();
+            father.children[1].addEventListener('click', stopPropagation);
+            father.children[1].addEventListener('keydown', keyDownOperation);
+            father.children[1].addEventListener('selectstart', handleSelectStart);
+            father.children[1].addEventListener('mouseup', keyDownOperation);
+            father.children[1].addEventListener('paste', handlePaste);
+            father.setAttribute('onmousedown', null);
+            window.addEventListener('click', stopEditing);
+            window.addEventListener('click', handleSelectEnd);
+            window.parent.document.querySelector('body').addEventListener('click', apmModeMouseClick);
+            window.parent.postMessage({ event: 'text-was-selected', value: true }, '*');
+          }
+          currentLayer.parentElement.parentElement.ondblclick = dbEvent;
+        }
+      }
+      if (currentLayer) {
+        if ([].includes.call(currentLayer.parentNode.classList, 'fullscreen')) {
+          Array.prototype.forEach.call(document.querySelectorAll('.dg-hdl'), (element) => {
+            element.style.display = 'none';
+          });
+          document.querySelector('.dg-controls').style.border = '1px dashed transparent';
+        }
+      }
+      if (event.data.previousId !== null && event.data.previousId !== undefined) {
+        const previousLayer = document.getElementById(`layer${event.data.previousId}`);
+        if (previousLayer) {
+          previousLayer.classList.remove('resizable');
+          previousLayer.classList.remove('draggable');
+          previousLayer.parentNode.classList.remove('layer-border');
+        }
+      }
     }
+  });
 
-    let oldLayerId = -1;
-    window.addEventListener('message', function (event) {
-        const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-        Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
-            if (element) {
-                element.classList.remove('draggable');
-            }
-        });
-        Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
-            element.remove();
-        });
-        if (currentLayer) {
-            currentLayer.classList.add('draggable');
-            Subjx('.draggable').drag({
-                each: {
-                    resize: true
-                },
-                snap: {
-                    x: 1,
-                    y: 1
-                }
-            });
-        }
+  window.addEventListener('keydown', (e) => {
+    if (e.keyCode === 90 && (e.ctrlKey || e.metaKey) && e.shiftKey) {
+      window.parent.postMessage({ event: 'redoStep' }, '*');
+    } else if (e.keyCode === 90 && (e.ctrlKey || e.metaKey)) {
+      window.parent.postMessage({ event: 'undoStep' }, '*');
+    }
+  });
 
-        const father = currentLayer ? currentLayer.parentNode : null;
-        if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
-            father.children[1].setAttribute('contenteditable', false);
-            father.querySelector('.text-container').style.width = '';
-            document.querySelector('.dg-controls').style.zIndex = '10000';
-        }
-        if (oldLayerId !== event.data.currentId) {
-            oldLayerId = event.data.currentId;
-            function selectText() {
-                document.addEventListener('mouseup', mouseUpOnSelection);
-                father.children[1].addEventListener('mouseup', keyDownOperation);
-            }
-            function convertTextSizeToPx(selectorContainer) {
-              const iframeWidth = document.documentElement.clientWidth;
-              [].map.call(selectorContainer.querySelectorAll('*'), (node) => {
-                if (node.style.fontSize && !node.style.fontSize.includes('em') && node.nodeName !== 'DIV' && node.style.fontSize !== node.parentNode.style.fontSize) {
-                  node.style.fontSize = `${parseFloat(node.style.fontSize) / (2.6 * iframeWidth / 100)}em`;
-                } else if (node.nodeName === 'DIV') {
-                  node.style.fontSize = '';
-                }
-              });
-            }
-            function handlePaste(e) {
-                let clipboardData, pastedData;
-                e.stopPropagation();
-                e.preventDefault();
-                clipboardData = e.clipboardData;
-                pastedData = clipboardData.getData('text/html');
-                const selectorContainer = document.createElement('DIV');
-                selectorContainer.innerHTML = pastedData;
-                convertTextSizeToPx(selectorContainer);
-                document.execCommand('insertHTML', false, selectorContainer.innerHTML);
-                window.parent.postMessage({event: 'textselected', value: true}, '*');
-            }
-            function keyDownOperation(e) {
-                console.log('12312312312312');
-                if ((e.target.innerText.length <= 1 && (e.keyCode === 8 || e.which === 8))) {
-                    e.preventDefault();
-                }
-                window.addEventListener('click', stopEditing);
-                e.stopPropagation();
-                convertTextSizeToPx(e.target);
-
-                window.parent.postMessage({event: 'textselected', value: true}, '*');
-            }
-            if (currentLayer && event.data.message !== 'KEY_PRESS_TEXT_EDITOR') {
-                currentLayer.onmousedown = null;
-                if (currentLayer.querySelector('.text-container')) {
-                    function apmModeMouseClick() {
-                        window.parent.document.querySelector('body').removeEventListener('click', apmModeMouseClick);
-                        father.children[1].removeEventListener('selectstart', selectText);
-                        father.children[1].addEventListener('mouseup', keyDownOperation);
-                    }
-
-                    function stopPropagation(event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-
-                    function stopEditing(e) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                          const selectedNode = getDraggableNode(e.path);
-                              if ((selectedNode && selectedNode.classList && [].includes.call(selectedNode.classList, 'animate')) ||
-                                  (e.target.tagName !== 'SPAN' && e.target.tagName !== 'DIV' && e.target.tagName !== 'B' && e.target.tagName !== 'I' && e.target.tagName !== 'U')) {
-                                  const previousContenteditable = father.children.length > 1 ? father.children[1] : father.children[0];
-                                  previousContenteditable.setAttribute('contenteditable', false);
-                                  previousContenteditable.firstElementChild.style.width = '';
-                                  document.querySelector('.dg-controls').style.zIndex = '10000';
-                                  previousContenteditable.removeEventListener('keydown', keyDownOperation);
-                                  previousContenteditable.removeEventListener('paste', handlePaste);
-                                  window.removeEventListener('click', stopEditing);
-                                  father.onmousedown = selectLayer;
-                                  if (oldLayerId !== event.data.currentId) {
-                                      currentLayer.parentElement.parentElement.removeEventListener('dblclick', dbEvent);
-                                  }
-                              }
-                              window.parent.postMessage({event: 'textselected', value: false}, '*');
-                    }
-                    function handleSelectStart() {
-                       window.removeEventListener('click', stopEditing);
-                    }
-
-                    function handleSelectEnd() {
-                      window.addEventListener('click', stopEditing);
-                    }
-
-                    function dbEvent(event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        document.querySelector('.dg-controls').style.zIndex = '0';
-                        father.children[1].removeEventListener('keydown', keyDownOperation);
-                        if (!father.children[1].querySelector('span')) {
-                            father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre-wrap; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
-                        }
-                        father.children[1].setAttribute('contenteditable', true);
-                        father.children[1].addEventListener('selectstart', selectText);
-                        father.children[1].focus();
-                        father.children[1].addEventListener('click', stopPropagation);
-                        father.children[1].addEventListener('keydown', keyDownOperation);
-                        father.children[1].addEventListener('selectstart', handleSelectStart);
-                        father.children[1].addEventListener('mouseup', keyDownOperation);
-                        father.children[1].addEventListener('paste', handlePaste);
-                        father.setAttribute('onmousedown', null);
-                        window.addEventListener('click', stopEditing);
-                        window.addEventListener('click', handleSelectEnd);
-                        window.parent.document.querySelector('body').addEventListener('click', apmModeMouseClick);
-                        window.parent.postMessage({ event: 'text-was-selected', value: true }, '*');
-                    }
-                    currentLayer.parentElement.parentElement.ondblclick = dbEvent;
-                }
-            }
-            if (currentLayer) {
-                if ([].includes.call(currentLayer.parentNode.classList, 'fullscreen')) {
-                    Array.prototype.forEach.call(document.querySelectorAll('.dg-hdl'), (element) => {
-                        element.style.display = 'none';
-                    });
-                    document.querySelector('.dg-controls').style.border = '1px dashed transparent';
-                }
-            }
-            if (event.data.previousId !== null && event.data.previousId !== undefined) {
-                const previousLayer = document.getElementById(`layer${event.data.previousId}`);
-                if (previousLayer) {
-                    previousLayer.classList.remove('resizable');
-                    previousLayer.classList.remove('draggable');
-                    previousLayer.parentNode.classList.remove('layer-border');
-                }
-            }
-        }
-    });
-
-    window.addEventListener('keydown', (e) => {
-        if (e.keyCode === 90 && (e.ctrlKey || e.metaKey) && e.shiftKey) {
-            window.parent.postMessage({ event: 'redoStep' }, '*');
-        } else if (e.keyCode === 90 && (e.ctrlKey || e.metaKey)) {
-            window.parent.postMessage({ event: 'undoStep' }, '*');
-        }
-    });
-
-    window.onload = () => {
-        let css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
-            head = document.head || document.getElementsByTagName('head')[0],
-            style = document.createElement('style');
-        style.type = 'text/css';
-        if (style.styleSheet) {
-            style.styleSheet.cssText = css;
-        } else {
-            style.appendChild(document.createTextNode(css));
-        };
-        head.appendChild(style);
+  window.onload = () => {
+    let css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
+      head = document.head || document.getElementsByTagName('head')[0],
+      style = document.createElement('style');
+    style.type = 'text/css';
+    if (style.styleSheet) {
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
     };
-    const element = null;
+    head.appendChild(style);
+  };
+  const element = null;
 
-    function selectLayer(event) {
-        let position = 0;
-        if (event.target.id === 'cta-link') {
-            Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
-                element.remove();
-            });
-            position = event.target.parentNode.id;
-        } else {
-            position = getDraggableNode(event.path).children[0].id.toString().slice(5);
-        }
-        window.parent.postMessage({ event: 'selectLayer', position: position }, 'http://127.0.0.1:3978/#/edit');
+  function selectLayer(event) {
+    let position = 0;
+    if (event.target.id === 'cta-link') {
+      Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
+        element.remove();
+      });
+      position = event.target.parentNode.id;
+    } else {
+      position = getDraggableNode(event.path).children[0].id.toString().slice(5);
     }
+    window.parent.postMessage({ event: 'selectLayer', position: position }, 'http://127.0.0.1:3978/#/edit');
+  }
 
-    function getDraggableNode(path) {
-        for (let i = 0; i < path.length; i++) {
-            if (path[i].classList && path[i].classList.value) {
-                if ([].includes.call(path[i].classList, 'drag-item')) {
-                    return path[i];
-                }
-            }
+  function getDraggableNode(path) {
+    for (let i = 0; i < path.length; i++) {
+      if (path[i].classList && path[i].classList.value) {
+        if ([].includes.call(path[i].classList, 'drag-item')) {
+          return path[i];
         }
+      }
     }
+  }
 </script>
 
 <%
@@ -365,15 +365,15 @@ function setLinkBgColor (data) {
 }
 
 function getFullScreenContainerX(layer) {
-  return layer.settings.layerSettings.fullscreen
-    ? `${(100 * layer.settings.generalSettings.offsetX) / ampStory.initialWidth}`
-    : `${((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100)}`
+    return layer.settings.layerSettings.fullscreen
+            ? `${(100 * layer.settings.generalSettings.offsetX) / ampStory.initialWidth}`
+            : `${((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100)}`
 }
 
 function getFullScreenContainerY(layer) {
-  return layer.settings.layerSettings.fullscreen
-    ? `${(100 * layer.settings.generalSettings.offsetY) / ampStory.initialHeight}`
-    : `${((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100)}`
+    return layer.settings.layerSettings.fullscreen
+            ? `${(100 * layer.settings.generalSettings.offsetY) / ampStory.initialHeight}`
+            : `${((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100)}`
 }
 %>
 
@@ -409,13 +409,15 @@ function getFullScreenContainerY(layer) {
                              top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
                          <% }%>
                                  left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
-                        <div id="layer<%=layer.position%>" style="
-                                outline: none;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;">
+                        <div id="layer<%=layer.position%>"
+                             style="
+                                     outline: none;
+                                     transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
+                                     width: <%=getDraggableElementWidth(layer);%>;
+                                     height: <%=getDraggableElementHeight(layer);%>;
+                                     top: <%=getDeraggableElementOffsetY(layer);%>;
+                                     left: <%=getDeraggableElementOffsetX(layer);%>;"
+                             class="drag-item-content">
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -437,7 +439,7 @@ function getFullScreenContainerY(layer) {
                              top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
                          <% }%>
                                  left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
-                        <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper " style="
+                        <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper drag-item-content" style="
                                 position: absolute;
                                 width: <%=getDraggableElementWidth(layer);%>;
                                 height: <%=getDraggableElementHeight(layer);%>;
@@ -480,7 +482,7 @@ function getFullScreenContainerY(layer) {
                                 width: <%=getDraggableElementWidth(layer) + '%'%>;
                                 height: <%=getDraggableElementHeight(layer) + '%';%>;
                                 transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                " <% } else { %> class="rotate-wrapper" style="
+                                " <% } else { %> class="rotate-wrapper drag-item-content" style="
                                 position: absolute;
                                 width: <%=getDraggableElementWidth(layer);%>;
                                 height: <%=getDraggableElementHeight(layer);%>;
@@ -521,7 +523,7 @@ function getFullScreenContainerY(layer) {
                                 width: <%=getDraggableElementWidth(layer)%>;
                                 height: <%=getDraggableElementHeight(layer)%>;
                                 transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                " <% } else { %> class="rotate-wrapper" style="
+                                " <% } else { %> class="rotate-wrapper drag-item-content" style="
                                 position: absolute;
                                 width: <%=getDraggableElementWidth(layer);%>;
                                 height: <%=getDraggableElementHeight(layer);%>;
