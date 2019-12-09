@@ -475,14 +475,16 @@ function getFullScreenContainerY(layer) {
                          <% }%>
                                  left: <%= getFullScreenContainerX(layer) + '%' %>;">
                         <div draggable="true" id="layer<%=layer.position%>"
-                                <%if (layer.settings.layerSettings.fullscreen) {%> style="
-                                position: absolute;
-                                left: <%=getFullScreenElementOffsetX(layer) + '%'%>;
-                                top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
-                                width: <%=getDraggableElementWidth(layer) + '%'%>;
-                                height: <%=getDraggableElementHeight(layer) + '%';%>;
-                                transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                " <% } else { %> class="rotate-wrapper drag-item-content" style="
+                                <%if (layer.settings.layerSettings.fullscreen) {%>
+                             class="drag-item-content"
+                             style="
+                                     position: absolute;
+                                     left: <%=getFullScreenElementOffsetX(layer) + '%'%>;
+                                     top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
+                                     width: <%=getDraggableElementWidth(layer) + '%'%>;
+                                     height: <%=getDraggableElementHeight(layer) + '%';%>;
+                                     transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
+                                     " <% } else { %> class="rotate-wrapper drag-item-content" style="
                                 position: absolute;
                                 width: <%=getDraggableElementWidth(layer);%>;
                                 height: <%=getDraggableElementHeight(layer);%>;
@@ -518,12 +520,14 @@ function getFullScreenContainerY(layer) {
                          <% }%>
                                  left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
                         <div draggable="true" id="layer<%=layer.position%>"
-                                <%if (layer.settings.layerSettings.fullscreen) {%> style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer)%>;
-                                height: <%=getDraggableElementHeight(layer)%>;
-                                transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                " <% } else { %> class="rotate-wrapper drag-item-content" style="
+                                <%if (layer.settings.layerSettings.fullscreen) {%>
+                             class="drag-item-content"
+                             style="
+                                     position: absolute;
+                                     width: <%=getDraggableElementWidth(layer)%>;
+                                     height: <%=getDraggableElementHeight(layer)%>;
+                                     transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
+                                     " <% } else { %> class="rotate-wrapper drag-item-content" style="
                                 position: absolute;
                                 width: <%=getDraggableElementWidth(layer);%>;
                                 height: <%=getDraggableElementHeight(layer);%>;

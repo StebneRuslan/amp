@@ -43,7 +43,7 @@
                     d='M 0 8 L 4 16 L 60 16 L 64 8 L 60 0 L 4 0 z'
                     stroke='<%= setColor('borderColor') %>'
                     fill='<%= setColor('fillColor') %>'
-                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(2)}em` : 0 %>'
+                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
                     vector-effect='non-scaling-stroke'>
             </path>
         </g>
