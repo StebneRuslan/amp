@@ -12,6 +12,7 @@
   }
 
   let oldLayerId = -1;
+  let newLayerId = -1;
   window.addEventListener('message', function (event) {
     const currentLayer = document.getElementById(`layer${event.data.currentId}`);
     Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
@@ -34,7 +35,7 @@
         }
       });
     }
-
+    newLayerId = event.data.currentId;
     const father = currentLayer ? currentLayer.parentNode : null;
     if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
       father.children[1].setAttribute('contenteditable', false);
@@ -50,6 +51,9 @@
       function convertTextSizeToPx(selectorContainer) {
         const iframeWidth = document.documentElement.clientWidth;
         [].map.call(selectorContainer.querySelectorAll('*'), (node) => {
+          if (!node.style.fontFamily && node.nodeName === 'SPAN') {
+            node.style.fontFamily = 'Montserrat';
+          }
           if (node.style.fontSize && !node.style.fontSize.includes('em') && node.nodeName !== 'DIV' && node.style.fontSize !== node.parentNode.style.fontSize) {
             node.style.fontSize = `${parseFloat(node.style.fontSize) / (2.6 * iframeWidth / 100)}em`;
           } else if (node.nodeName === 'DIV') {
@@ -70,7 +74,6 @@
         window.parent.postMessage({event: 'textselected', value: true}, '*');
       }
       function keyDownOperation(e) {
-        console.log('12312312312312');
         if ((e.target.innerText.length <= 1 && (e.keyCode === 8 || e.which === 8))) {
           e.preventDefault();
         }
@@ -128,7 +131,7 @@
             document.querySelector('.dg-controls').style.zIndex = '0';
             father.children[1].removeEventListener('keydown', keyDownOperation);
             if (!father.children[1].querySelector('span')) {
-              father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre-wrap; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
+              father.children[1].innerHTML = `<div class="text-container" style="opacity:1; position: relative">  <div class="single-text" id="text${newLayerId}"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;"><span style="white-space: pre-wrap; font-size: 1.5em; padding: 0; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>`;
             }
             father.children[1].setAttribute('contenteditable', true);
             father.children[1].addEventListener('selectstart', selectText);
@@ -355,7 +358,6 @@ function getFullScreenElementOffsetX (layer) {
 
 function setLinkBgColor (data) {
     if (data.type === 'solid') {
-        console.log('1111', data.leftColor);
         return data.leftColor;
     } else if (data.type === 'linear') {
         return `linear-gradient(${data.angle}deg, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
