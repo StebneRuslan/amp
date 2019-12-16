@@ -14,35 +14,35 @@
   let oldLayerId = -1;
   let newLayerId = -1;
   window.addEventListener('message', function (event) {
-    const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-    Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
-      if (element) {
-        element.classList.remove('draggable');
-      }
-    });
-    Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
-      element.remove();
-    });
-    if (currentLayer) {
-      currentLayer.classList.add('draggable');
-      Subjx('.draggable').drag({
-        each: {
-          resize: true
-        },
-        snap: {
-          x: 1,
-          y: 1
+    if (oldLayerId !== event.data.currentId) {
+      const currentLayer = document.getElementById(`layer${event.data.currentId}`);
+      Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
+        if (element) {
+          element.classList.remove('draggable');
         }
       });
-    }
-    newLayerId = event.data.currentId;
-    const father = currentLayer ? currentLayer.parentNode : null;
-    if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
-      father.children[1].setAttribute('contenteditable', false);
-      father.querySelector('.text-container').style.width = '';
-      document.querySelector('.dg-controls').style.zIndex = '10000';
-    }
-    if (oldLayerId !== event.data.currentId) {
+      Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
+        element.remove();
+      });
+      if (currentLayer) {
+        currentLayer.classList.add('draggable');
+        Subjx('.draggable').drag({
+          each: {
+            resize: true
+          },
+          snap: {
+            x: 1,
+            y: 1
+          }
+        });
+      }
+      newLayerId = event.data.currentId;
+      const father = currentLayer ? currentLayer.parentNode : null;
+      if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
+        father.children[1].setAttribute('contenteditable', false);
+        father.querySelector('.text-container').style.width = '';
+        document.querySelector('.dg-controls').style.zIndex = '10000';
+      }
       oldLayerId = event.data.currentId;
       function selectText() {
         document.addEventListener('mouseup', mouseUpOnSelection);
@@ -87,7 +87,9 @@
         currentLayer.onmousedown = null;
         if (currentLayer.querySelector('.text-container')) {
           function apmModeMouseClick() {
-            window.parent.document.querySelector('body').removeEventListener('click', apmModeMouseClick);
+            if (window.parent) {
+              window.parent.document.querySelector('body').removeEventListener('click', apmModeMouseClick);
+            }
             father.children[1].removeEventListener('selectstart', selectText);
             father.children[1].addEventListener('mouseup', keyDownOperation);
           }
@@ -144,7 +146,9 @@
             father.setAttribute('onmousedown', null);
             window.addEventListener('click', stopEditing);
             window.addEventListener('click', handleSelectEnd);
-            window.parent.document.querySelector('body').addEventListener('click', apmModeMouseClick);
+            if (window.parent) {
+              window.parent.document.querySelector('body').addEventListener('click', apmModeMouseClick);
+            }
             window.parent.postMessage({ event: 'text-was-selected', value: true }, '*');
           }
           currentLayer.parentElement.parentElement.ondblclick = dbEvent;
@@ -260,20 +264,14 @@ function getAnimationWidthEm (layer) {
     if (layer.settings.layerSettings.shapeStyles) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
-    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
+    return (+layer.settings.layerSettings.width + thickness) / (3.434 * ampStory.initialWidth / 100) + 'em';
 }
 function getAnimationHeightEm (layer) {
     let thickness = 0;
     if (layer.settings.layerSettings.shapeStyles) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
-    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
+    return(+layer.settings.layerSettings.height + thickness) / (3.434 * ampStory.initialWidth / 100) + 'em';
 }
 
 function getAnimationContainerWidth (layer) {
@@ -414,12 +412,8 @@ function getFullScreenContainerY(layer) {
                         <div id="layer<%=layer.position%>"
                              style="
                                      outline: none;
-                                     transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                     width: <%=getDraggableElementWidth(layer);%>;
-                                     height: <%=getDraggableElementHeight(layer);%>;
-                                     top: <%=getDeraggableElementOffsetY(layer);%>;
-                                     left: <%=getDeraggableElementOffsetX(layer);%>;"
-                             class="drag-item-content">
+                                     transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
+                             class="rotate-wrapper drag-item-content">
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -442,12 +436,7 @@ function getFullScreenContainerY(layer) {
                          <% }%>
                                  left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
                         <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper drag-item-content" style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;">
+                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                             <% include layers/shape.ejs %>
                         </div>
                     </div>
@@ -487,12 +476,7 @@ function getFullScreenContainerY(layer) {
                                      height: <%=getDraggableElementHeight(layer) + '%';%>;
                                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                      " <% } else { %> class="rotate-wrapper drag-item-content" style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
+                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
                             <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
                         </div>
                     </div>
@@ -530,12 +514,7 @@ function getFullScreenContainerY(layer) {
                                      height: <%=getDraggableElementHeight(layer)%>;
                                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                      " <% } else { %> class="rotate-wrapper drag-item-content" style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
+                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
                             <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
                         </div>
                     </div>

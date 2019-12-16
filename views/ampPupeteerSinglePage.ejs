@@ -66,20 +66,14 @@ function getAnimationWidthEm (layer) {
     if (layer.settings.layerSettings.shapeStyles) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
-    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
+    return (+layer.settings.layerSettings.width + thickness) / (3.434 * ampStory.initialWidth / 100) + 'em';
 }
 function getAnimationHeightEm (layer) {
     let thickness = 0;
     if (layer.settings.layerSettings.shapeStyles) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
-    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
+    return(+layer.settings.layerSettings.height + thickness) / (3.434 * ampStory.initialWidth / 100) + 'em';
 }
 
 function getAnimationContainerWidth (layer) {
@@ -212,13 +206,9 @@ function changeCtaLink (link) {
                                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
                             <% }%>
                                     left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
-                        <div draggable="true" id="layer<%=layer.position%>" style="
+                        <div draggable="true" class="rotate-wrapper" id="layer<%=layer.position%>" style="
                                 outline: none;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;">
+                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                             <% include layers/text.ejs %>
                         </div>
                     </div>
@@ -240,12 +230,7 @@ function changeCtaLink (link) {
                          <% }%>
                                  left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
                         <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper " style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;">
+                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                             <% include layers/shape.ejs %>
                         </div>
                     </div>
@@ -282,12 +267,7 @@ function changeCtaLink (link) {
                                 height: <%=getDraggableElementHeight(layer) + '%';%>;
                                 transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                 " <% } else { %> class="rotate-wrapper" style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
+                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
                             <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
                         </div>
                     </div>
@@ -322,12 +302,7 @@ function changeCtaLink (link) {
                                 height: <%=getDraggableElementHeight(layer)%>;
                                 transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                 " <% } else { %> class="rotate-wrapper" style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
+                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
                             <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
                         </div>
                     </div>
