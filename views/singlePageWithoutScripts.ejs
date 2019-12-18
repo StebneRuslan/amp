@@ -440,7 +440,7 @@ let currentSlide = ampStory.cuts.find(cut => {
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
     <%for (let i = 0; i < 2; i++) {%>
-    <amp-story-page style="text-rendering: auto;background: #eeeeee" id="<%=`story${i}`%>>" class="container">
+        <amp-story-page style="text-rendering: auto;background: #eeeeee" id="<%=`story${i}`%>>" class="container">
         <% let preview = false;
         if (currentSlide) {
             currentSlide.layers.sort((first, second) => {
