@@ -29,26 +29,26 @@ getFullScreenAnimationContainerWidth = function (layer) {
     return parseFloat((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
             Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10)
+                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10).toFixed(2)
 }
 
 getFullScreenAnimationContainerHeight = function (layer) {
     return parseFloat((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
             Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
             Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10)
+                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10).toFixed(2)
 }
 
 getFullScreenElementOffsetY = function (layer) {
     const heightContainerPx = ampStory.initialHeight * getFullScreenAnimationContainerHeight(layer) / 100;
     const heightContentPx = heightContainerPx * getDraggableElementHeight(layer) / 100;
-    return (100 * ((heightContainerPx - heightContentPx) / 2) / heightContainerPx)
+    return (100 * ((heightContainerPx - heightContentPx) / 2) / heightContainerPx).toFixed(2)
 }
 
 getFullScreenElementOffsetX = function (layer) {
     const widthContainerPx = ampStory.initialWidth * getFullScreenAnimationContainerWidth(layer) / 100;
     const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
-    return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
+    return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx).toFixed(2)
 }
 
 getAnimationWidthEm = function (layer) {
@@ -67,48 +67,48 @@ getAnimationHeightEm = function (layer) {
     return ((+layer.settings.layerSettings.height + thickness) / (3.434 * ampStory.initialWidth / 100)).toFixed(2) + 'em';
 }
 
-// TODO: check if we need next 2 functions (and second if check)
-getAnimationContainerWidth = function (layer)  {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    if (layer.settings.layerSettings.fullscreen) {
-        return getFullScreenAnimationContainerWidth(layer) + '%';
-    } else {
-        return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs((+layer.settings.layerSettings.height + thickness) *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10) + '%';
-    }
-}
-
-getAnimationContainerHeight = function (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    if (layer.settings.layerSettings.fullscreen) {
-        return getFullScreenAnimationContainerHeight(layer) + '%'
-    } else {
-        return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
-                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs((+layer.settings.layerSettings.height + thickness) *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10) + '%';
-    }
-}
+// TODO: check if we need next 2 functions (and second if check, it wasn't in all file)
+// getAnimationContainerWidth = function (layer)  {
+//     let thickness = 0;
+//     if (layer.settings.layerSettings.shapeStyles) {
+//         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+//     }
+//     if (layer.settings.layerSettings.fullscreen) {
+//         return getFullScreenAnimationContainerWidth(layer) + '%';
+//     } else {
+//         return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
+//                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+//                 Math.abs((+layer.settings.layerSettings.height + thickness) *
+//                         Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10) + '%';
+//     }
+// }
+//
+// getAnimationContainerHeight = function (layer) {
+//     let thickness = 0;
+//     if (layer.settings.layerSettings.shapeStyles) {
+//         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
+//     }
+//     if (layer.settings.layerSettings.fullscreen) {
+//         return getFullScreenAnimationContainerHeight(layer) + '%'
+//     } else {
+//         return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
+//                 Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
+//                 Math.abs((+layer.settings.layerSettings.height + thickness) *
+//                         Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10) + '%';
+//     }
+// }
 
 getDraggableElementWidth = function (layer)  {
     if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
         return ((100 * layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(1);
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(2);
     } else {
         return ((100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
                 Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.height *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(1) + '%';
+                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(2) + '%';
     }
 }
 getDraggableElementHeight = function (layer) {
@@ -116,35 +116,35 @@ getDraggableElementHeight = function (layer) {
         return ((100 * layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
                 Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(1);
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(2);
     } else {
         return ((100 * layer.settings.layerSettings.height) / parseInt((Math.abs(layer.settings.layerSettings.width *
                 Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
                 Math.abs(layer.settings.layerSettings.height *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(1) + '%';
+                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(2) + '%';
     }
 }
 
 getDeraggableElementOffsetX = function (layer) {
     return layer.settings.generalSettings.rotate !== '0' ?
-            (layer.settings.generalSettings.innerOffsetX / (3.434 * (ampStory.initialWidth / 100))).toFixed(1) + 'em' : '0'
+            (layer.settings.generalSettings.innerOffsetX / (3.434 * (ampStory.initialWidth / 100))).toFixed(2) + 'em' : '0'
 }
 
 getDeraggableElementOffsetY = function (layer)  {
     return layer.settings.generalSettings.rotate !== '0' ?
-            (layer.settings.generalSettings.innerOffsetY / (3.434 * (ampStory.initialWidth / 100))).toFixed(1) + 'em' : '0'
+            (layer.settings.generalSettings.innerOffsetY / (3.434 * (ampStory.initialWidth / 100))).toFixed(2) + 'em' : '0'
 }
 
 getFullScreenContainerX = function (layer) {
     return layer.settings.layerSettings.fullscreen
-            ? `${(100 * layer.settings.generalSettings.offsetX) / ampStory.initialWidth}`
-            : `${((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100)}`
+            ? ((100 * layer.settings.generalSettings.offsetX) / ampStory.initialWidth).toFixed(2)
+            : ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2)
 }
 
 getFullScreenContainerY = function (layer) {
     return layer.settings.layerSettings.fullscreen
-            ? `${(100 * layer.settings.generalSettings.offsetY) / ampStory.initialHeight}`
-            : `${((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100)}`
+            ? ((100 * layer.settings.generalSettings.offsetY) / ampStory.initialHeight).toFixed(2)
+            : ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2)
 }
 
 setLinkBgColor = function (data) {
