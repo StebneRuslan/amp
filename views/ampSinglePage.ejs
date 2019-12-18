@@ -237,7 +237,7 @@
             <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                 <% var page = null
                         switch (layer.type) {
-                    case 'text':
+                case 'text':
                 case 'html': %>
                 <amp-story-grid-layer template="horizontal">
                     <div onmousedown="selectLayer(event)"
@@ -286,7 +286,7 @@
                 </amp-story-grid-layer>
                 <% break;
 
-                    case 'image':
+                case 'image':
                 case 'gifs': %>
                 <% if (layer.content.image && layer.content.image.url) { %>
                 <amp-story-grid-layer template="horizontal">

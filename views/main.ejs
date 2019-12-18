@@ -45,7 +45,7 @@ getFullScreenElementOffsetY = function (layer) {
     return (100 * ((heightContainerPx - heightContentPx) / 2) / heightContainerPx)
 }
 
-getFullScreenElementOffsetX = function(layer) {
+getFullScreenElementOffsetX = function (layer) {
     const widthContainerPx = ampStory.initialWidth * getFullScreenAnimationContainerWidth(layer) / 100;
     const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
     return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
@@ -133,18 +133,6 @@ getDeraggableElementOffsetX = function (layer) {
 getDeraggableElementOffsetY = function (layer)  {
     return layer.settings.generalSettings.rotate !== '0' ?
             (layer.settings.generalSettings.innerOffsetY / (3.434 * (ampStory.initialWidth / 100))).toFixed(1) + 'em' : '0'
-}
-
-getFullScreenElementOffsetY = function (layer) {
-    const heightContainerPx = ampStory.initialHeight * getFullScreenAnimationContainerHeight(layer) / 100;
-    const heightContentPx = heightContainerPx * getDraggableElementHeight(layer) / 100;
-    return (100 * ((heightContainerPx - heightContentPx) / 2) / heightContainerPx)
-}
-
-getFullScreenElementOffsetX = function (layer)  {
-    const widthContainerPx = ampStory.initialWidth * getFullScreenAnimationContainerWidth(layer) / 100;
-    const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
-    return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
 }
 
 getFullScreenContainerX = function (layer) {

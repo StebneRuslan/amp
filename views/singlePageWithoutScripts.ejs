@@ -82,71 +82,71 @@
     <style amp-custom>
         <% include ./fonts/custom.ejs %><% if (ampStory.fromPreview || !v0Path.includes('https')) {
             %><% include ./fonts/alegreya.ejs %><% include ./fonts/anonymousPro.ejs %><% include ./fonts/archivonarrow.ejs %><% include ./fonts/arvo.ejs %><% include ./fonts/biorhyme.ejs %><% include ./fonts/cabin.ejs %><% include ./fonts/cardo.ejs %><% include ./fonts/chivo.ejs %><% include ./fonts/cormorant.ejs %><% include ./fonts/crimsontext.ejs %><% include ./fonts/domine.ejs %><% include ./fonts/eczar.ejs %><% include ./fonts/firasans.ejs %><% include ./fonts/ibmplexsans.ejs %><% include ./fonts/inconsolata.ejs %><% include ./fonts/inknutantiqua.ejs %><% include ./fonts/karla.ejs %><% include ./fonts/lato.ejs %><% include ./fonts/librebaskerville.ejs %><% include ./fonts/librefranklin.ejs %><% include ./fonts/lora.ejs %><% include ./fonts/merriweather.ejs %><% include ./fonts/montserrat.ejs %><% include ./fonts/neuton.ejs %><% include ./fonts/opensans.ejs %><% include ./fonts/playfairdisplay.ejs %><% include ./fonts/poppins.ejs %><% include ./fonts/prozalibre.ejs %><% include ./fonts/ptsans.ejs %><% include ./fonts/ptserif.ejs %><% include ./fonts/raleway.ejs %><% include ./fonts/roboto.ejs %><% include ./fonts/robotoslab.ejs %><% include ./fonts/rubik.ejs %><% include ./fonts/sourcesanspro.ejs %><% include ./fonts/sourceserifpro.ejs %><% include ./fonts/spectral.ejs %><% include ./fonts/worksans.ejs %>.resizable .resizers .resizer {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: white;
-            border: 3px solid #4286f4;
-            position: absolute;
-            z-index: 1;
-        }
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background: white;
+                border: 3px solid #4286f4;
+                position: absolute;
+                z-index: 1;
+            }
 
-        .resizable .resizers .resizer.top-left {
-            left: -5px;
-            top: -5px;
-            cursor: nwse-resize;
-        }
+            .resizable .resizers .resizer.top-left {
+                left: -5px;
+                top: -5px;
+                cursor: nwse-resize;
+            }
 
-        .i-amphtml-story-bookend {
-            display: none !important;
-        }
+            .i-amphtml-story-bookend {
+                display: none !important;
+            }
 
-        .i-amphtml-story-spinner-container::after {
-            display: none !important;
-        }
+            .i-amphtml-story-spinner-container::after {
+                display: none !important;
+            }
 
-        .resizable .resizers .resizer.top-right {
-            right: -5px;
-            top: -5px;
-            cursor: nesw-resize;
-        }
+            .resizable .resizers .resizer.top-right {
+                right: -5px;
+                top: -5px;
+                cursor: nesw-resize;
+            }
 
-        .resizable .resizers .resizer.bottom-left {
-            left: -5px;
-            bottom: -5px;
-            cursor: nesw-resize;
-        }
+            .resizable .resizers .resizer.bottom-left {
+                left: -5px;
+                bottom: -5px;
+                cursor: nesw-resize;
+            }
 
-        .resizable .resizers .resizer.bottom-right {
-            right: -5px;
-            bottom: -5px;
-            cursor: nwse-resize;
-        }
+            .resizable .resizers .resizer.bottom-right {
+                right: -5px;
+                bottom: -5px;
+                cursor: nwse-resize;
+            }
 
-        .rotate {
-            background-color: #23241f;
-            width: 1px;
-            height: 50px;
-            position: absolute;
-            display: none;
-            left: 50%;
-            top: -50px;
-        }
+            .rotate {
+                background-color: #23241f;
+                width: 1px;
+                height: 50px;
+                position: absolute;
+                display: none;
+                left: 50%;
+                top: -50px;
+            }
 
-        .rotate:before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            position: absolute;
-            display: flex;
-            left: -4px;
-            top: -9px;
-            border-radius: 4px;
-            border: 1px solid black;
-            cursor: alias;
-        }
+            .rotate:before {
+                content: '';
+                width: 8px;
+                height: 8px;
+                position: absolute;
+                display: flex;
+                left: -4px;
+                top: -9px;
+                border-radius: 4px;
+                border: 1px solid black;
+                cursor: alias;
+            }
 
-        <%
+            <%
         }
 
         %>amp-story.single-slide>div {
@@ -403,7 +403,7 @@
         }
     </style>
     <% if (ampStory.fromPreview || !v0Path.includes('https')) { %>
-        <link rel="stylesheet" href="/resize-files?path=amp-to-html/dist/style/subjx.css" />
+    <link rel="stylesheet" href="/resize-files?path=amp-to-html/dist/style/subjx.css" />
     <% } %>
     <% include ./main.ejs %>
     <script>
@@ -442,15 +442,15 @@ let currentSlide = ampStory.cuts.find(cut => {
     <%for (let i = 0; i < 2; i++) {%>
     <amp-story-page style="text-rendering: auto;background: #eeeeee" id="<%=`story${i}`%>>" class="container">
         <% let preview = false;
-            if (currentSlide) {
-                currentSlide.layers.sort((first, second) => {
-                    var keyA = first.position,
-                            keyB = second.position;
-                    if(keyA < keyB) return -1;
-                    if(keyA > keyB) return 1;
-                    return 0;
-                })
-            } %>
+        if (currentSlide) {
+            currentSlide.layers.sort((first, second) => {
+                var keyA = first.position,
+                        keyB = second.position;
+                if(keyA < keyB) return -1;
+                if(keyA > keyB) return 1;
+                return 0;
+            })
+        } %>
         <% if (currentSlide) { %>
             <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
                 <% var page = null
@@ -512,7 +512,7 @@ let currentSlide = ampStory.cuts.find(cut => {
                 </amp-story-grid-layer>
                 <% break;
 
-                    case 'image':
+                case 'image':
                 case 'gifs': %>
                 <% if (layer.content.image && layer.content.image) { %>
                     <% if (!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) { %>

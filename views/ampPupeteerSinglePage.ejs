@@ -85,7 +85,7 @@
                 </amp-story-grid-layer>
                 <% break;
 
-                    case 'image':
+                case 'image':
                 case 'gifs': %>
                 <amp-story-grid-layer template="horizontal">
                     <div
@@ -165,15 +165,15 @@
                         top: 90%;
                         display: grid;
                      "
-                     id="<%=layer.position%>">
-                    <a class='cta-link' style="
-                            background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
-                            color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                            border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-                            z-index: <%=currentSlide.layers.length + 1%>;
-                            border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 25 : layer.settings.layerSettings.shapeStyles.round) + 'px';%>"
-                       href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
-                </div>
+                         id="<%=layer.position%>">
+                        <a class='cta-link' style="
+                                background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
+                                color: <%=layer.settings.ctaLayerSettings.fontColor%>;
+                                border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
+                                z-index: <%=currentSlide.layers.length + 1%>;
+                                border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 25 : layer.settings.layerSettings.shapeStyles.round) + 'px';%>"
+                           href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
+                    </div>
                 <% } %>
                 <% break } %>
             <% }) %>
