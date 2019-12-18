@@ -56,7 +56,7 @@ getAnimationWidthEm = function (layer) {
     if (layer.settings.layerSettings.shapeStyles) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
-    return (+layer.settings.layerSettings.width + thickness) / (3.434 * ampStory.initialWidth / 100) + 'em';
+    return ((+layer.settings.layerSettings.width + thickness) / (3.434 * ampStory.initialWidth / 100)).toFixed(2) + 'em';
 }
 
 getAnimationHeightEm = function (layer) {
@@ -64,7 +64,7 @@ getAnimationHeightEm = function (layer) {
     if (layer.settings.layerSettings.shapeStyles) {
         thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
     }
-    return (+layer.settings.layerSettings.height + thickness) / (3.434 * ampStory.initialWidth / 100) + 'em';
+    return ((+layer.settings.layerSettings.height + thickness) / (3.434 * ampStory.initialWidth / 100)).toFixed(2) + 'em';
 }
 
 // TODO: check if we need next 2 functions (and second if check)
@@ -141,7 +141,7 @@ getFullScreenElementOffsetY = function (layer) {
     return (100 * ((heightContainerPx - heightContentPx) / 2) / heightContainerPx)
 }
 
-getFullScreenElementOffsetX = function (layer) {
+getFullScreenElementOffsetX = function (layer)  {
     const widthContainerPx = ampStory.initialWidth * getFullScreenAnimationContainerWidth(layer) / 100;
     const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
     return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
@@ -172,4 +172,5 @@ setLinkBgColor = function (data) {
 changeCtaLink = function(link) {
     return link.match('^https?:\/\/') ? link : `https://${link}`;
 }
- %>
+
+%>

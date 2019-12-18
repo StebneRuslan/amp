@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <% include ampViewerHead.ejs %>
-<% include ./main.ejs %>
 <% let currentSlide = ampStory.cuts.find(cut => cut.position === +current) %>
+<% include ./main.ejs %>
 
 <body>
 <script>
