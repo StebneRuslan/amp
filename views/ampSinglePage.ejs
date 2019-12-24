@@ -66,7 +66,7 @@
         e.stopPropagation();
         e.preventDefault();
         document.execCommand('inserttext', false, e.clipboardData.getData('text/plain').replace(/\s{2,}/g, ' '));
-        window.parent.postMessage({event: 'textselected', value: true}, '*');
+        window.parent.postMessage({event: 'textselected', value: true, paste: true}, '*');
     }
       function keyDownOperation(e) {
         if ((e.target.innerText.length <= 1 && (e.keyCode === 8 || e.which === 8))) {
