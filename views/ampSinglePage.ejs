@@ -62,18 +62,12 @@
           }
         });
       }
-      function handlePaste(e) {
-        let clipboardData, pastedData;
+    function handlePaste(e) {
         e.stopPropagation();
         e.preventDefault();
-        clipboardData = e.clipboardData;
-        pastedData = clipboardData.getData('text/html');
-        const selectorContainer = document.createElement('DIV');
-        selectorContainer.innerHTML = pastedData;
-        convertTextSizeToPx(selectorContainer);
-        document.execCommand('insertHTML', false, selectorContainer.innerHTML);
-        window.parent.postMessage({event: 'textselected', value: true}, '*');
-      }
+        document.execCommand('inserttext', false, e.clipboardData.getData('text/plain').replace(/\s{2,}/g, ' '));
+        window.parent.postMessage({event: 'textselected', value: true, paste: true}, '*');
+    }
       function keyDownOperation(e) {
         if ((e.target.innerText.length <= 1 && (e.keyCode === 8 || e.which === 8))) {
           e.preventDefault();
