@@ -618,7 +618,7 @@ let currentSlide = ampStory.cuts.find(cut => {
                     </amp-story-grid-layer>
                     <% } else { %>
                         <amp-story-grid-layer template="fill">
-                            <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
+                            <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration }); %>
                         </amp-story-grid-layer>
                     <% } %>
                 <% } %>
