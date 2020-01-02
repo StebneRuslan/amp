@@ -1,9 +1,9 @@
 <div class="amp-shape"
      style="width: 100%;height: 100%;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;">
-  <div class="inner-item shape" style="display: flex;width: 100%;height: 100%;">
+  <div class="inner-item shape" style="width: 100%;height: 100%;">
     <div
             id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
-            style="width: 100%;height: 100%;">
+            style="width: 100%;height: 100%;display: flex;">
       <% switch (layer.content.value) {
       case 'square' : %>
       <% include ../shapes/square.ejs %>

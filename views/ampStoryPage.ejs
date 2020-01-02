@@ -1,183 +1,4 @@
-<% function getRotateValue (layer) {
-    if (layer.settings.layerSettings.fullscreen) {
-        var dist = Math.sqrt((Math.pow(ampStory.initialWidth, 2)) + (Math.pow(ampStory.initialHeight, 2)));
-        var diagAngle = Math.asin((ampStory.initialHeight) / dist);
-
-        var a1 = (((layer.settings.generalSettings.rotate * Math.PI / 180) % (Math.PI * 2)) + Math.PI * 4) % (Math.PI * 2);
-        if (a1 > Math.PI) {
-            a1 -= Math.PI;
-        }
-        if (a1 > Math.PI / 2 && a1 <= Math.PI) {
-            a1 = (Math.PI / 2) - (a1 - (Math.PI / 2));
-        }
-
-        var ang1 = Math.PI / 2 - diagAngle - Math.abs(a1)
-        var ang2 = Math.abs(diagAngle - Math.abs(a1))
-
-        var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.originalHeight
-        var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.originalWidth
-        var scale = Math.max(scale1, scale2)
-        return scale
-    } else {
-        return scale
-    }
-}
-
-function getFullScreenAnimationContainerWidth (layer) {
-    return parseFloat((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10)
-}
-
-function getFullScreenAnimationContainerHeight (layer) {
-    return parseFloat((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
-            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10)
-}
-
-function getFullScreenElementOffsetY (layer) {
-    const heightContainerPx = ampStory.initialHeight * getFullScreenAnimationContainerHeight(layer) / 100;
-    const heightContentPx = heightContainerPx * getDraggableElementHeight(layer) / 100;
-    return (100 * ((heightContainerPx - heightContentPx) / 2) / heightContainerPx)
-}
-
-function getFullScreenElementOffsetX (layer) {
-    const widthContainerPx = ampStory.initialWidth * getFullScreenAnimationContainerWidth(layer) / 100;
-    const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
-    return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
-}
-
-function getAnimationWidthEm (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    return ((Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))) / (3.434 * ampStory.initialWidth / 100)).toFixed(1)+ 'em';
-}
-function getAnimationHeightEm (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    return ((Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))) / (3.434 * ampStory.initialWidth / 100)).toFixed(1) + 'em';
-}
-
-function getAnimationContainerWidth (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    if (layer.settings.layerSettings.fullscreen) {
-        return getFullScreenAnimationContainerWidth(layer) + '%';
-    } else {
-        return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs((+layer.settings.layerSettings.height + thickness) *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10) + '%';
-    }
-}
-
-function getAnimationContainerHeight (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    if (layer.settings.layerSettings.fullscreen) {
-        return getFullScreenAnimationContainerHeight(layer) + '%'
-    } else {
-        return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
-                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs((+layer.settings.layerSettings.height + thickness) *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10) + '%';
-    }
-}
-
-
-function getDraggableElementWidth (layer) {
-    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
-        return ((100 * layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(1);
-    } else {
-        return ((100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.height *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(1) + '%';
-    }
-}
-function getDraggableElementHeight (layer) {
-    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
-        return ((100 * layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
-                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(1);
-    } else {
-        return ((100 * layer.settings.layerSettings.height) / parseInt((Math.abs(layer.settings.layerSettings.width *
-                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.height *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))))).toFixed(1) + '%';
-    }
-}
-
-function getDeraggableElementOffsetX (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    if (layer.settings.generalSettings.rotate !== '0') {
-        return (layer.settings.generalSettings.innerOffsetX / (3.434 * (ampStory.initialWidth / 100))).toFixed(1) + 'em';
-    } else return '0';
-}
-function getDeraggableElementOffsetY (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    if (layer.settings.generalSettings.rotate !== '0') {
-        return (layer.settings.generalSettings.innerOffsetY / (3.434 * (ampStory.initialWidth / 100))).toFixed(1) + 'em';
-    } else return '0';
-}
-
-function getFullScreenElementOffsetY (layer) {
-    const heightContainerPx = ampStory.initialHeight * getFullScreenAnimationContainerHeight(layer) / 100;
-    const heightContentPx = heightContainerPx * getDraggableElementHeight(layer) / 100;
-    return (100 * ((heightContainerPx - heightContentPx) / 2) / heightContainerPx)
-}
-
-function getFullScreenElementOffsetX (layer) {
-    const widthContainerPx = ampStory.initialWidth * getFullScreenAnimationContainerWidth(layer) / 100;
-    const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
-    return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
-}
-
-function setLinkBgColor (data) {
-    if (data.type === 'solid') {
-        return data.leftColor;
-    } else if (data.type === 'linear') {
-        return `linear-gradient(${data.angle}deg, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
-    } else if (data.type === 'radial') {
-        return `radial-gradient(circle at ${data.horizontalDirection}% ${data.verticalDirection}%, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
-    }
-}
-
-function changeCtaLink (link) {
-    if (link.match('^https?:\/\/')) {
-        return link;
-    } else {
-        return `https://${link}`;
-    }
-}
-%>
-
+<% include ./main.ejs %>
 <%let preview = false;
 ampStory.cuts.map(currentSlide => { %>
 <amp-story-page auto-advance-after="<%=currentSlide.duration || 10%>s" id="<%= currentSlide.position %>" style="background: #eeeeee">
@@ -202,21 +23,17 @@ ampStory.cuts.map(currentSlide => { %>
                         bottom: 0;
                                 top: initial;
                     <% } else {%>
-                        top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(1) + '%' %>;
+                        top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
                     <% }%>
-                            left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(1) + '%' %>;"
+                            left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;"
             <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>"
                     <% } %> <% if (layer.settings.animateDuration){ %>
                     animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
             <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
                     <% } %>>
-                <div draggable="true" id="layer<%=layer.position%>" style="
+                <div draggable="true" class="rotate-wrapper" id="layer<%=layer.position%>" style="
                         outline: none;
-                        transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                        width: <%=getDraggableElementWidth(layer);%>;
-                        height: <%=getDraggableElementHeight(layer);%>;
-                        top: <%=getDeraggableElementOffsetY(layer);%>;
-                        left: <%=getDeraggableElementOffsetX(layer);%>;">
+                        transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                     <% include layers/text.ejs %>
                 </div>
             </div>
@@ -234,20 +51,15 @@ ampStory.cuts.map(currentSlide => { %>
                      bottom: 0;
                              top: initial;
                  <% } else {%>
-                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(1) + '%' %>;
+                     top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
                  <% }%>
-                         left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(1) + '%' %>;"
+                         left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;"
             <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>" <% } %>
             <% if (layer.settings.animateDuration){ %> animate-in-duration="<%= layer.settings.animateDuration %>s"
                     <% } %> <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
                     <% } %>>
                 <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper " style="
-                        position: absolute;
-                        width: <%=getDraggableElementWidth(layer);%>;
-                        height: <%=getDraggableElementHeight(layer);%>;
-                        transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                        top: <%=getDeraggableElementOffsetY(layer);%>;
-                        left: <%=getDeraggableElementOffsetX(layer);%>;">
+                        transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                     <% include layers/shape.ejs %>
                 </div>
             </div>
@@ -273,9 +85,9 @@ ampStory.cuts.map(currentSlide => { %>
                          bottom: 0;
                                  top: initial;
                      <% } else {%>
-                         top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(1) + '%' %>;
+                         top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
                      <% }%>
-                             left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(1) + '%' %>;"
+                             left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;"
                 <% if (!['pan-left', 'pan-right'].includes(layer.settings.animateIn) && layer.settings.animateIn && !preview){ %>
                      animate-in="<%= layer.settings.animateIn %>" <% } %> <% if (layer.settings.animateDuration){ %>
                      animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %> <% if (layer.settings.animateDelay){ %>
@@ -291,12 +103,7 @@ ampStory.cuts.map(currentSlide => { %>
                                  height: <%=getDraggableElementHeight(layer) + '%';%>;
                                  transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                  " <% } else { %> class="rotate-wrapper" style="
-                            position: absolute;
-                            width: <%=getDraggableElementWidth(layer);%>;
-                            height: <%=getDraggableElementHeight(layer);%>;
-                            transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                            top: <%=getDeraggableElementOffsetY(layer);%>;
-                            left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
+                            transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
                         <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
                     </div>
                 </div>
@@ -327,9 +134,9 @@ ampStory.cuts.map(currentSlide => { %>
                          bottom: 0;
                                  top: initial;
                      <% } else {%>
-                         top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(1) + '%' %>;
+                         top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
                      <% }%>
-                             left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(1) + '%' %>;"
+                             left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;"
                 <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>" <% } %>
                 <% if (layer.settings.animateDuration){ %> animate-in-duration="<%= layer.settings.animateDuration %>s"
                         <% } %> <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"
@@ -342,50 +149,33 @@ ampStory.cuts.map(currentSlide => { %>
                                  height: <%=getDraggableElementHeight(layer)%>;
                                  transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                  " <% } else { %> class="rotate-wrapper" style="
-                            position: absolute;
-                            width: <%=getDraggableElementWidth(layer);%>;
-                            height: <%=getDraggableElementHeight(layer);%>;
-                            transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                            top: <%=getDeraggableElementOffsetY(layer);%>;
-                            left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
+                            transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
                         <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
                     </div>
                 </div>
             </amp-story-grid-layer>
             <% } else { %>
                 <amp-story-grid-layer template="fill">
-                    <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
+                    <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration }); %>
                 </amp-story-grid-layer>
             <% } %>
         <% } %>
         <% break
         } %>
     <% }) %>
-    <%if (ampStory.googleAnalytics && ampStory.googleAnalytics.trackingAccountId) {%>
-        <%- include('analytics.ejs', {analyticsKey: ampStory.googleAnalytics.trackingAccountId})%>
-    <% } %>
     <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
-    <%if (currentSlide.position >= 1 && ampStory.type !== 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link') {%>
+    <%if (currentSlide.position >= 1 && ampStory.type !== 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link' && layer.settings.ctaLayerSettings.link) {%>
     <amp-story-cta-layer>
-        <a style="
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-                padding: 10px 20px;
-                text-align: center;
-                font-size: 16px;
-                font-family: 'Verdana';
-                text-decoration: none;
+        <a class='cta-link' style="
                 background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
                 color: <%=layer.settings.ctaLayerSettings.fontColor%>;
                 border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-                text-align: center;
-                bottom:10%;
-                border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
+                bottom: 10%;
+                border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 1.5 : layer.settings.layerSettings.shapeStyles.round / 16) + 'em';%>"
            href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>"
            id="<%=`cta-${currentSlide.position}`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
     </amp-story-cta-layer>
-    <% } else if (ampStory.type === 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link') {%>
+    <% } else if (ampStory.type === 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link' && layer.settings.ctaLayerSettings.link) {%>
     <div style="
                     width: 100%;
                     position: absolute;
@@ -394,24 +184,21 @@ ampStory.cuts.map(currentSlide => { %>
                     display: grid;
                  "
          id="<%=layer.position%>">
-        <a style="
-                margin: auto;
-                padding: 0.5em 0.9em;
-                text-align: center;
-                font-size: 0.9em;
-                font-family: 'Verdana';
-                text-decoration: none;
+        <a class='cta-link' style="
                 background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
                 color: <%=layer.settings.ctaLayerSettings.fontColor%>;
                 border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-                text-align: center;
-                cursor: default;
-                transform-origin: center;
                 z-index: <%=currentSlide.layers.length + 1%>;
-                border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px';%>"
+                border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 1.5 : layer.settings.layerSettings.shapeStyles.round / 16) + 'em';%>"
            href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
     </div>
     <% } %>
     <% }) %>
 </amp-story-page>
 <% }) %>
+<%if (ampStory.googleAnalytics && ampStory.googleAnalytics.trackingAccountId) {%>
+    <%- include('analytics.ejs', {analyticsKey: ampStory.googleAnalytics.trackingAccountId})%>
+<% } %>
+<%if (ampStory.customerAnalyticsKey) {%>
+    <%- include('customerAnalytics.ejs', {analyticsKey: ampStory.customerAnalyticsKey})%>
+<% } %>

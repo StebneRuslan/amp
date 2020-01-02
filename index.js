@@ -70,12 +70,13 @@ let Amp = class Amp {
     })
   }
 
-  createFullStory (data, googleAnalytics = null, calback) {
+  createFullStory ({ config, userAnalytics = null, customerAnalyticsKey = null }, calback) {
     let resultHtml = ''
-    data.type = this.type
-    let fullData = this.setConfigPath(data)
-    if (data.ampStory) {
-      data.ampStory.googleAnalytics = googleAnalytics
+    config.type = this.type
+    let fullData = this.setConfigPath(config)
+    if (config.ampStory) {
+      config.ampStory.googleAnalytics = userAnalytics
+      config.ampStory.customerAnalyticsKey = customerAnalyticsKey
     }
     app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function (err, html) {
       if (err) {
