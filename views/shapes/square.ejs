@@ -9,11 +9,12 @@
 >
     <defs>
         <filter id='<%=`shadow${currentSlide.position}${layer.position}`%>' width='200%' height='200%' x='-40%' y='-40%'>
-            <%if (layer.settings.generalSettings.shadow !== '0') { %>
-            <feDropShadow flood-opacity='<%=layer.settings.generalSettings.shadow == '0' ? '0' : '1'%>' dx='0' dy='0' stdDeviation='<%= layer.settings.generalSettings.shadow / 10 %>' />
-            <% } else {%>
-                <feDropShadow flood-opacity='0' dx='0' dy='0' stdDeviation='0' />
-            <% } %>
+            <feGaussianBlur in="SourceAlpha" stdDeviation='<%= layer.settings.generalSettings.shadow / 10 %>'/>
+            <feOffset dx="0" dy="0" result="offsetblur"/>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
         </filter>
 
         <linearGradient id='<%=`linearfillColor${currentSlide.position}${layer.position}`%>' x1="<%= setCoordinates('x1', 'fillColor') %>" y1="<%= setCoordinates('y1', 'fillColor') %>" x2="<%= setCoordinates('x2', 'fillColor') %>" y2="<%= setCoordinates('y2', 'fillColor') %>">
