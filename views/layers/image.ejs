@@ -1,5 +1,5 @@
 <% function getImageUrl (content) {
-  return typeof content.image === 'string' ? ((content.value || content.image) || '') : content.image.url (content.value || content.image) || ''
+  return typeof content.image === 'string' ? ((content.value || content.image) || '') : content.image.url || (content.value || content.image) || ''
 }
 if (layer.settings.layerSettings.fullscreen) { %>
   <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
