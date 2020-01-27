@@ -4,7 +4,7 @@
     <script async custom-element="amp-video" src=<%=ampVideoPath%>></script>
     <script async src=<%=v0Path%>></script>
     <% snippets.map(snippet => { %>
-        <%= Buffer.from(snippet.headCode, 'base64').toString() %>
+        <%- Buffer.from(snippet.headCode, 'base64').toString() %>
     <% })%>
     <script async custom-element="amp-story"
             src=<%=ampStoryPath%>></script>
