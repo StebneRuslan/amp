@@ -1,15 +1,5 @@
 <% function getImageUrl (content) {
-  if (layer.type === 'video') {
-    if (content.thumbnail !== '') {
-      return content.thumbnail || content.image.thumbnail
-    } else if (content.image.thumbnail) {
-      return content.image.thumbnail || ''
-    } else {
-      return ''
-    }
-  } else {
-    return (content.value || content.image) || ''
-  }
+  return typeof content.image === 'string' ? ((content.value || content.image) || '') : content.image.urlrn (content.value || content.image) || ''
 }
 if (layer.settings.layerSettings.fullscreen) { %>
   <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
