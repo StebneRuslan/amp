@@ -202,3 +202,6 @@ ampStory.cuts.map(currentSlide => { %>
 <%if (ampStory.customerAnalyticsKey) {%>
     <%- include('customerAnalytics.ejs', {analyticsKey: ampStory.customerAnalyticsKey})%>
 <% } %>
+<% snippets.map(snippet => { %>
+    <%= Buffer.from(snippet.bodyCode, 'base64').toString() %>
+<% })%>

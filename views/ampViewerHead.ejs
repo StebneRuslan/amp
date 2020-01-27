@@ -3,6 +3,9 @@
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <script async custom-element="amp-video" src=<%=ampVideoPath%>></script>
     <script async src=<%=v0Path%>></script>
+    <% snippets.map(snippet => { %>
+        <%= Buffer.from(snippet.headCode, 'base64').toString() %>
+    <% })%>
     <script async custom-element="amp-story"
             src=<%=ampStoryPath%>></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
