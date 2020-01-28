@@ -15,6 +15,7 @@ let Amp = class Amp {
   createSinglePage (data, calback) {
     let resultHtml = ''
     let fullData = this.setConfigPath(data)
+    fullData.snippets = []
     app.render(path.resolve(__dirname, 'views', 'ampSinglePage.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -28,6 +29,7 @@ let Amp = class Amp {
   createStaticSinglePage (data, calback) {
     let resultHtml = ''
     let fullData = this.setConfigPath()
+    fullData.snippets = []
     app.render(path.resolve(__dirname, 'views', 'ampPupeteerSinglePage.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -41,6 +43,7 @@ let Amp = class Amp {
   createSinglePageWithAnimations (data, calback) {
     let resultHtml = ''
     let fullData = this.setConfigPath()
+    fullData.snippets = []
     app.render(path.resolve(__dirname, 'views', 'ampSinglePageWithAnimations.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -54,6 +57,7 @@ let Amp = class Amp {
   createSinglePageWithoutScripts (data, calback) {
     let resultHtml = ''
     let fullData = this.setConfigPath()
+    fullData.snippets = []
     app.render(path.resolve(__dirname, 'views', 'singlePageWithoutScripts.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
