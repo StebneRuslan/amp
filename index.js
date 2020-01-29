@@ -28,7 +28,7 @@ let Amp = class Amp {
 
   createStaticSinglePage (data, calback) {
     let resultHtml = ''
-    let fullData = this.setConfigPath()
+    let fullData = this.setConfigPath(data)
     fullData.snippets = []
     app.render(path.resolve(__dirname, 'views', 'ampPupeteerSinglePage.ejs'), fullData, function (err, html) {
       if (err) {
@@ -42,7 +42,7 @@ let Amp = class Amp {
 
   createSinglePageWithAnimations (data, calback) {
     let resultHtml = ''
-    let fullData = this.setConfigPath()
+    let fullData = this.setConfigPath(data)
     fullData.snippets = []
     app.render(path.resolve(__dirname, 'views', 'ampSinglePageWithAnimations.ejs'), fullData, function (err, html) {
       if (err) {
@@ -56,7 +56,7 @@ let Amp = class Amp {
 
   createSinglePageWithoutScripts (data, calback) {
     let resultHtml = ''
-    let fullData = this.setConfigPath()
+    let fullData = this.setConfigPath(data)
     fullData.snippets = []
     app.render(path.resolve(__dirname, 'views', 'singlePageWithoutScripts.ejs'), fullData, function (err, html) {
       if (err) {
@@ -72,12 +72,12 @@ let Amp = class Amp {
     let resultHtml = ''
     config.type = this.type
     let fullData = this.setConfigPath(config)
-    console.log('fullData', fullData)
     if (config.ampStory) {
       config.ampStory.googleAnalytics = userAnalytics
       config.ampStory.customerAnalyticsKey = customerAnalyticsKey
     }
-    config.snippets = snippets || []
+    console.log('@@@@@@@@@', snippets)
+    config.snippets = snippets
     app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
