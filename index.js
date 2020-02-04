@@ -16,6 +16,7 @@ let Amp = class Amp {
     let resultHtml = ''
     let fullData = this.setConfigPath(data)
     fullData.snippets = []
+    fullData.bookendLink = ''
     app.render(path.resolve(__dirname, 'views', 'ampSinglePage.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -30,6 +31,7 @@ let Amp = class Amp {
     let resultHtml = ''
     let fullData = this.setConfigPath(data)
     fullData.snippets = []
+    fullData.bookendLink = ''
     app.render(path.resolve(__dirname, 'views', 'ampPupeteerSinglePage.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -44,6 +46,7 @@ let Amp = class Amp {
     let resultHtml = ''
     let fullData = this.setConfigPath(data)
     fullData.snippets = []
+    fullData.bookendLink = ''
     app.render(path.resolve(__dirname, 'views', 'ampSinglePageWithAnimations.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -58,6 +61,7 @@ let Amp = class Amp {
     let resultHtml = ''
     let fullData = this.setConfigPath(data)
     fullData.snippets = []
+    fullData.bookendLink = ''
     app.render(path.resolve(__dirname, 'views', 'singlePageWithoutScripts.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -76,7 +80,6 @@ let Amp = class Amp {
       config.ampStory.googleAnalytics = userAnalytics
       config.ampStory.customerAnalyticsKey = customerAnalyticsKey
     }
-    console.log('@@@@@@@@@', snippets)
     config.snippets = snippets
     config.bookendLink = bookendLink
     app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function (err, html) {

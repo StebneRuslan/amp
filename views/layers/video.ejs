@@ -1,9 +1,6 @@
 <%
 function getVideoUrl (content) {
-  let url = content.value
-  if (!url) {
-    url = content.video
-  }
+  let url = typeof content.video === 'string' ? content.value || content.video : content.video.url
   if (/http:\/\//.test(url) || /https:\/\//.test(url)) {
     return url
   } else {
