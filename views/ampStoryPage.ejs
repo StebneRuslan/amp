@@ -68,8 +68,21 @@ ampStory.cuts.map(currentSlide => { %>
 
             case 'image':
         case 'gifs': %>
+        <% console.log('########0', layer.content.compressed)%>
+        <% console.log('########11', ((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && !layer.content.compressed))%>
+        <% console.log('########222', ((layer.content.compressed && !layer.settings.layerSettings.fullscreen)))%>
         <% if (layer.content.image && layer.content.image) { %>
-            <% if (!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) { %>
+
+
+
+
+            <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && !layer.content.compressed) ||
+                    ((layer.content.compressed && !layer.settings.layerSettings.fullscreen)) ||
+                    ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && layer.content.compressed) { %>
+
+
+
+
             <amp-story-grid-layer template="horizontal">
                 <div class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
                      style="
@@ -88,7 +101,8 @@ ampStory.cuts.map(currentSlide => { %>
                          top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
                      <% }%>
                              left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;"
-                <% if (!['pan-left', 'pan-right'].includes(layer.settings.animateIn) && layer.settings.animateIn && !preview){ %>
+                <% if ((!['pan-left', 'pan-right'].includes(layer.settings.animateIn) && layer.settings.animateIn && !preview) ||
+                        layer.content.compressed && ['pan-left', 'pan-right'].includes(layer.settings.animateIn) && layer.settings.animateIn ){ %>
                      animate-in="<%= layer.settings.animateIn %>" <% } %> <% if (layer.settings.animateDuration){ %>
                      animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %> <% if (layer.settings.animateDelay){ %>
                      animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
@@ -118,7 +132,9 @@ ampStory.cuts.map(currentSlide => { %>
 
         case 'video': %>
         <% if (layer.content.video && layer.content.video) { %>
-            <% if (!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) { %>
+            <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && !layer.content.compressed) ||
+                    ((layer.content.compressed && !layer.settings.layerSettings.fullscreen)) ||
+                    ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && layer.content.compressed) { %>
             <amp-story-grid-layer template="horizontal">
                 <div class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
                      style="
