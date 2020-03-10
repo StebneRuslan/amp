@@ -33,6 +33,8 @@ if (layer.settings.layerSettings.fullscreen) {%>
       poster="<%= layer.content.thumbnail || (layer.content.image ? layer.content.image.url : '') %>"
     <% if ((!layer.content.compressed && (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) || (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) { %>
       style="height: inherit;object-fit:cover;opacity:<%= layer.settings.generalSettings.opacity / 100 %>"
+            <% } else if (!layer.content.compressed) { %>
+      style="width:100%;height: inherit;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
             <% } %>
     >
       <source src="<%= getVideoUrl(layer.content)%>"

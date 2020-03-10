@@ -68,21 +68,10 @@ ampStory.cuts.map(currentSlide => { %>
 
             case 'image':
         case 'gifs': %>
-        <% console.log('########0', layer.content.compressed)%>
-        <% console.log('########11', ((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && !layer.content.compressed))%>
-        <% console.log('########222', ((layer.content.compressed && !layer.settings.layerSettings.fullscreen)))%>
         <% if (layer.content.image && layer.content.image) { %>
-
-
-
-
             <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && !layer.content.compressed) ||
                     ((layer.content.compressed && !layer.settings.layerSettings.fullscreen)) ||
                     ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && layer.content.compressed) { %>
-
-
-
-
             <amp-story-grid-layer template="horizontal">
                 <div class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
                      style="
