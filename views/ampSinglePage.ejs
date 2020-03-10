@@ -52,9 +52,6 @@
       function convertTextSizeToPx(selectorContainer) {
         const iframeWidth = document.documentElement.clientWidth;
         [].map.call(selectorContainer.querySelectorAll('*'), (node) => {
-          if (!node.style.fontFamily && node.nodeName === 'SPAN') {
-            node.style.fontFamily = 'Montserrat';
-          }
           if (node.style.fontSize && !node.style.fontSize.includes('em') && node.nodeName !== 'DIV' && node.style.fontSize !== node.parentNode.style.fontSize) {
             node.style.fontSize = `${parseFloat(node.style.fontSize) / (2.6 * iframeWidth / 100)}em`;
           } else if (node.nodeName === 'DIV') {
