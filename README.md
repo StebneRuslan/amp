@@ -24,7 +24,7 @@ const ampToHtmlConfig = new Amp(type, {
     customFontPath: ''
   })
 
-ampToHtmlConfig.createFullStory({ampStory}, (html) => { // 
+ampToHtmlConfig.createFullStory({ config, userAnalytics, customerAnalyticsKey, snippets, bookendLink }, (html) => { // 
   console.log(html)
 })
 ```
