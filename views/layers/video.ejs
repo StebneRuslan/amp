@@ -1,9 +1,6 @@
 <%
 function getVideoUrl (content) {
-  let url = content.value
-  if (!url) {
-    url = content.video
-  }
+  let url = typeof content.video === 'string' ? content.value || content.video : content.video.url
   if (/http:\/\//.test(url) || /https:\/\//.test(url)) {
     return url
   } else {
@@ -12,37 +9,42 @@ function getVideoUrl (content) {
 }
 if (layer.settings.layerSettings.fullscreen) {%>
   <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
-<div style="transform: translateX(50%);">
-  <% } %>
-  <amp-video
-  <% if (withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
-    animate-in="<%= layer.settings.animateIn %>"
-    <% if (layer.settings.animateDuration){ %>
-    animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-    <% if (layer.settings.animateDelay){ %>
-    animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
-          <% } %>
-    class="full-screen-video"
-    autoplay
-  <% if (layer.settings.layerSettings.mute) {%>
-    noaudio
-          <% } %>
-    layout="responsive"
-  <% if (ampStory.fromPreview) { %>
-    src="<%= getVideoUrl(layer.content)%>"
-          <% }%>
-    width="<%= layer.settings.layerSettings.width %>"
-    height="<%= layer.settings.layerSettings.height %>"
-    poster="<%= layer.content.thumbnail || (layer.content.image ? layer.content.image.url : '') %>"
-    style="height: 100%;object-fit:cover;opacity:<%= layer.settings.generalSettings.opacity / 100 %>">
-    <source src="<%= getVideoUrl(layer.content)%>"
-            type="video/mp4">
-    <div fallback>
-      <p>This browser does not support the video element.</p>
-    </div>
-  </amp-video>
-  <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
-</div>
+  <div style="transform: translateX(50%);">
+    <% } %>
+    <amp-video
+    <% if ((withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn && !layer.content.compressed ) ||
+            layer.content.compressed && layer.settings.animateIn){ %>
+      animate-in="<%= layer.settings.animateIn %>"
+      <% if (layer.settings.animateDuration){ %>
+      animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+      <% if (layer.settings.animateDelay){ %>
+      animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
+            <% } %>
+    <%if (['zoom-in'].includes(layer.settings.animateIn) && layer.content.compressed) { %> scale-start="1" scale-end="1.4" <% } %>
+    <%if (['zoom-out'].includes(layer.settings.animateIn) && layer.content.compressed) { %> scale-start="1.4" scale-end="1" <% } %>
+      class="full-screen-video"
+      autoplay
+      <% if (layer.settings.layerSettings.mute) {%>noaudio<% } %>
+      layout="<%=['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && layer.content.compressed ? 'fill' : 'responsive'%>"
+    <% if (ampStory.fromPreview) { %>
+      src="<%= getVideoUrl(layer.content)%>"<% }%>
+      width="<%= layer.settings.layerSettings.width %>"
+      height="<%= layer.settings.layerSettings.height %>"
+      poster="<%= layer.content.thumbnail || (layer.content.image ? layer.content.image.url : '') %>"
+    <% if ((!layer.content.compressed && (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) || (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) { %>
+      style="height: inherit;object-fit:cover;opacity:<%= layer.settings.generalSettings.opacity / 100 %>"
+            <% } else if (!layer.content.compressed) { %>
+      style="width:100%;height: inherit;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+            <% } %>
+    >
+      <source src="<%= getVideoUrl(layer.content)%>"
+              type="video/mp4">
+      <div fallback>
+        <p>This browser does not support the video element.</p>
+      </div>
+    </amp-video>
+    <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
+  </div>
   <% } %>
 <% } else { %>
   <amp-video

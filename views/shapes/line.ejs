@@ -3,17 +3,18 @@
         xmlns:xlink='http://www.w3.org/1999/xlink'
         width='<%= getSvgSizeInProcentage('width') %>'
         height='<%= getSvgSizeInProcentage('height') %>'
-        style='<%=`overflow: visible; filter: url(#shadow${currentSlide.position}${layer.position}); transform: translate(${getSvgTranslate()}em, -${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% + ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
+        style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, -${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% + ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
         viewBox='0 -16 64 48'
         preserveAspectRatio='none'
 >
     <defs>
         <filter id='<%=`shadow${currentSlide.position}${layer.position}`%>' width='200%' height='200%' x='-40%' y='-40%'>
-            <%if (layer.settings.generalSettings.shadow !== '0') { %>
-            <feDropShadow flood-opacity='<%=layer.settings.generalSettings.shadow == '0' ? '0' : '1'%>' dx='0' dy='0' stdDeviation='<%= layer.settings.generalSettings.shadow / 10 %>' />
-            <% } else {%>
-                <feDropShadow flood-opacity='0' dx='0' dy='0' stdDeviation='0' />
-            <% } %>
+            <feGaussianBlur in="SourceAlpha" stdDeviation='<%= layer.settings.generalSettings.shadow / 10 %>'/>
+            <feOffset dx="0" dy="0" result="offsetblur"/>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
         </filter>
 
         <linearGradient id='<%=`linearfillColor${currentSlide.position}${layer.position}`%>' x1="<%= setCoordinates('x1', 'fillColor') %>" y1="<%= setCoordinates('y1', 'fillColor') %>" x2="<%= setCoordinates('x2', 'fillColor') %>" y2="<%= setCoordinates('y2', 'fillColor') %>">
