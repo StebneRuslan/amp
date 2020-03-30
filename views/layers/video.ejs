@@ -35,6 +35,8 @@ if (layer.settings.layerSettings.fullscreen) {%>
       style="height: inherit;object-fit:cover;opacity:<%= layer.settings.generalSettings.opacity / 100 %>"
             <% } else if (!layer.content.compressed) { %>
       style="width:100%;height: inherit;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+            <% } else { %>
+      style="opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
             <% } %>
     >
       <source src="<%= getVideoUrl(layer.content)%>"

@@ -24,9 +24,9 @@ if (layer.settings.layerSettings.fullscreen) { %>
       style="width:100%;height:100%;object-fit:fill;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
             <% } else if (!layer.content.compressed && !['pan-right', 'pan-left'].includes(layer.settings.animateIn)) { %>
       style="width:100%;height:100%;object-fit:contain;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
-    <% } else if (!layer.content.compressed) { %>
-      style="position: initial;"
-            <% } %>
+      <% } else if (!layer.content.compressed) { %>
+        style="position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+      <% } %>
     >
     </amp-img>
     <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
