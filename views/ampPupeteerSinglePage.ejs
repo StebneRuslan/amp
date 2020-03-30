@@ -9,176 +9,168 @@
 
 <body>
 <script>
-    window.onload = () => {
-        var css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
-            head = document.head || document.getElementsByTagName('head')[0],
-            style = document.createElement('style');
-        style.type = 'text/css';
-        if (style.styleSheet) {
-            style.styleSheet.cssText = css;
-        } else {
-            style.appendChild(document.createTextNode(css));
-        };
-        head.appendChild(style);
+  window.onload = () => {
+    var css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
+      head = document.head || document.getElementsByTagName('head')[0],
+      style = document.createElement('style');
+    style.type = 'text/css';
+    if (style.styleSheet) {
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
     };
+    head.appendChild(style);
+  };
 </script>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-    <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="<%=currentSlide.duration || 10%>s" class="container">
-        <% let preview = false;
-        if (currentSlide) {
-            currentSlide.layers.sort((first, second) => {
-                var keyA = first.position,
-                        keyB = second.position;
-                if(keyA < keyB) return -1;
-                if(keyA > keyB) return 1;
-                return 0;
-            })
-        } %>
-        <% if (currentSlide) { %>
-            <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
-                <% var page = null
-                        switch (layer.type) {
-                    case 'text':
-                case 'html': %>
-                <amp-story-grid-layer template="horizontal">
-                    <div
-                            class="drag-item single-page-item animate"
-                            style="
-                                    width: <%=getAnimationWidthEm(layer)%>;
-                                    height: <%=getAnimationHeightEm(layer)%>;
-                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
-                                bottom: 0;
-                                        top: initial;
-                            <% } else {%>
-                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
-                            <% }%>
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;">
-                        <div draggable="true" class="rotate-wrapper" id="layer<%=layer.position%>" style="
-                                outline: none;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
-                            <% include layers/text.ejs %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% break;
+  <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="<%=currentSlide.duration || 10%>s" class="container">
+    <% let preview = false;
+    if (currentSlide) {
+    	currentSlide.layers.sort((first, second) => {
+    		var keyA = first.position,
+          keyB = second.position;
+    		if(keyA < keyB) return -1;
+    		if(keyA > keyB) return 1;
+    		return 0;
+    	})
+    } %>
+    <% if (currentSlide) { %>
+      <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
+        <% var page = null
+          switch (layer.type) {
+        	case 'text':
+        		case 'html': %>
+        <amp-story-grid-layer template="horizontal">
+          <div
+            class="drag-item single-page-item animate"
+            style="
+              width: <%=getAnimationWidthEm(layer)%>;
+              height: <%=getAnimationHeightEm(layer)%>;
+            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
+              bottom: 0;
+                top: initial;
+            <% } else {%>
+              top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
+            <% }%>
+              left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;">
+            <div draggable="true" class="rotate-wrapper" id="layer<%=layer.position%>" style="
+              outline: none;
+              transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
+              <% include layers/text.ejs %>
+            </div>
+          </div>
+        </amp-story-grid-layer>
+        <% break;
+        case 'shape': %>
+        <amp-story-grid-layer template="horizontal">
+          <div class="drag-item single-page-item animate"
+               style="
+                 position: absolute;
+                 width: <%=getAnimationWidthEm(layer)%>;
+                 height: <%=getAnimationHeightEm(layer)%>;
+               <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
+                 bottom: 0;
+                   top: initial;
+               <% } else {%>
+                 top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
+               <% }%>
+                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;">
+            <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper " style="
+              transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
+              <% include layers/shape.ejs %>
+            </div>
+          </div>
+        </amp-story-grid-layer>
+        <% break;
 
-                case 'shape': %>
-                <amp-story-grid-layer template="horizontal">
-                    <div class="drag-item single-page-item animate"
-                         style="
-                                 position: absolute;
-                                 width: <%=getAnimationWidthEm(layer)%>;
-                                 height: <%=getAnimationHeightEm(layer)%>;
-                         <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
-                             bottom: 0;
-                                     top: initial;
-                         <% } else {%>
-                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
-                         <% }%>
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;">
-                        <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper " style="
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
-                            <% include layers/shape.ejs %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% break;
-
-                case 'image':
-                case 'gifs': %>
-                <amp-story-grid-layer template="horizontal">
-                    <div
-                            class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
-                            style="
-                                    position: absolute;
-                            <%if (layer.settings.layerSettings.fullscreen) {%>
-                                    width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
-                                    height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
-                            <% } else {%>
-                                    width: <%=getAnimationWidthEm(layer)%>;
-                                    height: <%=getAnimationHeightEm(layer)%>;
-                            <% }%>
-                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
-                                bottom: 0;
-                                        top: initial;
-                            <% } else {%>
-                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
-                            <% }%>
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;">
-                        <div id="layer<%=layer.position%>"
-                                <%if (layer.settings.layerSettings.fullscreen) {%> style="
-                                position: absolute;
-                                left: <%=getFullScreenElementOffsetX(layer) + '%'%>;
-                                top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
-                                width: <%=getDraggableElementWidth(layer) + '%'%>;
-                                height: <%=getDraggableElementHeight(layer) + '%';%>;
-                                transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                " <% } else { %> class="rotate-wrapper" style="
+        case 'image':
+        	case 'gifs': %>
+        <amp-story-grid-layer template="horizontal">
+          <div
+            class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
+            style="
+              position: absolute;
+            <%if (layer.settings.layerSettings.fullscreen) {%>
+              width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
+              height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
+            <% } else {%>
+              width: <%=getAnimationWidthEm(layer)%>;
+              height: <%=getAnimationHeightEm(layer)%>;
+            <% }%>
+            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
+              bottom: 0;
+                top: initial;
+            <% } else {%>
+              top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
+            <% }%>
+              left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;">
+            <div id="layer<%=layer.position%>"
+              <%if (layer.settings.layerSettings.fullscreen) {%> style="
+              position: absolute;
+              left: <%=getFullScreenElementOffsetX(layer) + '%'%>;
+              top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
+              width: <%=getDraggableElementWidth(layer) + '%'%>;
+              height: <%=getDraggableElementHeight(layer) + '%';%>;
+              transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
+              " <% } else { %> class="rotate-wrapper" style="
+              transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
+              <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
+            </div>
+          </div>
+        </amp-story-grid-layer>
+        <% break
+        case 'video': %>
+        <amp-story-grid-layer template="horizontal">
+          <div
+            class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
+            style="
+              position: absolute;
+            <%if (layer.settings.layerSettings.fullscreen) {%>
+              width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
+              height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
+            <% } else {%>
+              width: <%=getAnimationWidthEm(layer)%>;
+              height: <%=getAnimationHeightEm(layer)%>;
+            <% }%>
+            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
+              bottom: 0;
+                top: initial;
+            <% } else {%>
+              top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
+            <% }%>
+              left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;"
+          >
+            <div  id="layer<%=layer.position%>"
+              <%if (layer.settings.layerSettings.fullscreen) {%> style="
+              position: absolute;
+              width: <%=getDraggableElementWidth(layer)%>;
+              height: <%=getDraggableElementHeight(layer)%>;
+              transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
+              " <% } else { %> class="rotate-wrapper" style="
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                            <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% break
-
-                case 'video': %>
-                <amp-story-grid-layer template="horizontal">
-                    <div
-                            class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
-                            style="
-                                    position: absolute;
-                            <%if (layer.settings.layerSettings.fullscreen) {%>
-                                    width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
-                                    height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
-                            <% } else {%>
-                                    width: <%=getAnimationWidthEm(layer)%>;
-                                    height: <%=getAnimationHeightEm(layer)%>;
-                            <% }%>
-                            <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
-                                bottom: 0;
-                                        top: initial;
-                            <% } else {%>
-                                top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
-                            <% }%>
-                                    left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;"
-                    >
-                        <div  id="layer<%=layer.position%>"
-                                <%if (layer.settings.layerSettings.fullscreen) {%> style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer)%>;
-                                height: <%=getDraggableElementHeight(layer)%>;
-                                transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                " <% } else { %> class="rotate-wrapper" style="
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                            <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% break
-                case 'cta-link': %>
-                <%if (layer.settings.ctaLayerSettings.link) {%>
-                    <div style="
-                        width: 100%;
-                        position: absolute;
-                        height: 10vh;
-                        top: 90%;
-                        display: grid;
-                     "
-                         id="<%=layer.position%>">
-                        <a class='cta-link' style="
+              <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
+            </div>
+          </div>
+        </amp-story-grid-layer>
+        <% break
+        case 'cta-link': %>
+        <%if (layer.settings.ctaLayerSettings.link) {%>
+        <div style="width: 100%;position: absolute;height: 10vh;top: 90%;display: grid;"
+             id="<%=layer.position%>">
+          <a class='cta-link' style="
                                 background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
                                 color: <%=layer.settings.ctaLayerSettings.fontColor%>;
                                 border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
                                 z-index: <%=currentSlide.layers.length + 1%>;
                                 border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 25 : layer.settings.layerSettings.shapeStyles.round) + 'px';%>"
-                           href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
-                    </div>
-                <% } %>
-                <% break } %>
-            <% }) %>
+             href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link)%>" id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
+        </div>
         <% } %>
-    </amp-story-page>
+        <% break } %>
+      <% }) %>
+    <% } %>
+  </amp-story-page>
 </amp-story>
 </body>
 

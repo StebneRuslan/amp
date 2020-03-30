@@ -22,11 +22,11 @@ if (layer.settings.layerSettings.fullscreen) { %>
       alt="an image"
             <% if ((!layer.content.compressed && (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) || (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) { %>
       style="width:100%;height:100%;object-fit:fill;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
-            <% } else if (!layer.content.compressed) { %>
+            <% } else if (!layer.content.compressed && !['pan-right', 'pan-left'].includes(layer.settings.animateIn)) { %>
       style="width:100%;height:100%;object-fit:contain;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
-            <% } else { %>
-      style="opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
-            <% } %>
+      <% } else if (!layer.content.compressed) { %>
+        style="position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+      <% } %>
     >
     </amp-img>
     <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
