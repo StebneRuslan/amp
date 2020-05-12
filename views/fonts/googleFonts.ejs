@@ -1,0 +1,7 @@
+<%if (ampStory && ampStory.googleFonts) { %>
+  <% ampStory.googleFonts.forEach(font => { %>
+    <% if (font.fontType === 'GOOGLE_FONT') {%>
+    <link type="text/css" rel="stylesheet" href="<%=`https://fonts.googleapis.com/css?family=${font.family}:${font.weight}`%>">
+    <% } %>
+  <% }) %>
+<% } %>

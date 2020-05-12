@@ -126,7 +126,8 @@ setLinkBgColor = function (data) {
     }
 }
 
-changeCtaLink = function(link) {
-    return link.match('^https?:\/\/') ? link : `https://${link}`;
+changeCtaLink = function(link, cutPosition) {
+    const queries = cutPosition ? `?ref=ampstories&slide_id=${cutPosition}` : '';
+    return link.match('^https?:\/\/') ? `${link}${queries}` : `https://${link}${queries}`;
 }
 %>

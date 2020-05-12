@@ -12,6 +12,7 @@
     <% } %>
     <title><%= ampStory.title%></title>
     <link rel="canonical" href="https://test-cutnut-tv.cdn.ampproject.org/c/s/test.cutnut.tv/amp/<%=ampStory.key%>" />
+    <% include ./fonts/googleFonts.ejs %>
     <style amp-boilerplate>
         body {
             -webkit-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
@@ -394,7 +395,7 @@
             }
 
             div.animate {
-                font-size: 2.07vh;
+                font-size: 2vh;
             }
         }
     </style>
@@ -467,8 +468,8 @@ let currentSlide = ampStory.cuts.find(cut => {
                   <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>"<% } %>
                   <% if (layer.settings.animateDuration){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
                   <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"<% } %>
-                  <%if (['zoom-in'].includes(layer.settings.animateIn)) { %>scale-start="0.6" scale-end="1"<% } %>
-                  <%if (['zoom-out'].includes(layer.settings.animateIn)) { %>scale-start="1.4" scale-end="1"<% } %>>
+                  <%if (['zoom-in'].includes(layer.settings.animateIn)) { %>scale-start="0.1" scale-end="1"<% } %>
+                  <%if (['zoom-out'].includes(layer.settings.animateIn)) { %>scale-start="1.9" scale-end="1"<% } %>>
                   <div draggable="true" class="rotate-wrapper" id="layer<%=layer.position%>" style="
                     outline: none;
                     transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
@@ -495,8 +496,8 @@ let currentSlide = ampStory.cuts.find(cut => {
                 <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>" <% } %>
                 <% if (layer.settings.animateDuration){ %> animate-in-duration="<%= layer.settings.animateDuration %>s"<% } %>
                 <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"<% } %>
-                     <%if (['zoom-in'].includes(layer.settings.animateIn)) { %>scale-start="0.6" scale-end="1"<% } %>
-                     <%if (['zoom-out'].includes(layer.settings.animateIn)) { %>scale-start="1.4" scale-end="1"<% } %>>
+                     <%if (['zoom-in'].includes(layer.settings.animateIn)) { %>scale-start="0.1" scale-end="1"<% } %>
+                     <%if (['zoom-out'].includes(layer.settings.animateIn)) { %>scale-start="1.9" scale-end="1"<% } %>>
                   <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper " style="
                     transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
                     <% include layers/shape.ejs %>
@@ -505,15 +506,15 @@ let currentSlide = ampStory.cuts.find(cut => {
               </amp-story-grid-layer>
               <% break;
 
-                  case 'image':
-                case 'gifs': %>
+                case 'image':
+              case 'gifs': %>
               <% if (layer.content.image && layer.content.image) { %>
                 <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && !layer.content.compressed) ||
                   ((layer.content.compressed && !layer.settings.layerSettings.fullscreen)) ||
                   ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && layer.content.compressed) { %>
                   <amp-story-grid-layer template="horizontal">
                     <!---->
-                    <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.layerSettings.fullscreen) { %>
+                    <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
                     <div style="width: 100%; height: 100%;"
                          <% if (layer.settings.animateIn && !preview){ %>animate-in="<%= layer.settings.animateIn %>"<% } %>
                          <% if (layer.settings.animateDuration){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
@@ -524,26 +525,21 @@ let currentSlide = ampStory.cuts.find(cut => {
                       <!---->
                       <div class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
                            style="position: absolute;
-                           <%if (layer.settings.layerSettings.fullscreen) {%>
-                             width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
-                             height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
-                           <% }
-                           else { %>
-                             width: <%=getAnimationWidthEm(layer)%>;height: <%=getAnimationHeightEm(layer)%>;
-                           <% }%>
-                           <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>bottom: 0;top: initial;<% }
-                           else {%>
-                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;<%
-                           }%>
+                           <%if (layer.settings.layerSettings.fullscreen) {%>width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
+                           <% } else {%>width: <%=getAnimationWidthEm(layer)%>;height: <%=getAnimationHeightEm(layer)%>;<% }%>
+                           <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>bottom: 0;top: initial;
+                           <% } else {%>top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;<% }%>
                              left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;"
 
 
-                      <% if (((!['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && layer.settings.layerSettings.fullscreen)
-                        || !layer.settings.layerSettings.fullscreen)){ %>animate-in="<%= layer.settings.animateIn %>"<% } %>
-                      <% if (layer.settings.animateDuration && !['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn)){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                      <% if (layer.settings.animateDelay && !['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn)){ %>animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
-                      <%if (['zoom-in'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen) { %> scale-start="0.6" scale-end="1" <% } %>
-                      <%if (['zoom-out'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen) { %> scale-start="1.4" scale-end="1" <% } %>>
+                           <% if (((!['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && layer.settings.layerSettings.fullscreen && layer.settings.animateIn)
+                             || !layer.settings.layerSettings.fullscreen && layer.settings.animateIn)){ %>animate-in="<%= layer.settings.animateIn %>"<% } %>
+                           <% if (layer.settings.animateDuration && !['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+                           <% if (layer.settings.animateDelay && !['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
+                      <%if (['zoom-in'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen && layer.settings.animateIn) { %> scale-start="0.1" scale-end="1" <% } %>
+                      <%if (['zoom-out'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen && layer.settings.animateIn) { %> scale-start="1.9" scale-end="1" <% } %>
+
+                      >
                         <div draggable="true" id="layer<%=layer.position%>" <%if (layer.settings.layerSettings.fullscreen) {%>
                              style="
                                position: absolute;
@@ -558,7 +554,7 @@ let currentSlide = ampStory.cuts.find(cut => {
                         </div>
                       </div>
 
-                      <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.layerSettings.fullscreen) { %>
+                      <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
                     </div>
                     <% } %>
 
@@ -571,14 +567,14 @@ let currentSlide = ampStory.cuts.find(cut => {
               <% } %>
               <% break
 
-                    case 'video': %>
+              case 'video': %>
               <% if (layer.content.video && layer.content.video) { %>
                 <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && !layer.content.compressed) ||
                   ((layer.content.compressed && !layer.settings.layerSettings.fullscreen)) ||
                   ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && layer.content.compressed) { %>
                   <amp-story-grid-layer template="horizontal">
                     <!--          -->
-                    <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.layerSettings.fullscreen) { %>
+                    <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
                     <div style="width: 100%; height: 100%;"
                          <% if (layer.settings.animateIn && !preview){ %>animate-in="<%= layer.settings.animateIn %>"<% } %>
                          <% if (layer.settings.animateDuration){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
@@ -604,12 +600,12 @@ let currentSlide = ampStory.cuts.find(cut => {
                              top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
                            <% }%>
                              left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;"
-                           <% if (((!['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && layer.settings.layerSettings.fullscreen)
-                             || !layer.settings.layerSettings.fullscreen)){ %>animate-in="<%= layer.settings.animateIn %>"<% } %>
-                           <% if (layer.settings.animateDuration && !['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn)){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
-                           <% if (layer.settings.animateDelay && !['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn)){ %>animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
-                      <%if (['zoom-in'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen) { %> scale-start="0.6" scale-end="1" <% } %>
-                      <%if (['zoom-out'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen) { %> scale-start="1.4" scale-end="1" <% } %>
+                           <% if (((!['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && layer.settings.layerSettings.fullscreen && layer.settings.animateIn)
+                             || !layer.settings.layerSettings.fullscreen && layer.settings.animateIn)){ %>animate-in="<%= layer.settings.animateIn %>"<% } %>
+                           <% if (layer.settings.animateDuration && !['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
+                           <% if (layer.settings.animateDelay && !['pan-left', 'pan-right', 'zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
+                      <%if (['zoom-in'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen) { %> scale-start="0.1" scale-end="1" <% } %>
+                      <%if (['zoom-out'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen) { %> scale-start="1.9" scale-end="1" <% } %>
                       >
                         <div draggable="true" id="layer<%=layer.position%>" <%if (layer.settings.layerSettings.fullscreen) {%>
                              style="
@@ -623,7 +619,7 @@ let currentSlide = ampStory.cuts.find(cut => {
                         </div>
                       </div>
 
-                      <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.layerSettings.fullscreen) { %>
+                      <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
                     </div>
                     <% } %>
 
