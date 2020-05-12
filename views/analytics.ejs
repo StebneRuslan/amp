@@ -30,7 +30,17 @@
             "event_category": "${title}",
             "send_to": ["<%=analyticsKey%>"]
           }
-        }
+        },
+        "storyPageVisible": {
+          "on": "visible",
+            "vars": {
+              "event_name": "custom",
+              "event_action": "<%=analyticsKey%>_story_visible",
+              "event_label": "story_visible",
+              "event_category": "${title}",
+              "send_to": ["<%=analyticsKey%>"]
+            }
+          }
       }
     }
   </script>

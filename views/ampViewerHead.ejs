@@ -19,6 +19,7 @@
     <style amp-custom>
         <% include ./fonts/custom.ejs %>
         <% if (ampStory.fromPreview || !v0Path.includes('https')) { %>
+        <% include ./fonts/montserrat.ejs %>
         .drag-item {
             position: absolute;
             top: 50%;
@@ -173,7 +174,7 @@
                 font-size: 1.53vh;
             }
             div.animate, .cta-link {
-                font-size: 2.07vh;
+                font-size: 2vh;
             }
         }
     </style>
