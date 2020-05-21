@@ -111,7 +111,7 @@ ampStory.cuts.map(currentSlide => { %>
                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                      " <% } else { %> class="rotate-wrapper" style="
                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
+                <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: false }); %>
               </div>
             </div>
 
@@ -122,7 +122,7 @@ ampStory.cuts.map(currentSlide => { %>
         </amp-story-grid-layer>
       <% } else { %>
         <amp-story-grid-layer template="fill">
-          <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
+          <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: false }); %>
         </amp-story-grid-layer>
       <% } %>
     <% } %>
@@ -176,7 +176,7 @@ ampStory.cuts.map(currentSlide => { %>
                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                      " <% } else { %> class="rotate-wrapper" style="
                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
+                <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration, zipExport: false }); %>
               </div>
             </div>
 
@@ -187,7 +187,7 @@ ampStory.cuts.map(currentSlide => { %>
         </amp-story-grid-layer>
       <% } else { %>
         <amp-story-grid-layer template="fill">
-          <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration }); %>
+          <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration, zipExport: false }); %>
         </amp-story-grid-layer>
       <% } %>
     <% } %>
@@ -236,3 +236,24 @@ ampStory.cuts.map(currentSlide => { %>
 <% snippets.map(snippet => { %>
   <%- Buffer.from(snippet.bodyCode || '', 'base64').toString() %>
 <% })%>
+
+<script>
+	let getParams = function (url) {
+		const params = {};
+		const parser = document.createElement('a');
+		parser.href = url;
+		const query = parser.search.substring(1);
+		const vars = query.split('&');
+		for (let i = 0; i < vars.length; i++) {
+			const pair = vars[i].split('=');
+			params[pair[0]] = decodeURIComponent(pair[1]);
+		}
+		return params;
+	};
+	let ctaLinkTag = document.querySelector('amp-story-cta-layer a');
+	let ctaLinkQueries = getParams(ctaLinkTag);
+	let storyQueryUrl = getParams(window.location.href).url;
+	if (ctaLinkTag && storyQueryUrl) {
+		document.querySelector('amp-story-cta-layer a').setAttribute('href', `${storyQueryUrl}?ref=ampstories&slide_id=${ctaLinkQueries.slide_id}`);
+	}
+</script>

@@ -1,5 +1,11 @@
 <% function getImageUrl (content) {
-  return typeof content.image === 'string' ? ((content.value || content.image) || '') : content.image.url || (content.value || content.image) || ''
+  if (zipExport) {
+    return `assets/${content.image.name}` || ''
+  } else {
+    return layer.type === 'video'
+      ? content.thumbnail || content.image.thumbnail
+      : typeof content.image === 'string' ? ((content.value || content.image) || '') : content.image.url || (content.value || content.image) || ''
+  }
 }
 if (layer.settings.layerSettings.fullscreen) { %>
   <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>

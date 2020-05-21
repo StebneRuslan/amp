@@ -550,7 +550,7 @@ let currentSlide = ampStory.cuts.find(cut => {
                                transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                " <% } else { %> class="rotate-wrapper" style="
                           transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                          <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
+                          <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: false }); %>
                         </div>
                       </div>
 
@@ -561,7 +561,7 @@ let currentSlide = ampStory.cuts.find(cut => {
                   </amp-story-grid-layer>
                 <% } else { %>
                   <amp-story-grid-layer template="fill">
-                    <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
+                    <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: false }); %>
                   </amp-story-grid-layer>
                 <% } %>
               <% } %>
@@ -615,7 +615,7 @@ let currentSlide = ampStory.cuts.find(cut => {
                                transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                                " <% } else { %> class="rotate-wrapper" style="
                           transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                          <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
+                          <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration, zipExport: false }); %>
                         </div>
                       </div>
 
@@ -626,7 +626,7 @@ let currentSlide = ampStory.cuts.find(cut => {
                   </amp-story-grid-layer>
                 <% } else { %>
                   <amp-story-grid-layer template="fill">
-                    <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration }); %>
+                    <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration, zipExport: false }); %>
                   </amp-story-grid-layer>
                 <% } %>
               <% } %>

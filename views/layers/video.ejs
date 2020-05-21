@@ -1,10 +1,23 @@
 <%
 function getVideoUrl (content) {
-  let url = typeof content.video === 'string' ? content.value || content.video : content.video.url
-  if (/http:\/\//.test(url) || /https:\/\//.test(url)) {
-    return url
+  if (zipExport) {
+    return `assets/${content.video.name}` || ''
   } else {
-    return `//localhost:3978${url}#t=0,${duration}`
+    let url = typeof content.video === 'string' ? content.value || content.video : content.video.url
+    if (/http:\/\//.test(url) || /https:\/\//.test(url)) {
+      return url
+    } else {
+      return `//localhost:3978${url}#t=0,${duration}`
+    }
+  }
+}
+
+function getPosterUrl () {
+  if (zipExport) {
+    const url = layer.content.thumbnail || (layer.content.image ? layer.content.image.url : '')
+    return `assets/${url.split(/[/\\]/).pop()}`
+  } else {
+    return layer.content.thumbnail || (layer.content.image ? layer.content.image.url : '')
   }
 }
 if (layer.settings.layerSettings.fullscreen) {%>
@@ -30,7 +43,7 @@ if (layer.settings.layerSettings.fullscreen) {%>
       src="<%= getVideoUrl(layer.content)%>"<% }%>
       width="<%= layer.settings.layerSettings.width %>"
       height="<%= layer.settings.layerSettings.height %>"
-      poster="<%= layer.content.thumbnail || (layer.content.image ? layer.content.image.url : '') %>"
+      poster="<%= getPosterUrl() %>"
     <% if ((!layer.content.compressed && (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) || (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) { %>
       style="height: inherit;object-fit:cover;opacity:<%= layer.settings.generalSettings.opacity / 100 %>"
             <% } else if (!layer.content.compressed) { %>
@@ -60,7 +73,7 @@ if (layer.settings.layerSettings.fullscreen) {%>
                   opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
           width="<%= layer.settings.layerSettings.width %>"
           height="<%= layer.settings.layerSettings.height %>"
-          poster="<%= layer.content.thumbnail || (layer.content.image ? layer.content.image.url : '') %>"
+          poster="<%= getPosterUrl() %>"
           layout="responsive"
   <% if (ampStory.fromPreview) { %>
           src="<%= getVideoUrl(layer.content)%>"

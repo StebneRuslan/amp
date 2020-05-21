@@ -60,12 +60,12 @@ let Amp = class Amp {
     })
   }
 
-  createSinglePageWithoutScripts (data, calback) {
+  createSinglePageWithoutScripts (data, fontHost, calback) {
     let resultHtml = ''
     let fullData = this.setConfigPath(data)
     fullData.snippets = []
     fullData.bookendLink = ''
-    fullData.fontsHost = ''
+    fullData.fontsHost = fontHost || 'https://fonts.cutnut.tv/'
     app.render(path.resolve(__dirname, 'views', 'singlePageWithoutScripts.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)

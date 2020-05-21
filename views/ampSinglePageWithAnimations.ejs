@@ -163,7 +163,7 @@
                     transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                     " <% } else { %> class="rotate-wrapper" style="
                     transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                    <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
+                    <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: false }); %>
                   </div>
                 </div>
                 <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.animateIn) { %>
@@ -172,7 +172,7 @@
             </amp-story-grid-layer>
           <% } else { %>
             <amp-story-grid-layer template="fill">
-              <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
+              <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: false }); %>
             </amp-story-grid-layer>
           <% } %>
         <% } %>

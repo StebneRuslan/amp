@@ -115,7 +115,7 @@
               transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
               " <% } else { %> class="rotate-wrapper" style="
               transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-              <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
+              <%- include('layers/image.ejs', {withAnimations: false, layer: layer, zipExport: false }); %>
             </div>
           </div>
         </amp-story-grid-layer>
@@ -149,7 +149,7 @@
               transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
               " <% } else { %> class="rotate-wrapper" style="
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-              <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
+              <%- include('layers/image.ejs', {withAnimations: false, layer: layer, zipExport: false }); %>
             </div>
           </div>
         </amp-story-grid-layer>
