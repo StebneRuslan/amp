@@ -18,6 +18,7 @@ let Amp = class Amp {
     fullData.snippets = []
     fullData.bookendLink = ''
     fullData.fontsHost = ''
+    fullData.zipExport = false
     app.render(path.resolve(__dirname, 'views', 'ampSinglePage.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -34,6 +35,7 @@ let Amp = class Amp {
     fullData.snippets = []
     fullData.bookendLink = ''
     fullData.fontsHost = ''
+    fullData.zipExport = false
     app.render(path.resolve(__dirname, 'views', 'ampPupeteerSinglePage.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -50,6 +52,7 @@ let Amp = class Amp {
     fullData.snippets = []
     fullData.bookendLink = ''
     fullData.fontsHost = ''
+    fullData.zipExport = false
     app.render(path.resolve(__dirname, 'views', 'ampSinglePageWithAnimations.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -65,6 +68,7 @@ let Amp = class Amp {
     let fullData = this.setConfigPath(data)
     fullData.snippets = []
     fullData.bookendLink = ''
+    fullData.zipExport = false
     fullData.fontsHost = fontHost || 'https://fonts.cutnut.tv/'
     app.render(path.resolve(__dirname, 'views', 'singlePageWithoutScripts.ejs'), fullData, function (err, html) {
       if (err) {
@@ -76,7 +80,7 @@ let Amp = class Amp {
     })
   }
 
-  createFullStory ({ config, userAnalytics = null, customerAnalyticsKey = null, snippets = [], bookendLink = '', fontsHost }, callback) {
+  createFullStory ({ config, userAnalytics = null, customerAnalyticsKey = null, snippets = [], bookendLink = '', fontsHost, zipExport = false }, callback) {
     let resultHtml = ''
     config.type = this.type
     let fullData = this.setConfigPath(config)
@@ -85,6 +89,7 @@ let Amp = class Amp {
       config.ampStory.customerAnalyticsKey = customerAnalyticsKey
     }
     config.snippets = snippets
+    config.zipExport = zipExport
     config.bookendLink = bookendLink
     config.fontsHost = fontsHost || 'https://fonts.cutnut.tv/'
     app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function (err, html) {

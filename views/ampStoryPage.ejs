@@ -111,7 +111,7 @@ ampStory.cuts.map(currentSlide => { %>
                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                      " <% } else { %> class="rotate-wrapper" style="
                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: false }); %>
+                <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: zipExport }); %>
               </div>
             </div>
 
@@ -122,7 +122,7 @@ ampStory.cuts.map(currentSlide => { %>
         </amp-story-grid-layer>
       <% } else { %>
         <amp-story-grid-layer template="fill">
-          <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: false }); %>
+          <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: zipExport }); %>
         </amp-story-grid-layer>
       <% } %>
     <% } %>
@@ -176,7 +176,7 @@ ampStory.cuts.map(currentSlide => { %>
                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                      " <% } else { %> class="rotate-wrapper" style="
                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration, zipExport: false }); %>
+                <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration, zipExport: zipExport }); %>
               </div>
             </div>
 
@@ -187,7 +187,7 @@ ampStory.cuts.map(currentSlide => { %>
         </amp-story-grid-layer>
       <% } else { %>
         <amp-story-grid-layer template="fill">
-          <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration, zipExport: false }); %>
+          <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration, zipExport: zipExport }); %>
         </amp-story-grid-layer>
       <% } %>
     <% } %>
