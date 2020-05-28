@@ -12,28 +12,28 @@ if (layer.settings.layerSettings.fullscreen) { %>
   <div style="transform: translateX(50%);">
     <% } %>
     <amp-img
-    <% if ((withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn && !layer.content.compressed ) ||
-            layer.content.compressed && layer.settings.animateIn){ %>
+    <% if ((withAnimations && ['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn && (!layer.content.compressed && !zipExport) ) ||
+      (layer.content.compressed || zipExport) && layer.settings.animateIn){ %>
       animate-in="<%= layer.settings.animateIn %>"
       <% if (layer.settings.animateDuration){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
       <% if (layer.settings.animateDelay){ %>animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %><% } %>
 
-    <%if (['zoom-in'].includes(layer.settings.animateIn) && layer.content.compressed) { %> scale-start="1" scale-end="1.4" <% } %>
-    <%if (['zoom-out'].includes(layer.settings.animateIn) && layer.content.compressed) { %> scale-start="1.4" scale-end="1" <% } %>
+    <%if (['zoom-in'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)) { %> scale-start="1" scale-end="1.4" <% } %>
+    <%if (['zoom-out'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)) { %> scale-start="1.4" scale-end="1" <% } %>
 
       src="<%= getImageUrl(layer.content) %>"
       width="<%= layer.settings.layerSettings.width %>"
       height="<%= layer.settings.layerSettings.height %>"
-      layout="<%=['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && layer.content.compressed ? 'fill' : 'responsive'%>"
+      layout="<%=['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport) ? 'fill' : 'responsive'%>"
       alt="an image"
-            <% if ((!layer.content.compressed && (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) || (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) { %>
+      <% if (((!layer.content.compressed && !zipExport) && ((layer.content.compressed || zipExport) && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) || (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) { %>
       style="width:100%;height:100%;object-fit:fill;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
-            <% } else if (!layer.content.compressed && !['pan-right', 'pan-left'].includes(layer.settings.animateIn)) { %>
+      <% } else if ((!layer.content.compressed && !zipExport) && !['pan-right', 'pan-left'].includes(layer.settings.animateIn)) { %>
       style="width:100%;height:100%;object-fit:contain;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
-      <% } else if (!layer.content.compressed) { %>
-        style="position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+      <% } else if (!layer.content.compressed && !zipExport) { %>
+      style="position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
       <% } else { %>
-        style="opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"%>
+      style="opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"%>
       <% } %>
     >
     </amp-img>
@@ -43,19 +43,19 @@ if (layer.settings.layerSettings.fullscreen) { %>
 
 <% } else { %>
   <amp-img
-          class="small-image"
-          src="<%= getImageUrl(layer.content) %>"
-          width="<%= layer.settings.layerSettings.width %>"
-          height="<%= layer.settings.layerSettings.height %>"
-          layout="responsive"
-          alt="an image"
+    class="small-image"
+    src="<%= getImageUrl(layer.content) %>"
+    width="<%= layer.settings.layerSettings.width %>"
+    height="<%= layer.settings.layerSettings.height %>"
+    layout="responsive"
+    alt="an image"
   <% if (layer.settings.generalSettings.shadow !== '0') { %>
-          style="
-                  filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));
-                  position: initial;
-                  opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
-          <% } else { %>
-          style="position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
-          <% } %>
+    style="
+      filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));
+      position: initial;
+      opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+    <% } else { %>
+    style="position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+    <% } %>
   ></amp-img>
 <% } %>
