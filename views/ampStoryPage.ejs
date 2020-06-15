@@ -70,14 +70,14 @@ ampStory.cuts.map(currentSlide => { %>
       case 'image':
     case 'gifs': %>
     <% if (layer.content.image && layer.content.image) { %>
-      <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && !layer.content.compressed) ||
-        ((layer.content.compressed && !layer.settings.layerSettings.fullscreen)) ||
-        ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && layer.content.compressed) { %>
+      <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && (!layer.content.compressed && !zipExport)) ||
+        (((layer.content.compressed || zipExport) && !layer.settings.layerSettings.fullscreen)) ||
+        ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)) { %>
         <amp-story-grid-layer template="horizontal">
           <!---->
-          <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
+          <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && (!layer.content.compressed && !zipExport) && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
           <div style="width: 100%; height: 100%;"
-               <% if (layer.settings.animateIn && !preview){ %>animate-in="<%= layer.settings.animateIn %>"<% } %>
+               <% if (layer.settings.animateIn){ %>animate-in="<%= layer.settings.animateIn %>"<% } %>
                <% if (layer.settings.animateDuration){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
                <% if (layer.settings.animateDelay){ %>animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
                <% if (['zoom-in'].includes(layer.settings.animateIn)) { %>scale-start="1" scale-end="1.4"<% } %>
@@ -111,18 +111,18 @@ ampStory.cuts.map(currentSlide => { %>
                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                      " <% } else { %> class="rotate-wrapper" style="
                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
+                <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: zipExport }); %>
               </div>
             </div>
 
-            <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
+            <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && (!layer.content.compressed && !zipExport) && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
           </div>
           <% } %>
 
         </amp-story-grid-layer>
       <% } else { %>
         <amp-story-grid-layer template="fill">
-          <%- include('layers/image.ejs', {withAnimations: true, layer: layer }); %>
+          <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: zipExport }); %>
         </amp-story-grid-layer>
       <% } %>
     <% } %>
@@ -130,12 +130,12 @@ ampStory.cuts.map(currentSlide => { %>
 
     case 'video': %>
     <% if (layer.content.video && layer.content.video) { %>
-      <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && !layer.content.compressed) ||
-        ((layer.content.compressed && !layer.settings.layerSettings.fullscreen)) ||
-        ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && layer.content.compressed) { %>
+      <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && (!layer.content.compressed && !zipExport)) ||
+        (((layer.content.compressed || zipExport) && !layer.settings.layerSettings.fullscreen)) ||
+        ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)) { %>
         <amp-story-grid-layer template="horizontal">
           <!--          -->
-          <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
+          <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && (!layer.content.compressed && !zipExport) && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
           <div style="width: 100%; height: 100%;"
                <% if (layer.settings.animateIn && !preview){ %>animate-in="<%= layer.settings.animateIn %>"<% } %>
                <% if (layer.settings.animateDuration){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
@@ -176,18 +176,18 @@ ampStory.cuts.map(currentSlide => { %>
                      transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                      " <% } else { %> class="rotate-wrapper" style="
                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-                <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
+                <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration, zipExport: zipExport }); %>
               </div>
             </div>
 
-            <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && !layer.content.compressed && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
+            <% if (['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && (!layer.content.compressed && !zipExport) && layer.settings.animateIn && layer.settings.layerSettings.fullscreen) { %>
           </div>
           <% } %>
 
         </amp-story-grid-layer>
       <% } else { %>
         <amp-story-grid-layer template="fill">
-          <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration }); %>
+          <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration, zipExport: zipExport }); %>
         </amp-story-grid-layer>
       <% } %>
     <% } %>

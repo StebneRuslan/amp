@@ -28,8 +28,7 @@
     <% })%>
 <% } %>
 
-
-<%if (ampStory && ampStory.storyFonts && !ampStory.fromPreview) { %>
+<%if (ampStory && ampStory.storyFonts && (!ampStory.fromPreview || zipExport)) { %>
     <% ampStory.storyFonts.forEach(font => { %>
         <% if (font && font.fontType === 'SYSTEM_FONT') {%>
             @font-face {
@@ -38,7 +37,7 @@
             <% } else { %>
             font-family: "<%=font.family%>";
             <% } %>
-            src: url('<%= fontsHost + font.key%>');
+            src: url('<%= zipExport ? `assets/${font.path.split(/[/\\]/).pop()}` : `${fontsHost}${font.key}`%>');
             font-weight: <%= +font.weight %>;
             font-style: <%= font.style %>;
             }

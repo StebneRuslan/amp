@@ -14,6 +14,7 @@
 
   let oldLayerId = -1;
   let newLayerId = -1;
+  let keydownTimeout = null;
   window.addEventListener('message', function (event) {
     if (oldLayerId !== event.data.currentId) {
       const currentLayer = document.getElementById(`layer${event.data.currentId}`);
@@ -166,15 +167,35 @@
   });
 
   window.addEventListener('keydown', (e) => {
-    if (e.keyCode === 90 && (e.ctrlKey || e.metaKey) && e.shiftKey) {
-      window.parent.postMessage({ event: 'redoStep' }, '*');
-    } else if (e.keyCode === 90 && (e.ctrlKey || e.metaKey)) {
-      window.parent.postMessage({ event: 'undoStep' }, '*');
-    }
+	  clearTimeout(keydownTimeout);
+	  keydownTimeout = setTimeout(() => {
+		  const withMetaKey = (e.ctrlKey || e.metaKey);
+		  if (e.keyCode === 90 && withMetaKey && e.shiftKey) {
+			  window.parent.postMessage({ event: 'redoStep' }, '*');
+		  } else if (e.keyCode === 90 && withMetaKey) {
+			  window.parent.postMessage({ event: 'undoStep' }, '*');
+		  } else if (e.keyCode === 67 && withMetaKey) {
+			  window.parent.postMessage({ event: 'COPY' }, '*');
+		  } else if (e.keyCode === 88 && withMetaKey) {
+			  window.parent.postMessage({ event: 'CUT' }, '*');
+		  } else if (e.keyCode === 86 && withMetaKey) {
+			  window.parent.postMessage({ event: 'PASTE' }, '*');
+		  } else if (e.keyCode === 46 || e.key === 'Delete' || e.keyCode === 8 || e.key === 'Backspace') {
+			  window.parent.postMessage({ event: 'DELETE' }, '*');
+		  }
+	  }, 300);
+	  if ([37, 38, 39, 40].includes(e.keyCode)) {
+		  const keyCode = e.keyCode;
+		  const step = e.shiftKey ? 10 : 1;
+		  window.parent.postMessage({ event: 'PRESS_ARROW_KEY', step: {
+				  x: keyCode === 37 ? -step : keyCode === 39 ? step : 0,
+				  y: keyCode === 38 ? -step : keyCode === 40 ? step : 0
+			  }}, '*');
+	  }
   });
 
   window.onload = () => {
-    let css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
+    let css = 'amp-story-bookend {display: none!important;} .amp-story-draggable-drawer-root {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
       head = document.head || document.getElementsByTagName('head')[0],
       style = document.createElement('style');
     style.type = 'text/css';
@@ -309,7 +330,7 @@
                    transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                    " <% } else { %> class="rotate-wrapper drag-item-content" style="
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-              <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
+              <%- include('layers/image.ejs', {withAnimations: false, layer: layer, zipExport: false }); %>
             </div>
           </div>
         </amp-story-grid-layer>
@@ -347,7 +368,7 @@
                    transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                    " <% } else { %> class="rotate-wrapper drag-item-content" style="
                                 transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
-              <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
+              <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration, zipExport: false }); %>
             </div>
           </div>
         </amp-story-grid-layer>
