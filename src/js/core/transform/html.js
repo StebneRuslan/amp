@@ -17,6 +17,7 @@ import {
     getUnitDimension,
     floatToFixed, getRotatedPoint
 } from './common'
+import { forEach } from 'amp-to-html/src/js/core/util/util'
 
 const brackets = '<div class="dg-hdl dg-rotator"></div>\
         <div class="dg-hdl dg-hdl-t dg-hdl-l dg-hdl-tl"></div>\
@@ -27,6 +28,18 @@ const brackets = '<div class="dg-hdl dg-rotator"></div>\
         <div class="dg-hdl dg-hdl-b dg-hdl-c dg-hdl-bc"></div>\
         <div class="dg-hdl dg-hdl-m dg-hdl-l dg-hdl-ml"></div>\
         <div class="dg-hdl dg-hdl-m dg-hdl-r dg-hdl-mr"></div>';
+
+const guidLinesConfig = {
+    stopDragX: false,
+    tempPositionX: 0,
+    stopDragY: false,
+    tempPositionY: 0,
+    normalizeX: 0,
+    normalizeY: 0,
+    newPositionX: 0,
+    newPositionY: 0
+}
+
 export default class Draggable extends Subject {
     
     constructor(el, options, Observable) {
@@ -146,7 +159,7 @@ let dissableX = false;
 let dissableY = false;
 let savedLeft = 0;
 let savedTop = 0;
-
+let normalizeX = false;
 function handleLayerLock (event) {
     if (event.data.event === 'set-lock-settings') {
         locked = event.data.locked;
@@ -194,24 +207,25 @@ function _init(sel) {
         if (activeElement !== element) {
             const config = element.getBoundingClientRect();
             return {
-                left: parseInt(config.left),
-                top: parseInt(config.top),
-                right: parseInt(config.right),
-                bottom: parseInt(config.bottom),
-                centerX: parseInt(config.left + config.width / 2),
-                centerY: parseInt(config.top + config.height / 2)
+                left: config.left,
+                top: config.top,
+                right: config.right,
+                bottom: config.bottom,
+                centerX: config.left + config.width / 2,
+                centerY: config.top + config.height / 2
             }
         }
     }).filter(config => config);
     const activeElementCoordinates = {
-        left: parseInt(activeElementConfig.left),
-        top: parseInt(activeElementConfig.top),
-        right: parseInt(activeElementConfig.right),
-        bottom: parseInt(activeElementConfig.bottom),
-        centerX: parseInt(activeElementConfig.left + activeElementConfig.width / 2),
-        centerY: parseInt(activeElementConfig.top + activeElementConfig.height / 2)
+        left: activeElementConfig.left,
+        top: activeElementConfig.top,
+        right: activeElementConfig.right,
+        bottom: activeElementConfig.bottom,
+        centerX: activeElementConfig.left + activeElementConfig.width / 2,
+        centerY: activeElementConfig.top + activeElementConfig.height / 2
     }
     const screenCenterX = document.body.clientWidth / 2;
+    const screenCenterY = document.body.clientHeight / 2;
     controls.innerHTML = brackets;
     
     addClass(controls, 'dg-controls');
@@ -228,6 +242,9 @@ function _init(sel) {
         guidlines: guidlines,
         coordinates: coordinates,
         screenCenterX: screenCenterX,
+        screenCenterY: screenCenterY,
+        verticalCoordinates: getArrayOfCoorditates(coordinates, screenCenterX, 'left'),
+        horizontalCoordinates: getArrayOfCoorditates(coordinates, screenCenterY, 'top'),
         activeElementCoordinates: activeElementCoordinates,
         activeElement: document.querySelector('.dg-wrapper + .rotate-wrapper'),
         handles: {
@@ -263,6 +280,13 @@ function _destroy() {
 }
 
 function _compute(e) {
+    guidLinesConfig.stopDragX = false;
+    guidLinesConfig.stopDragY = false;
+    guidLinesConfig.tempPositionX = 0;
+    guidLinesConfig.tempPositionY = 0;
+    guidLinesConfig.normalizeX = 0;
+    guidLinesConfig.newPositionX = 0;
+    guidLinesConfig.newPositionY = 0;
     window.parent.postMessage({ event: 'compute-from-iframe' }, 'http://127.0.0.1:3978/#/edit');
     const {
         el,
@@ -543,7 +567,7 @@ function processResize(
     window.parent.postMessage({ event: 'resize-from-package', size: size, isText: isText }, 'http://127.0.0.1:3978/#/edit');
     storage.cached = matrix;
 }
-
+let normalizeValue = 0;
 function processMove(
   top,
   left
@@ -552,7 +576,6 @@ function processMove(
         el,
         storage
     } = this;
-    
     const {
         controls,
         transform,
@@ -567,12 +590,12 @@ function processMove(
     }
     const activeElementClientRect = storage.activeElement.getBoundingClientRect();
     const activeElementConfig = {
-        left: parseInt(activeElementClientRect.left),
-        top: parseInt(activeElementClientRect.top),
-        right: parseInt(activeElementClientRect.right),
-        bottom: parseInt(activeElementClientRect.bottom),
-        centerX: parseInt(activeElementClientRect.left + activeElementClientRect.width / 2),
-        centerY: parseInt(activeElementClientRect.top + activeElementClientRect.height / 2)
+        left: activeElementClientRect.left,
+        top: activeElementClientRect.top,
+        right: activeElementClientRect.right,
+        bottom: activeElementClientRect.bottom,
+        centerX: activeElementClientRect.left + activeElementClientRect.width / 2,
+        centerY: activeElementClientRect.top + activeElementClientRect.height / 2
     };
     if (props.elDrag.name && props.elDrag.name.match('fullscreen')) {
         props.elDragClient = {
@@ -615,41 +638,14 @@ function processMove(
         }
         
     } else {
-        // const bodyCenter = document.body.clientWidth / 2;
-        // const verticalLines = (({left, right, centerX}) => ({left, right, centerX}))(activeElementConfig);
-        // let stopDrag = false;
-        // let diffX = 0;
-        // let side = 'left';
-        // for (let [key, value] of Object.entries(verticalLines)) {
-        //     const localDiff = Math.abs(bodyCenter - value).toFixed(0);
-        //     if (localDiff <= 20) {
-        //         stopDrag = true;
-        //         diffX = localDiff;
-        //         side = bodyCenter - value >= 0 ? 'left' : 'right'
-        //     }
-        // }
-        // if (stopDrag) {
-        //     left -= side === 'right' ? diffX : -diffX;
-        //     if (!savedLeft) {
-        //         savedLeft = left;
-        //     }
-        //     dissableX = true;
-        // }
-        // if (Math.abs(left - savedLeft) > 50){
-        //     savedLeft = 0;
-        //     dissableX = false;
-        // }
-        
-        matrix[4] = snapToGrid(transform[4] + handleGuideLines(storage, left, activeElementConfig), snap.x);
+        matrix[4] = snapToGrid(transform[4] + handleGuideLines(storage, left, activeElementConfig, 'left'), snap.x);
         // matrix[4] = snapToGrid(transform[4] + left, snap.x);
-        matrix[5] = snapToGrid(transform[5] + top, snap.y);
-        // matrix[5] = snapToGrid(transform[5] + handleGuideLines(storage, top, activeElementConfig), snap.y);
+        matrix[5] = snapToGrid(transform[5] + handleGuideLines(storage, top, activeElementConfig, 'top'), snap.y);
+        // matrix[5] = snapToGrid(transform[5] + top, snap.y);
     }
     const css = matrixToCSS(matrix);
-    
     Helper(controls).css(css);
     Helper(el).css(css);
-    // handleGuideLines(storage, activeElementConfig);
     storage.cached = matrix;
 }
 
@@ -660,6 +656,9 @@ const horizontalConfigFields = ['top', 'bottom', 'centerY']
 let tmp = 0;
 let stopDrag = false;
 
+
+
+// GUIDLINES
 function approxeq(numbers, controlNumber, epsilon) {
     if (epsilon == null) {
         epsilon = 10;
@@ -671,141 +670,143 @@ function getGuidlinesConfig(elenentPositions, activeElemetPosition, screenCenter
     const config = {
         left: false,
         centerX: false,
-        right: false
+        right: false,
+        top: false,
+        centerY: false,
+        bottom: false
     }
-    let diffs = [];
-    const leftSide = approxeq(elenentPositions, activeElemetPosition.left)
-    const centerElementSideX = approxeq(elenentPositions, activeElemetPosition.centerX)
-    const rightSide = approxeq(elenentPositions, activeElemetPosition.right)
+    const coorditates = {
     
-    if (leftSide) {
-        config.left = true;
-        diffs.push(leftSide - activeElemetPosition.left);
     }
-    if (centerElementSideX) {
-        config.centerX = true;
-        diffs.push(centerElementSideX - activeElemetPosition.centerX);
+    let diffsX = [];
+    let diffsY = [];
+    
+    const sides = {
+        leftSide: approxeq(elenentPositions, activeElemetPosition.left),
+        centerElementSideX: approxeq(elenentPositions, activeElemetPosition.centerX),
+        rightSide: approxeq(elenentPositions, activeElemetPosition.right),
+        topSide: approxeq(elenentPositions, activeElemetPosition.top),
+        bottomSide: approxeq(elenentPositions, activeElemetPosition.bottom),
+        centerElementSideY: approxeq(elenentPositions, activeElemetPosition.centerY)
     }
-    if (rightSide) {
-        config.right = true;
-        diffs.push(rightSide - activeElemetPosition.right);
+    
+    for (let [key, value] of Object.entries(sides)) {
+        if (value) {
+            switch (key) {
+                case 'leftSide': {
+                    coorditates.left = sides.leftSide;
+                    config.left = true;
+                    diffsX.push(+sides.leftSide - +activeElemetPosition.left);
+                    break;
+                }
+                case 'centerElementSideX': {
+                    coorditates.centerX = sides.centerElementSideX;
+                    config.centerX = true;
+                    diffsX.push(+sides.centerElementSideX - +activeElemetPosition.centerX);
+                    break;
+                }
+                case 'rightSide': {
+                    coorditates.right = sides.rightSide;
+                    config.right = true;
+                    diffsX.push(+sides.rightSide - +activeElemetPosition.right);
+                    break;
+                }
+                case 'topSide': {
+                    coorditates.top = sides.topSide;
+                    config.top = true;
+                    diffsY.push(+sides.topSide - +activeElemetPosition.top);
+                    break;
+                }
+                case 'centerElementSideY': {
+                    coorditates.centerY = sides.centerElementSideY;
+                    config.centerY = true;
+                    diffsY.push(+sides.centerElementSideY - +activeElemetPosition.centerY);
+                    break;
+                }
+                case 'bottomSide': {
+                    coorditates.bottom = sides.bottomSide;
+                    config.bottom = true;
+                    diffsY.push(+sides.bottomSide - +activeElemetPosition.bottom);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
     }
     return {
         config: config,
-        diff: Math.min.apply(null, diffs)
+        coorditates: coorditates,
+        diffX: diffsX.length ? Math.min.apply(null, diffsX) : 0,
+        diffY: diffsY.length ? Math.min.apply(null, diffsY) : 0
     };
 }
 
-const guidLinesConfig = {
-    stopDragX: false,
-    tempPositionX: 0
-}
-
-function getArrayOfCoorditates(coordinates, center) {
+function getArrayOfCoorditates(coordinates, center, type) {
     let res = [center];
     coordinates.map(element => {
-        res = res.concat(Object.values((({left, right, centerX}) => ({left, right, centerX}))(element)))
+        res = type === 'left'
+          ? res.concat(Object.values((({left, right, centerX}) => ({left, right, centerX}))(element)))
+          : res.concat(Object.values((({top, bottom, centerY}) => ({top, bottom, centerY}))(element)))
     })
     return res;
 }
 
-function handleGuideLines (storage, position, activeElementConfig) {
-    // console.log('getArrayOfCoorditates', getArrayOfCoorditates(storage.coordinates));
-    // (storage.coordinates).concat({ left: storage.screenCenterX, right: storage.screenCenterX, centerX: storage.screenCenterX }).map(line => {
-    //     const vertical = (({left, right, centerX}) => ({left, right, centerX}))(line);
-    const linesConfig = getGuidlinesConfig(getArrayOfCoorditates(storage.coordinates, storage.screenCenterX), activeElementConfig);
-    for (let [key, value] of Object.entries(linesConfig.config)) {
-        if (value) {
+function handleGuideLines (storage, position, activeElementConfig, type) {
+    const linesConfig = getGuidlinesConfig(type === 'left' ? storage.verticalCoordinates : storage.horizontalCoordinates, activeElementConfig);
+    const linesCoordinates = type === 'left'
+      ? (({left, right, centerX}) => ({left, right, centerX}))(linesConfig.coorditates)
+      : (({top, bottom, centerY}) => ({top, bottom, centerY}))(linesConfig.coorditates)
+    const resPosition = type === 'left'
+      ? stopDragHandlerX(linesCoordinates, linesConfig.diffX, position)
+      : stopDragHandlerY(linesCoordinates, linesConfig.diffY, position);
+    for (let [key, value] of Object.entries(linesCoordinates)) {
+        if (value && Math.abs(linesConfig[type === 'left' ? 'diffX' : 'diffY']) < 1) {
             storage.guidlines[key].style.display = 'block';
-            storage.guidlines[key].style.left = `${activeElementConfig[key]}px`;
+            storage.guidlines[key].style[type] = `${parseInt(value)}px`;
         } else {
             storage.guidlines[key].style.display = 'none';
         }
     }
-    if (Object.values(linesConfig.config).includes(true) && !guidLinesConfig.stopDragX && !guidLinesConfig.tempPositionX) {
-        guidLinesConfig.stopDragX = true;
-        console.log(linesConfig.diff)
-        position += linesConfig.diff;
-        guidLinesConfig.tempPositionX = position;
-    } else if (Math.abs(position - guidLinesConfig.tempPositionX) >= 20) {
-        guidLinesConfig.stopDragX = false;
-        guidLinesConfig.tempPositionX = false;
-    }
-    // } else {
-    //     storage.guidlines[key].style.display = 'none';
-    // }
-    // const diff = +Math.abs(activeElementConfig.left - value).toFixed(0);
-    // if (diff && diff <= 20 && !stopDrag && !tmp) {
-    //     position -= diff;
-    //     tmp = position;
-    //     stopDrag = true;
-    //     if (key !== 'centerX' && key !== 'centerY') {
-    //         storage.guidlines[key].style.display = 'block';
-    //         storage.guidlines[key].style.left = `${line[key]}px`;
-    //     }
-    // }
-    // if (Math.abs(tmp - position) >= 20) {
-    //     if (key !== 'centerX' && key !== 'centerY') {
-    //         storage.guidlines[key].style.display = 'none';
-    //     }
-    //     tmp = 0;
-    //     stopDrag = false;
-    // }
-    // }
-    // })
-    return !guidLinesConfig.stopDragX ? position : guidLinesConfig.tempPositionX;
-}
-function handleCenterGuideLines (position, activeElementConfig, firstSide, secondSide) {
-    const bodyCenter = firstSide === 'left' ? (document.body.clientWidth / 2) : (document.body.clientHeight / 2);
-    const lines = firstSide === 'left' ? (({left, right, centerX}) => ({left, right, centerX}))(activeElementConfig) : (({top, bottom, centerY}) => ({top, bottom, centerY}))(activeElementConfig);
-    let stopDrag = false;
-    let diff = 0;
-    let side = firstSide;
-    for (let [key, value] of Object.entries(lines)) {
-        const localDiff = Math.abs(bodyCenter - value).toFixed(0);
-        if (localDiff <= 20) {
-            stopDrag = true;
-            diff = localDiff;
-            side = bodyCenter - value >= 0 ? firstSide : secondSide
-        }
-    }
-    if (stopDrag) {
-        position -= side === secondSide ? diff : -diff;
-        if (!savedLeft && firstSide === 'left') {
-            savedLeft = position;
-            dissableX = true;
-        } else if (!savedTop && firstSide === 'top') {
-            savedTop = position
-            dissableY = true;
-        }
-    }
-    if (Math.abs(position - savedLeft) > 50 && firstSide === 'left'){
-        savedLeft = 0;
-        dissableX = false;
-    } else if (Math.abs(position - savedTop) > 50 && firstSide === 'top') {
-        savedTop = 0;
-        dissableY = false;
-    }
-    return firstSide === 'left' ? (!dissableX ? position : savedLeft) : (!dissableY ? position : savedTop)
+    return resPosition;
+    
 }
 
+function stopDragHandlerX(linesConfig, diffX, position) {
+    guidLinesConfig.normalizeX = guidLinesConfig.newPositionX - position
+    guidLinesConfig.newPositionX = position;
+    for (let [key, value] of Object.entries(linesConfig)) {
+        if (value && !guidLinesConfig.stopDragX && !guidLinesConfig.tempPositionX && !guidLinesConfig.stopDragX) {
+            guidLinesConfig.stopDragX = true;
+            guidLinesConfig.newPositionX += (diffX + guidLinesConfig.normalizeX);
+            guidLinesConfig.tempPositionX = guidLinesConfig.newPositionX;
+        }  else if (Math.abs(guidLinesConfig.newPositionX - guidLinesConfig.tempPositionX) >= 10 && guidLinesConfig.tempPositionX) {
+            guidLinesConfig.stopDragX = false;
+            guidLinesConfig.normalizeX = 0;
+            guidLinesConfig.tempPositionX = 0;
+        }
+    }
+    return !guidLinesConfig.stopDragX ? guidLinesConfig.newPositionX : guidLinesConfig.tempPositionX;
+}
 
+function stopDragHandlerY(linesConfig, diffY, position) {
+    guidLinesConfig.normalizeY = guidLinesConfig.newPositionY - position
+    guidLinesConfig.newPositionY = position;
+    for (let [key, value] of Object.entries(linesConfig)) {
+        if (value && !guidLinesConfig.stopDragY && !guidLinesConfig.tempPositionY) {
+            guidLinesConfig.stopDragY = true;
+            guidLinesConfig.newPositionY += (diffY + guidLinesConfig.normalizeY);
+            guidLinesConfig.tempPositionY = guidLinesConfig.newPositionY;
+        }  else if (Math.abs(guidLinesConfig.newPositionY - guidLinesConfig.tempPositionY) >= 10 && guidLinesConfig.tempPositionY) {
+            guidLinesConfig.stopDragY = false;
+            guidLinesConfig.normalizeY = 0;
+            guidLinesConfig.tempPositionY = 0;
+        }
+    }
+    return !guidLinesConfig.stopDragY ? guidLinesConfig.newPositionY : guidLinesConfig.tempPositionY;
+}
 
-// function handleGuideLines(storage, activeElementConfig) {
-// console.log('clientHeight', document.body.clientHeight / 2);
-// console.log('clientWidth', document.body.clientWidth / 2);
-// console.log((activeElementConfig.left + activeElementConfig.width / 2).toFixed(0));
-// console.log('#', (activeElementConfig.left + activeElementConfig.width / 2).toFixed(0), document.body.clientWidth / 2);
-// console.log('$', (activeElementConfig.left + activeElementConfig.width / 2).toFixed(0) === (document.body.clientWidth / 2).toFixed(0));
-// if ((activeElementConfig.left + activeElementConfig.width / 2).toFixed(0) === (document.body.clientWidth / 2).toFixed(0)) {
-//     storage.guidlines.centerY.style.display = 'block';
-// } else if ((activeElementConfig.top + activeElementConfig.height / 2).toFixed(0) === (document.body.clientHeight / 2).toFixed(0)) {
-//     storage.guidlines.centerX.style.display = 'block';
-// } else {
-// storage.guidlines.centerX.style.display = 'none';
-// storage.guidlines.centerY.style.display = 'none';
-// }
-// }
+// END GUIDLINES
 
 function processRotate(radians) {
     
