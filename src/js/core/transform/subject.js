@@ -449,7 +449,9 @@ export default class Subject {
 
 function hieAllDuides (guidLines) {
     Object.values(guidLines).forEach(line => {
-        line.style.display = 'none';
+        if (line) {
+            line.style.display = 'none';
+        }
     })
 }
 

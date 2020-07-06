@@ -17,7 +17,6 @@ import {
     getUnitDimension,
     floatToFixed, getRotatedPoint
 } from './common'
-import { forEach } from 'amp-to-html/src/js/core/util/util'
 
 const brackets = '<div class="dg-hdl dg-rotator"></div>\
         <div class="dg-hdl dg-hdl-t dg-hdl-l dg-hdl-tl"></div>\
@@ -181,7 +180,6 @@ function _init(sel) {
       l = _sel.css('left');
     
     const _parent = Helper(container.parentNode);
-    
     const css = {
         top: t,
         left: l,
@@ -192,8 +190,6 @@ function _init(sel) {
     
     const controls = document.createElement('div');
     const guidlines = {
-        screenCenterX: document.querySelector('.guid-line.guid-line-x.center-x'),
-        screenCenterY: document.querySelector('.guid-line.guid-line-y.center-y'),
         centerX: document.querySelector('.guid-line.guid-line-y.guid-center-y'),
         centerY: document.querySelector('.guid-line.guid-line-x.guid-center-x'),
         left: document.querySelector('.guid-line.guid-line-y.guid-left'),
@@ -201,9 +197,14 @@ function _init(sel) {
         top: document.querySelector('.guid-line.guid-line-x.guid-top'),
         bottom: document.querySelector('.guid-line.guid-line-x.guid-bottom')
     }
-    const activeElement = document.querySelector('.dg-wrapper + .rotate-wrapper');
+    let activeElement = document.querySelector('.dg-wrapper + .drag-item-content');
+    if (!activeElement) {
+        activeElement = document.querySelector('.drag-item-content');
+    }
+    let coordinates = [];
+    let activeElementCoordinates = {};
     const activeElementConfig = activeElement.getBoundingClientRect();
-    const coordinates = [].map.call(document.querySelectorAll('.rotate-wrapper'), element => {
+    coordinates = [].map.call(document.querySelectorAll('.drag-item-content'), element => {
         if (activeElement !== element) {
             const config = element.getBoundingClientRect();
             return {
@@ -216,7 +217,7 @@ function _init(sel) {
             }
         }
     }).filter(config => config);
-    const activeElementCoordinates = {
+    activeElementCoordinates = {
         left: activeElementConfig.left,
         top: activeElementConfig.top,
         right: activeElementConfig.right,
@@ -236,7 +237,6 @@ function _init(sel) {
     _controls.css(css);
     
     const _container = Helper(container);
-    
     Object.assign(this.storage, {
         controls: controls,
         guidlines: guidlines,
@@ -246,7 +246,7 @@ function _init(sel) {
         verticalCoordinates: getArrayOfCoorditates(coordinates, screenCenterX, 'left'),
         horizontalCoordinates: getArrayOfCoorditates(coordinates, screenCenterY, 'top'),
         activeElementCoordinates: activeElementCoordinates,
-        activeElement: document.querySelector('.dg-wrapper + .rotate-wrapper'),
+        activeElement: activeElement,
         handles: {
             tl: _container.find('.dg-hdl-tl'),
             tr: _container.find('.dg-hdl-tr'),
@@ -287,6 +287,8 @@ function _compute(e) {
     guidLinesConfig.normalizeX = 0;
     guidLinesConfig.newPositionX = 0;
     guidLinesConfig.newPositionY = 0;
+    guidLinesConfig.tempPositionX = 0;
+    guidLinesConfig.tempPositionY = 0;
     window.parent.postMessage({ event: 'compute-from-iframe' }, 'http://127.0.0.1:3978/#/edit');
     const {
         el,
@@ -504,7 +506,6 @@ function processResize(
     }
     const scaleHeight = storage.ch / storage.cw;
     if (height !== null) {
-        console.log()
         if (((!storage.shiftKey && locked) || isText) && canResizeWithShiftKey) {
             height = width * scaleHeight;
         }
@@ -588,15 +589,6 @@ function processMove(
         elDrag: el,
         elDragContainer: document.querySelector('body')
     }
-    const activeElementClientRect = storage.activeElement.getBoundingClientRect();
-    const activeElementConfig = {
-        left: activeElementClientRect.left,
-        top: activeElementClientRect.top,
-        right: activeElementClientRect.right,
-        bottom: activeElementClientRect.bottom,
-        centerX: activeElementClientRect.left + activeElementClientRect.width / 2,
-        centerY: activeElementClientRect.top + activeElementClientRect.height / 2
-    };
     if (props.elDrag.name && props.elDrag.name.match('fullscreen')) {
         props.elDragClient = {
             left: Math.floor(+props.elDrag.name.split('/')[1]),
@@ -638,6 +630,15 @@ function processMove(
         }
         
     } else {
+        const activeElementClientRect = storage.activeElement.getBoundingClientRect();
+        const activeElementConfig = {
+            left: activeElementClientRect.left,
+            top: activeElementClientRect.top,
+            right: activeElementClientRect.right,
+            bottom: activeElementClientRect.bottom,
+            centerX: activeElementClientRect.left + activeElementClientRect.width / 2,
+            centerY: activeElementClientRect.top + activeElementClientRect.height / 2
+        };
         matrix[4] = snapToGrid(transform[4] + handleGuideLines(storage, left, activeElementConfig, 'left'), snap.x);
         // matrix[4] = snapToGrid(transform[4] + left, snap.x);
         matrix[5] = snapToGrid(transform[5] + handleGuideLines(storage, top, activeElementConfig, 'top'), snap.y);
@@ -661,7 +662,7 @@ let stopDrag = false;
 // GUIDLINES
 function approxeq(numbers, controlNumber, epsilon) {
     if (epsilon == null) {
-        epsilon = 10;
+        epsilon = 5;
     }
     return Array.from(numbers).find(number => Math.abs(number - controlNumber) < epsilon)
 };
@@ -737,8 +738,8 @@ function getGuidlinesConfig(elenentPositions, activeElemetPosition, screenCenter
     return {
         config: config,
         coorditates: coorditates,
-        diffX: diffsX.length ? Math.min.apply(null, diffsX) : 0,
-        diffY: diffsY.length ? Math.min.apply(null, diffsY) : 0
+        diffX: diffsX.length ? Math.min.apply(null, diffsX) : 10,
+        diffY: diffsY.length ? Math.min.apply(null, diffsY) : 10
     };
 }
 
@@ -761,9 +762,12 @@ function handleGuideLines (storage, position, activeElementConfig, type) {
       ? stopDragHandlerX(linesCoordinates, linesConfig.diffX, position)
       : stopDragHandlerY(linesCoordinates, linesConfig.diffY, position);
     for (let [key, value] of Object.entries(linesCoordinates)) {
-        if (value && Math.abs(linesConfig[type === 'left' ? 'diffX' : 'diffY']) < 1) {
+        if (value && Math.abs(value - activeElementConfig[key]) < 2.5) {
             storage.guidlines[key].style.display = 'block';
             storage.guidlines[key].style[type] = `${parseInt(value)}px`;
+            storage.guidlines[key].style[type === 'left' ? 'borderLeft' : 'borderTop'] = (value === storage.screenCenterY || value === storage.screenCenterX)
+              ? `1.5px solid rgba(51, 122, 255, 0.51)`
+              : `1.5px dotted rgba(51, 122, 255, 0.51)`;
         } else {
             storage.guidlines[key].style.display = 'none';
         }
@@ -772,6 +776,7 @@ function handleGuideLines (storage, position, activeElementConfig, type) {
     
 }
 
+// TODO: optimize (to one function)
 function stopDragHandlerX(linesConfig, diffX, position) {
     guidLinesConfig.normalizeX = guidLinesConfig.newPositionX - position
     guidLinesConfig.newPositionX = position;
@@ -780,7 +785,7 @@ function stopDragHandlerX(linesConfig, diffX, position) {
             guidLinesConfig.stopDragX = true;
             guidLinesConfig.newPositionX += (diffX + guidLinesConfig.normalizeX);
             guidLinesConfig.tempPositionX = guidLinesConfig.newPositionX;
-        }  else if (Math.abs(guidLinesConfig.newPositionX - guidLinesConfig.tempPositionX) >= 10 && guidLinesConfig.tempPositionX) {
+        }  else if (Math.abs(guidLinesConfig.newPositionX - guidLinesConfig.tempPositionX) >= 5 && guidLinesConfig.stopDragX) {
             guidLinesConfig.stopDragX = false;
             guidLinesConfig.normalizeX = 0;
             guidLinesConfig.tempPositionX = 0;
@@ -797,7 +802,7 @@ function stopDragHandlerY(linesConfig, diffY, position) {
             guidLinesConfig.stopDragY = true;
             guidLinesConfig.newPositionY += (diffY + guidLinesConfig.normalizeY);
             guidLinesConfig.tempPositionY = guidLinesConfig.newPositionY;
-        }  else if (Math.abs(guidLinesConfig.newPositionY - guidLinesConfig.tempPositionY) >= 10 && guidLinesConfig.tempPositionY) {
+        }  else if (Math.abs(guidLinesConfig.newPositionY - guidLinesConfig.tempPositionY) >= 5 && guidLinesConfig.stopDragY) {
             guidLinesConfig.stopDragY = false;
             guidLinesConfig.normalizeY = 0;
             guidLinesConfig.tempPositionY = 0;
