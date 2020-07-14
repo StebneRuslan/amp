@@ -159,9 +159,12 @@ let dissableY = false;
 let savedLeft = 0;
 let savedTop = 0;
 let normalizeX = false;
+let isLockedLayer = false;
 function handleLayerLock (event) {
     if (event.data.event === 'set-lock-settings') {
         locked = event.data.locked;
+    } else if (event.data.event === 'lock-layer') {
+        isLockedLayer = event.data.locked;
     }
 }
 
@@ -201,6 +204,7 @@ function _init(sel) {
     if (!activeElement) {
         activeElement = document.querySelector('.drag-item-content');
     }
+    isLockedLayer = !!+activeElement.dataset.locked;
     let coordinates = [];
     let activeElementCoordinates = {};
     const activeElementConfig = activeElement.getBoundingClientRect();
@@ -468,186 +472,190 @@ function processResize(
   revX,
   revY
 ) {
-    
-    const {
-        el,
-        storage
-    } = this;
-    
-    const {
-        controls,
-        handle,
-        snap,
-        left,
-        top,
-        coordX,
-        coordY,
-        refang,
-        dimens,
-        parent,
-        transform
-    } = storage;
-    
-    
-    const { style } = controls;
-    
-    if (width !== null) {
-        style.width = `${snapToGrid(width, snap.x)}px`;
-    }
-    
-    const canResizeWithShiftKey = handle[0].classList.contains('dg-hdl-br') ||
-      handle[0].classList.contains('dg-hdl-tr') ||
-      handle[0].classList.contains('dg-hdl-bl') ||
-      handle[0].classList.contains('dg-hdl-tl');
-    let isText = false;
-    const container = el.querySelector('.text-container');
-    if (container && canResizeWithShiftKey) {
-        isText = true;
-    }
-    const scaleHeight = storage.ch / storage.cw;
-    if (height !== null) {
-        if (((!storage.shiftKey && locked) || isText) && canResizeWithShiftKey) {
-            height = width * scaleHeight;
+    if (!isLockedLayer) {
+        const {
+            el,
+            storage
+        } = this;
+        
+        const {
+            controls,
+            handle,
+            snap,
+            left,
+            top,
+            coordX,
+            coordY,
+            refang,
+            dimens,
+            parent,
+            transform
+        } = storage;
+        
+        const { style } = controls;
+        
+        if (width !== null) {
+            style.width = `${snapToGrid(width, snap.x)}px`;
         }
-        style.height = `${snapToGrid(height, snap.y)}px`;
+        
+        const canResizeWithShiftKey = handle[0].classList.contains('dg-hdl-br') ||
+          handle[0].classList.contains('dg-hdl-tr') ||
+          handle[0].classList.contains('dg-hdl-bl') ||
+          handle[0].classList.contains('dg-hdl-tl');
+        let isText = false;
+        const container = el.querySelector('.text-container');
+        if (container && canResizeWithShiftKey) {
+            isText = true;
+        }
+        const scaleHeight = storage.ch / storage.cw;
+        if (height !== null) {
+            if (((!storage.shiftKey && locked) || isText) && canResizeWithShiftKey) {
+                height = width * scaleHeight;
+            }
+            style.height = `${snapToGrid(height, snap.y)}px`;
+        }
+        
+        if (container && (handle[0].classList.contains('dg-hdl-mr') || handle[0].classList.contains('dg-hdl-ml'))) {
+            let newHeight = 0;
+            [].forEach.call(container.querySelectorAll('.simple-text-line'), (el) => {
+                newHeight += el.clientHeight || el.offsetHeight;
+            })
+            style.height = !newHeight ? `${snapToGrid(container.parentNode.clientHeight, snap.y)}px` : `${snapToGrid(newHeight, snap.y)}px`;
+        }
+        
+        const coords = rotatedTopLeft(
+          left,
+          top,
+          style.width,
+          style.height,
+          refang,
+          revX,
+          revY
+        );
+        let resultY = top - (coords.top - coordY);
+        let resultX = left - (coords.left - coordX);
+        
+        const matrix = [...transform];
+        
+        if (isText) {
+            container.style.transformOrigin = `top left`;
+            container.style.transform = `scale(${parseFloat(style.width) / storage.cw})`;
+        }
+        matrix[4] = resultX;
+        matrix[5] = resultY;
+        
+        const css = matrixToCSS(matrix);
+        
+        Helper(controls).css(css);
+        
+        css.width = fromPX(
+          style.width,
+          parent.css('width'),
+          dimens.width
+        );
+        
+        css.height = fromPX(
+          style.height,
+          parent.css('height'),
+          dimens.height
+        );
+        
+        const size = {
+            width: css.width,
+            height: css.height,
+        }
+        
+        Helper(el).css(css);
+        window.parent.postMessage({
+            event: 'resize-from-package',
+            size: size,
+            isText: isText
+        }, 'http://127.0.0.1:3978/#/edit');
+        storage.cached = matrix;
     }
-    
-    if (container && (handle[0].classList.contains('dg-hdl-mr') || handle[0].classList.contains('dg-hdl-ml'))) {
-        let newHeight = 0;
-        [].forEach.call(container.querySelectorAll('.simple-text-line'), (el) => {
-            newHeight += el.clientHeight || el.offsetHeight;
-        })
-        style.height = !newHeight ? `${snapToGrid(container.parentNode.clientHeight, snap.y)}px` : `${snapToGrid(newHeight, snap.y)}px`;
-    }
-    
-    const coords = rotatedTopLeft(
-      left,
-      top,
-      style.width,
-      style.height,
-      refang,
-      revX,
-      revY
-    );
-    let resultY = top - (coords.top - coordY);
-    let resultX = left - (coords.left - coordX);
-    
-    const matrix = [...transform];
-    
-    if (isText) {
-        container.style.transformOrigin = `top left`;
-        container.style.transform = `scale(${parseFloat(style.width) / storage.cw})`;
-    }
-    matrix[4] = resultX;
-    matrix[5] = resultY;
-    
-    const css = matrixToCSS(matrix);
-    
-    Helper(controls).css(css);
-    
-    
-    css.width = fromPX(
-      style.width,
-      parent.css('width'),
-      dimens.width
-    );
-    
-    css.height = fromPX(
-      style.height,
-      parent.css('height'),
-      dimens.height
-    );
-    
-    const size = {
-        width: css.width,
-        height: css.height,
-    }
-    
-    
-    Helper(el).css(css);
-    window.parent.postMessage({ event: 'resize-from-package', size: size, isText: isText }, 'http://127.0.0.1:3978/#/edit');
-    storage.cached = matrix;
 }
 let normalizeValue = 0;
 function processMove(
   top,
   left
 ) {
-    const {
-        el,
-        storage
-    } = this;
-    const {
-        controls,
-        transform,
-        snap
-    } = storage;
-    
-    const matrix = [...transform];
-    
-    const props = {
-        elDrag: el,
-        elDragContainer: document.querySelector('body')
-    }
-    if (props.elDrag.name && props.elDrag.name.match('fullscreen')) {
-        props.elDragClient = {
-            left: Math.floor(+props.elDrag.name.split('/')[1]),
-            right: Math.floor(+props.elDrag.name.split('/')[2]),
-            top: Math.floor(+props.elDrag.name.split('/')[3]),
-            bottom: Math.floor(+props.elDrag.name.split('/')[4])
-        }
-        if (props.elDragClient.left || Math.abs(Math.floor(props.elDragClient.right + 2)) - Math.floor(props.elDragContainer.clientWidth)) {
-            if (left > 0 && props.elDragClient.left) {
-                // need to optimize this
-                if (Math.abs(props.elDragClient.left) > Math.abs(left)) {
-                    matrix[4] = snapToGrid(transform[4] + Math.floor(left), snap.x);
-                } else {
-                    matrix[4] = snapToGrid(transform[4] + Math.abs(props.elDragClient.left), snap.x);
-                }
-            } else if (left <= 0 && Math.floor(props.elDragClient.right - 2) - Math.floor(props.elDragContainer.clientWidth)) {
-                if ((Math.abs(Math.floor(props.elDragClient.right)) - Math.floor(props.elDragContainer.clientWidth)) - Math.abs(left) > 0) {
-                    matrix[4] = snapToGrid(transform[4] + left, snap.x);
-                } else {
-                    matrix[4] = snapToGrid(transform[4] - (Math.abs(Math.floor(props.elDragClient.right)) - Math.floor(props.elDragContainer.clientWidth)), snap.x);
-                }
-            }
-        }
-        if (props.elDragClient.top) {
-            if (top > 0 && props.elDragClient.top) {
-                // need to optimize this
-                if (Math.abs(props.elDragClient.top) > Math.abs(top)) {
-                    matrix[5] = snapToGrid(transform[5] + Math.floor(top), snap.y);
-                } else {
-                    matrix[5] = snapToGrid(transform[5] + (Math.abs(props.elDragClient.top)), snap.y);
-                }
-            } else if (left <= 0 && Math.floor(props.elDragClient.bottom - 2) - Math.floor(props.elDragContainer.clientHeight)) {
-                if ((Math.abs(Math.floor(props.elDragClient.bottom)) - Math.floor(props.elDragContainer.clientHeight)) - Math.abs(top) > 0) {
-                    matrix[5] = snapToGrid(transform[5] + top, snap.y);
-                } else {
-                    matrix[5] = snapToGrid(transform[5] - (Math.abs(Math.floor(props.elDragClient.bottom)) - Math.floor(props.elDragContainer.clientHeight)), snap.y);
-                }
-            }
-        }
+    if (!isLockedLayer) {
+        const {
+            el,
+            storage
+        } = this;
+        const {
+            controls,
+            transform,
+            snap
+        } = storage;
         
-    } else {
-        const activeElementClientRect = storage.activeElement.getBoundingClientRect();
-        const activeElementConfig = {
-            left: activeElementClientRect.left,
-            top: activeElementClientRect.top,
-            right: activeElementClientRect.right,
-            bottom: activeElementClientRect.bottom,
-            centerX: activeElementClientRect.left + activeElementClientRect.width / 2,
-            centerY: activeElementClientRect.top + activeElementClientRect.height / 2
-        };
-        matrix[4] = snapToGrid(transform[4] + handleGuideLines(storage, left, activeElementConfig, 'left'), snap.x);
-        // matrix[4] = snapToGrid(transform[4] + left, snap.x);
-        matrix[5] = snapToGrid(transform[5] + handleGuideLines(storage, top, activeElementConfig, 'top'), snap.y);
-        // matrix[5] = snapToGrid(transform[5] + top, snap.y);
+        const matrix = [...transform];
+        
+        const props = {
+            elDrag: el,
+            elDragContainer: document.querySelector('body')
+        }
+        if (props.elDrag.name && props.elDrag.name.match('fullscreen')) {
+            props.elDragClient = {
+                left: Math.floor(+props.elDrag.name.split('/')[1]),
+                right: Math.floor(+props.elDrag.name.split('/')[2]),
+                top: Math.floor(+props.elDrag.name.split('/')[3]),
+                bottom: Math.floor(+props.elDrag.name.split('/')[4])
+            }
+            if (props.elDragClient.left || Math.abs(Math.floor(props.elDragClient.right + 2)) - Math.floor(props.elDragContainer.clientWidth)) {
+                if (left > 0 && props.elDragClient.left) {
+                    // need to optimize this
+                    if (Math.abs(props.elDragClient.left) > Math.abs(left)) {
+                        matrix[4] = snapToGrid(transform[4] + Math.floor(left), snap.x);
+                    } else {
+                        matrix[4] = snapToGrid(transform[4] + Math.abs(props.elDragClient.left), snap.x);
+                    }
+                } else if (left <= 0 && Math.floor(props.elDragClient.right - 2) - Math.floor(props.elDragContainer.clientWidth)) {
+                    if ((Math.abs(Math.floor(props.elDragClient.right)) - Math.floor(props.elDragContainer.clientWidth)) - Math.abs(left) > 0) {
+                        matrix[4] = snapToGrid(transform[4] + left, snap.x);
+                    } else {
+                        matrix[4] = snapToGrid(transform[4] - (Math.abs(Math.floor(props.elDragClient.right)) - Math.floor(props.elDragContainer.clientWidth)), snap.x);
+                    }
+                }
+            }
+            if (props.elDragClient.top) {
+                if (top > 0 && props.elDragClient.top) {
+                    // need to optimize this
+                    if (Math.abs(props.elDragClient.top) > Math.abs(top)) {
+                        matrix[5] = snapToGrid(transform[5] + Math.floor(top), snap.y);
+                    } else {
+                        matrix[5] = snapToGrid(transform[5] + (Math.abs(props.elDragClient.top)), snap.y);
+                    }
+                } else if (left <= 0 && Math.floor(props.elDragClient.bottom - 2) - Math.floor(props.elDragContainer.clientHeight)) {
+                    if ((Math.abs(Math.floor(props.elDragClient.bottom)) - Math.floor(props.elDragContainer.clientHeight)) - Math.abs(top) > 0) {
+                        matrix[5] = snapToGrid(transform[5] + top, snap.y);
+                    } else {
+                        matrix[5] = snapToGrid(transform[5] - (Math.abs(Math.floor(props.elDragClient.bottom)) - Math.floor(props.elDragContainer.clientHeight)), snap.y);
+                    }
+                }
+            }
+            
+        } else {
+            const activeElementClientRect = storage.activeElement.getBoundingClientRect();
+            const activeElementConfig = {
+                left: activeElementClientRect.left,
+                top: activeElementClientRect.top,
+                right: activeElementClientRect.right,
+                bottom: activeElementClientRect.bottom,
+                centerX: activeElementClientRect.left + activeElementClientRect.width / 2,
+                centerY: activeElementClientRect.top + activeElementClientRect.height / 2
+            };
+            matrix[4] = snapToGrid(transform[4] + handleGuideLines(storage, left, activeElementConfig, 'left'), snap.x);
+            // matrix[4] = snapToGrid(transform[4] + left, snap.x);
+            matrix[5] = snapToGrid(transform[5] + handleGuideLines(storage, top, activeElementConfig, 'top'), snap.y);
+            // matrix[5] = snapToGrid(transform[5] + top, snap.y);
+        }
+        const css = matrixToCSS(matrix);
+        Helper(controls).css(css);
+        Helper(el).css(css);
+        storage.cached = matrix;
     }
-    const css = matrixToCSS(matrix);
-    Helper(controls).css(css);
-    Helper(el).css(css);
-    storage.cached = matrix;
 }
 
 
@@ -814,35 +822,39 @@ function stopDragHandlerY(linesConfig, diffY, position) {
 // END GUIDLINES
 
 function processRotate(radians) {
-    
-    const {
-        el,
-        storage
-    } = this;
-    
-    const {
-        controls,
-        transform,
-        refang,
-        snap
-    } = storage;
-    
-    const matrix = [...transform];
-    
-    const angle = snapToGrid(refang + radians, snap.angle);
-    //rotate(Xdeg) = matrix(cos(X), sin(X), -sin(X), cos(X), 0, 0);
-    matrix[0] = floatToFixed(Math.cos(angle));
-    matrix[1] = floatToFixed(Math.sin(angle));
-    matrix[2] = - floatToFixed(Math.sin(angle));
-    matrix[3] = floatToFixed(Math.cos(angle));
-    
-    window.parent.postMessage({ event: 'rotate-from-resizer', value: angle * (180 / Math.PI) }, 'http://127.0.0.1:3978/#/edit');
-    const css = matrixToCSS(matrix);
-    
-    Helper(controls).css(css);
-    Helper(el).css(css);
-    
-    storage.cached = matrix;
+    if (!isLockedLayer) {
+        const {
+            el,
+            storage
+        } = this;
+        
+        const {
+            controls,
+            transform,
+            refang,
+            snap
+        } = storage;
+        
+        const matrix = [...transform];
+        
+        const angle = snapToGrid(refang + radians, snap.angle);
+        //rotate(Xdeg) = matrix(cos(X), sin(X), -sin(X), cos(X), 0, 0);
+        matrix[0] = floatToFixed(Math.cos(angle));
+        matrix[1] = floatToFixed(Math.sin(angle));
+        matrix[2] = -floatToFixed(Math.sin(angle));
+        matrix[3] = floatToFixed(Math.cos(angle));
+        
+        window.parent.postMessage({
+            event: 'rotate-from-resizer',
+            value: angle * (180 / Math.PI)
+        }, 'http://127.0.0.1:3978/#/edit');
+        const css = matrixToCSS(matrix);
+        
+        Helper(controls).css(css);
+        Helper(el).css(css);
+        
+        storage.cached = matrix;
+    }
 }
 
 function matrixToCSS(arr) {

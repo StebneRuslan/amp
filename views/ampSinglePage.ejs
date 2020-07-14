@@ -15,6 +15,12 @@
 	let oldLayerId = -1;
 	let newLayerId = -1;
 	let keydownTimeout = null;
+	let isLockedLayer = false;
+	window.parent.addEventListener('message', function (event) {
+		if (event.data.event === 'lock-layer') {
+			isLockedLayer = event.data.locked;
+		}
+	});
 	window.addEventListener('message', function (event) {
 		if (oldLayerId !== event.data.currentId) {
 			const currentLayer = document.getElementById(`layer${event.data.currentId}`);
@@ -29,17 +35,15 @@
 			if (currentLayer) {
 				currentLayer.classList.add('draggable');
 				Subjx('.draggable').drag({
-					each: {
-						resize: true
-					},
-					snap: {
-						x: 0.005,
-						y: 0.005
-					}
+					each: { resize: true },
+					snap: { x: 0.005, y: 0.005 }
 				});
 			}
 			newLayerId = event.data.currentId;
 			const father = currentLayer ? currentLayer.parentNode : null;
+			if (father) {
+				isLockedLayer = !!+father.children[1].dataset.locked;
+			}
 			if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
 				father.children[1].setAttribute('contenteditable', false);
 				father.querySelector('.text-container').style.width = '';
@@ -122,27 +126,29 @@
 					}
 
 					function dbEvent(event) {
-						event.preventDefault();
-						event.stopPropagation();
-						document.querySelector('.dg-controls').style.zIndex = '0';
-						father.children[1].removeEventListener('keydown', keyDownOperation);
-						if (!father.children[1].querySelector('span')) {
-							father.children[1].innerHTML = `<div class="text-container" style="opacity:1; position: relative">  <div class="single-text" id="text${newLayerId}"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;"><span style="white-space: pre-wrap; font-size: 1.5em; padding: 0; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>`;
+						if (!isLockedLayer) {
+							event.preventDefault();
+							event.stopPropagation();
+							document.querySelector('.dg-controls').style.zIndex = '0';
+							father.children[1].removeEventListener('keydown', keyDownOperation);
+							if (!father.children[1].querySelector('span')) {
+								father.children[1].innerHTML = `<div class="text-container" style="opacity:1; position: relative">  <div class="single-text" id="text${newLayerId}"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;"><span style="white-space: pre-wrap; font-size: 1.5em; padding: 0; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>`;
+							}
+							father.children[1].setAttribute('contenteditable', true);
+							father.children[1].addEventListener('selectstart', selectText);
+							father.children[1].focus();
+							father.children[1].addEventListener('click', stopPropagation);
+							father.children[1].addEventListener('keydown', keyDownOperation);
+							father.children[1].addEventListener('selectstart', handleSelectStart);
+							father.children[1].addEventListener('mouseup', keyDownOperation);
+							father.children[1].addEventListener('paste', handlePaste);
+							father.setAttribute('onmousedown', null);
+							window.document.addEventListener('mouseup', handleSelectEnd);
+							if (window.parent) {
+								window.parent.document.querySelector('body').addEventListener('click', ampModeMouseClick);
+							}
+							window.parent.postMessage({ event: 'text-was-selected', value: true }, '*');
 						}
-						father.children[1].setAttribute('contenteditable', true);
-						father.children[1].addEventListener('selectstart', selectText);
-						father.children[1].focus();
-						father.children[1].addEventListener('click', stopPropagation);
-						father.children[1].addEventListener('keydown', keyDownOperation);
-						father.children[1].addEventListener('selectstart', handleSelectStart);
-						father.children[1].addEventListener('mouseup', keyDownOperation);
-						father.children[1].addEventListener('paste', handlePaste);
-						father.setAttribute('onmousedown', null);
-						window.document.addEventListener('mouseup', handleSelectEnd);
-						if (window.parent) {
-							window.parent.document.querySelector('body').addEventListener('click', ampModeMouseClick);
-						}
-						window.parent.postMessage({ event: 'text-was-selected', value: true }, '*');
 					}
 					currentLayer.parentElement.parentElement.ondblclick = dbEvent;
 				}
@@ -274,7 +280,8 @@
                  style="
                    outline: none;
                    transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
-                 class="rotate-wrapper drag-item-content">
+                 class="rotate-wrapper drag-item-content"
+                 data-locked="<%=layer.settings.generalSettings.locked ? 1 : 0%>">
               <% include layers/text.ejs %>
             </div>
           </div>
@@ -295,7 +302,7 @@
                  top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
                <% }%>
                  left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;">
-            <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper drag-item-content" style="
+            <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper drag-item-content" data-locked="<%=layer.settings.generalSettings.locked ? 1 : 0%>" style="
               transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
               <% include layers/shape.ejs %>
             </div>
@@ -336,7 +343,8 @@
                    height: <%=getDraggableElementHeight(layer) + '%';%>;
                    transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                    " <% } else { %> class="rotate-wrapper drag-item-content" style="
-              transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
+              transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>
+                 data-locked="<%=layer.settings.generalSettings.locked ? 1 : 0%>">
               <%- include('layers/image.ejs', {withAnimations: false, layer: layer, zipExport: false }); %>
             </div>
           </div>
@@ -374,7 +382,8 @@
                    height: <%=getDraggableElementHeight(layer)%>;
                    transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
                    " <% } else { %> class="rotate-wrapper drag-item-content" style="
-              transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>>
+              transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>
+                 data-locked="<%=layer.settings.generalSettings.locked ? 1 : 0%>">
               <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration, zipExport: false }); %>
             </div>
           </div>
