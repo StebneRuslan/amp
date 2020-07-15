@@ -1,0 +1,53 @@
+<svg xmlns='http://www.w3.org/2000/svg'
+     xmlns:xlink='http://www.w3.org/1999/xlink'
+     width='<%= getSvgSizeInProcentage('width') %>'
+     height='<%= getSvgSizeInProcentage('height') %>'
+     style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
+     viewBox='0 0 511 511'
+     preserveAspectRatio='none'>
+    <% include ./defs.ejs %>
+<g>
+    <g>
+        <path
+                d="M511.155,252.305l-102.4-213.333c-1.417-2.953-4.403-4.838-7.689-4.838H110.933c-3.285,0-6.272,1.886-7.689,4.838
+			L0.845,252.305c-1.126,2.338-1.126,5.052,0,7.39l102.4,213.333c1.417,2.953,4.403,4.838,7.689,4.838h290.133
+			c3.285,0,6.272-1.886,7.689-4.838l102.4-213.333C512.282,257.357,512.282,254.643,511.155,252.305z"
+                stroke='<%= setColor('borderColor') %>'
+                fill='<%= setColor('fillColor') %>'
+                stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && +layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
+                vector-effect='non-scaling-stroke'/>
+    </g>
+</g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+</svg>
+
+<% include ./index.ejs %>

@@ -1,5 +1,6 @@
 <% include ./main.ejs %>
 <%let preview = false;
+let withQueries = false;
 ampStory.cuts.map(currentSlide => { %>
 <amp-story-page auto-advance-after="<%=currentSlide ? currentSlide.duration : 10%>s" id="<%= currentSlide.position %>" style="background: #eeeeee">
   <% currentSlide.layers.sort((first, second) => {
@@ -195,7 +196,8 @@ ampStory.cuts.map(currentSlide => { %>
     } %>
   <% }) %>
   <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
-  <%if (currentSlide.position >= 1 && ampStory.type !== 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link' && layer.settings.ctaLayerSettings.link) {%>
+  <%if (currentSlide.position >= 1 && ampStory.type !== 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link' && (layer.settings.ctaLayerSettings.link || layer.settings.ctaLayerSettings.withQueries)) {%>
+    <% if (layer.settings.ctaLayerSettings.withQueries) { withQueries = true }%>
   <amp-story-cta-layer>
     <a class='cta-link' style="
       background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
@@ -236,3 +238,7 @@ ampStory.cuts.map(currentSlide => { %>
 <% snippets.map(snippet => { %>
   <%- Buffer.from(snippet.bodyCode || '', 'base64').toString() %>
 <% })%>
+<%if (withQueries) { %>
+  <%- include('cta-queries.ejs')%>
+<% } %>
+

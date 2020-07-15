@@ -2,8 +2,8 @@
      style="width: 100%;height: 100%;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;">
   <div class="inner-item shape" style="width: 100%;height: 100%;">
     <div
-            id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
-            style="width: 100%;height: 100%;display: flex;">
+      id="shape<%= layer.settings.generalSettings.position ? layer.settings.generalSettings.position : '' %>"
+      style="width: 100%;height: 100%;display: flex;">
       <% switch (layer.content.value || layer.content.shape) {
       case 'square' : %>
       <% include ../shapes/square.ejs %>
@@ -16,6 +16,24 @@
       <% break
       case'line' : %>
       <% include ../shapes/line.ejs %>
+      <% break
+      case'heart' : %>
+      <% include ../shapes/heart.ejs %>
+      <% break
+      case'plus' : %>
+      <% include ../shapes/plus.ejs %>
+      <% break
+      case'pentagon' : %>
+      <% include ../shapes/pentagon.ejs %>
+      <% break
+      case'hexagon' : %>
+      <% include ../shapes/hexagon.ejs %>
+      <% break
+      case'diamond' : %>
+      <% include ../shapes/diamond.ejs %>
+      <% break
+      case'star' : %>
+      <% include ../shapes/star.ejs %>
       <% break %>
       <% } %>
     </div>
