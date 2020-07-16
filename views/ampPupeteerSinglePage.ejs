@@ -25,24 +25,24 @@
             case 'text':
             case 'html': %>
               <amp-story-grid-layer template="horizontal">
-                <%- include('./components/text-layer.ejs', {withEvent: false, withAnimations: false, layer: layer, currentSlide: currentSlide, preview: preview})%>
+                <%- include('./components/text-layer.ejs', {withEvent: false, withAnimations: false, layer, currentSlide, preview})%>
               </amp-story-grid-layer>
               <% break;
             case 'shape': %>
               <amp-story-grid-layer template="horizontal">
-                <%- include('./components/shape-layer.ejs', {withEvent: false, withAnimations: false, layer: layer, currentSlide: currentSlide, preview: preview})%>
+                <%- include('./components/shape-layer.ejs', {withEvent: false, withAnimations: false, layer, currentSlide, preview})%>
               </amp-story-grid-layer>
               <% break;
 
             case 'image':
             case 'gifs': %>
               <amp-story-grid-layer template="horizontal">
-                <%- include('./components/dirty-image-layer.ejs', {withEvent: true, withAnimations: false, layer: layer, currentSlide: currentSlide, preview: preview})%>
+                <%- include('./components/dirty-image-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
               </amp-story-grid-layer>
               <% break
             case 'video': %>
               <amp-story-grid-layer template="horizontal">
-                <%- include('./components/dirty-video-layer.ejs', {withEvent: false, withAnimations: false, layer: layer, currentSlide: currentSlide, preview: preview})%>
+                <%- include('./components/dirty-video-layer.ejs', {withEvent: false, withAnimations: false, layer, currentSlide, preview})%>
               </amp-story-grid-layer>
               <% break
             case 'cta-link': %>

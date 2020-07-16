@@ -7,7 +7,6 @@
      <% if (['zoom-in'].includes(layer.settings.animateIn)) { %>scale-start="1" scale-end="1.4"<% } %>
      <% if (['zoom-out'].includes(layer.settings.animateIn)) { %>scale-start="1.4" scale-end="1"<% } %>>
   <% } %>
-  <!---->
   <div
     class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
     style="position: absolute;

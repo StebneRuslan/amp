@@ -34,13 +34,13 @@
           case 'text':
           case 'html': %>
             <amp-story-grid-layer template="horizontal">
-              <%- include('./components/text-layer.ejs', {withEvent: true, withAnimations: false, layer: layer, currentSlide: currentSlide, preview: preview})%>
+              <%- include('./components/text-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
             </amp-story-grid-layer>
             <% break;
 
           case 'shape': %>
             <amp-story-grid-layer template="horizontal">
-              <%- include('./components/shape-layer.ejs', {withEvent: true, withAnimations: false, layer: layer, currentSlide: currentSlide, preview: preview})%>
+              <%- include('./components/shape-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
             </amp-story-grid-layer>
             <% break;
 
@@ -48,7 +48,7 @@
           case 'gifs': %>
             <% if (layer.content.image && layer.content.image.url) { %>
             <amp-story-grid-layer template="horizontal">
-              <%- include('./components/dirty-image-layer.ejs', {withEvent: true, withAnimations: false, layer: layer, currentSlide: currentSlide, preview: preview})%>
+              <%- include('./components/dirty-image-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
             </amp-story-grid-layer>
             <% } %>
             <% break
@@ -56,12 +56,12 @@
           case 'video': %>
             <% if (layer.content.video && layer.content.video.url) { %>
             <amp-story-grid-layer template="horizontal">
-              <%- include('./components/dirty-video-layer.ejs', {withEvent: true, withAnimations: false, layer: layer, currentSlide: currentSlide, preview: preview})%>
+              <%- include('./components/dirty-video-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
             </amp-story-grid-layer>
             <% } %>
             <% break
           case 'cta-link': %>
-            <%- include('./components/dirty-cta-layer.ejs', {withEvent: true, layer: layer, currentSlide: currentSlide})%>
+            <%- include('./components/dirty-cta-layer.ejs', {withEvent: true, layer, currentSlide})%>
             <% break } %>
         <% }) %>
       <% } %>

@@ -15,13 +15,13 @@ ampStory.cuts.map(currentSlide => { %>
     	case 'text':
       case 'html': %>
         <amp-story-grid-layer template="horizontal">
-          <%- include('./components/text-layer.ejs', {withEvent: false, withAnimations: true, layer: layer, currentSlide: currentSlide, preview: preview})%>
+          <%- include('./components/text-layer.ejs', {withEvent: false, withAnimations: true, layer, currentSlide, preview})%>
         </amp-story-grid-layer>
         <% break;
 
       case 'shape': %>
         <amp-story-grid-layer template="horizontal">
-          <%- include('./components/shape-layer.ejs', {withEvent: false, withAnimations: true, layer: layer, currentSlide: currentSlide, preview: preview})%>
+          <%- include('./components/shape-layer.ejs', {withEvent: false, withAnimations: true, layer, currentSlide, preview})%>
         </amp-story-grid-layer>
         <% break;
 
@@ -32,11 +32,11 @@ ampStory.cuts.map(currentSlide => { %>
             (((layer.content.compressed || zipExport) && !layer.settings.layerSettings.fullscreen)) ||
             ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)) { %>
             <amp-story-grid-layer template="horizontal">
-              <%- include('./components/image-layer.ejs', {layer: layer, currentSlide: currentSlide, preview: preview})%>
+              <%- include('./components/image-layer.ejs', {layer, currentSlide, preview})%>
             </amp-story-grid-layer>
           <% } else { %>
             <amp-story-grid-layer template="fill">
-              <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: zipExport }); %>
+              <%- include('layers/image.ejs', {withAnimations: true, layer, zipExport }); %>
             </amp-story-grid-layer>
           <% } %>
         <% } %>
@@ -48,11 +48,11 @@ ampStory.cuts.map(currentSlide => { %>
             (((layer.content.compressed || zipExport) && !layer.settings.layerSettings.fullscreen)) ||
             ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)) { %>
             <amp-story-grid-layer template="horizontal">
-              <%- include('./components/video-layer.ejs', {layer: layer, currentSlide: currentSlide, preview: preview})%>
+              <%- include('./components/video-layer.ejs', {layer, currentSlide, preview})%>
             </amp-story-grid-layer>
           <% } else { %>
             <amp-story-grid-layer template="fill">
-              <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration, zipExport: zipExport }); %>
+              <%- include('layers/video.ejs', {withAnimations: true, layer, duration: currentSlide.duration, zipExport }); %>
             </amp-story-grid-layer>
           <% } %>
         <% } %>
@@ -64,7 +64,7 @@ ampStory.cuts.map(currentSlide => { %>
     <% if (layer.settings.ctaLayerSettings.withQueries) { withQueries = true }%>
     <% include ./components/cta-layer.ejs %>
   <% } else if (ampStory.type === 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link' && layer.settings.ctaLayerSettings.link) {%>
-    <%- include('./components/dirty-cta-layer.ejs', {withEvent: false, layer: layer, currentSlide: currentSlide})%>
+    <%- include('./components/dirty-cta-layer.ejs', {withEvent: false, layer, currentSlide})%>
   <% } %>
   <% }) %>
 </amp-story-page>

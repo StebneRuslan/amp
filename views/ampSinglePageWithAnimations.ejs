@@ -8,20 +8,7 @@
 <% include ./main.ejs %>
 
 <body>
-<script>
-	window.onload = () => {
-		var css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
-			head = document.head || document.getElementsByTagName('head')[0],
-			style = document.createElement('style');
-		style.type = 'text/css';
-		if (style.styleSheet) {
-			style.styleSheet.cssText = css;
-		} else {
-			style.appendChild(document.createTextNode(css));
-		};
-		head.appendChild(style);
-	};
-</script>
+<% include ./override-amp-styles.ejs %>
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
   <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="<%=currentSlide ? currentSlide.duration : 10%>s" class="container">
@@ -42,13 +29,13 @@
           case 'text':
         case 'html': %>
         <amp-story-grid-layer template="horizontal">
-          <%- include('./components/text-layer.ejs', {withEvent: false, withAnimations: true, layer: layer, currentSlide: currentSlide, preview: preview})%>
+          <%- include('./components/text-layer.ejs', {withEvent: false, withAnimations: true, layer, currentSlide, preview})%>
         </amp-story-grid-layer>
         <% break;
 
         case 'shape': %>
         <amp-story-grid-layer template="horizontal">
-          <%- include('./components/shape-layer.ejs', {withEvent: false, withAnimations: true, layer: layer, currentSlide: currentSlide, preview: preview})%>
+          <%- include('./components/shape-layer.ejs', {withEvent: false, withAnimations: true, layer, currentSlide, preview})%>
         </amp-story-grid-layer>
         <% break;
 
@@ -59,11 +46,11 @@
             (((layer.content.compressed || zipExport) && !layer.settings.layerSettings.fullscreen)) ||
             ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)) { %>
             <amp-story-grid-layer template="horizontal">
-              <%- include('./components/image-layer.ejs', {layer: layer, currentSlide: currentSlide, preview: preview})%>
+              <%- include('./components/image-layer.ejs', {layer, currentSlide, preview})%>
             </amp-story-grid-layer>
           <% } else { %>
             <amp-story-grid-layer template="fill">
-              <%- include('layers/image.ejs', {withAnimations: true, layer: layer, zipExport: zipExport }); %>
+              <%- include('layers/image.ejs', {withAnimations: true, layer, zipExport }); %>
             </amp-story-grid-layer>
           <% } %>
         <% } %>
@@ -75,17 +62,17 @@
             (((layer.content.compressed || zipExport) && !layer.settings.layerSettings.fullscreen)) ||
             ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)) { %>
             <amp-story-grid-layer template="horizontal">
-              <%- include('./components/video-layer.ejs', {layer: layer, currentSlide: currentSlide, preview: preview})%>
+              <%- include('./components/video-layer.ejs', {layer, currentSlide, preview})%>
             </amp-story-grid-layer>
           <% } else { %>
             <amp-story-grid-layer template="fill">
-              <%- include('layers/video.ejs', {withAnimations: true, layer: layer, duration: currentSlide.duration, zipExport: zipExport }); %>
+              <%- include('layers/video.ejs', {withAnimations: true, layer, duration: currentSlide.duration, zipExport }); %>
             </amp-story-grid-layer>
           <% } %>
         <% } %>
         <% break
         case 'cta-link': %>
-          <%- include('./components/dirty-cta-layer.ejs', {withEvent: false, layer: layer, currentSlide: currentSlide})%>
+          <%- include('./components/dirty-cta-layer.ejs', {withEvent: false, layer, currentSlide})%>
         <% break } %>
       <% }) %>
     <% } %>
