@@ -3,14 +3,14 @@
      class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
      style="
        position: absolute;
-     <%if (layer.settings.layerSettings.fullscreen) {%>
+     <%if (layer.settings.layerSettings.fullscreen) { %>
        width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
        height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
-     <% } else {%>
+     <% } else { %>
        width: <%=getAnimationWidthEm(layer)%>;
        height: <%=getAnimationHeightEm(layer)%>;
-     <% }%>
-     <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
+     <% } %>
+     <%if (Math.abs(+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height)) <= 1.5) {%>
        bottom: 0;
        top: initial;
      <% } else {%>
@@ -26,9 +26,11 @@
            top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
            width: <%=getDraggableElementWidth(layer) + '%'%>;
            height: <%=getDraggableElementHeight(layer) + '%';%>;
-           transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-           " <% } else { %> class="rotate-wrapper drag-item-content" style="
-            transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>
+           transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;"
+      <% } else { %>
+         class="rotate-wrapper drag-item-content"
+         style="transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
+      <% } %>
          data-locked="<%=layer.settings.generalSettings.locked ? 1 : 0%>">
         <%- include('../layers/image.ejs', {withAnimations: false, layer: layer, zipExport: false }); %>
     </div>

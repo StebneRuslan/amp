@@ -10,9 +10,8 @@
        width: <%=getAnimationWidthEm(layer)%>;
        height: <%=getAnimationHeightEm(layer)%>;
      <% }%>
-     <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
-         bottom: 0;
-           top: initial;
+     <%if (Math.abs(+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height)) <= 1.5) {%>
+         bottom: 0;top: initial;
      <% } else {%>
          top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
      <% }%>
@@ -24,9 +23,11 @@
            position: absolute;
            width: <%=getDraggableElementWidth(layer)%>;
            height: <%=getDraggableElementHeight(layer)%>;
-           transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-           " <% } else { %> class="rotate-wrapper drag-item-content" style="
-      transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;" <% } %>
+           transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;"
+      <% } else { %>
+         class="rotate-wrapper drag-item-content" style="
+      transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;"
+      <% } %>
          data-locked="<%=layer.settings.generalSettings.locked ? 1 : 0%>">
         <%- include('../layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration, zipExport: false }); %>
     </div>

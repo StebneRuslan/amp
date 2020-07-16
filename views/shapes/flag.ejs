@@ -6,43 +6,43 @@
      style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
      viewBox='0 0 64 64'
      preserveAspectRatio='none'>
-    <% include ./defs.ejs %>
-<g>
+  <% include ./defs.ejs %>
+  <g>
     <path
-        d='M 4 18 L 32 56 L 60 18 L 52 0 L 12 0z'
-        stroke='<%= setColor('borderColor') %>'
-        fill='<%= setColor('fillColor') %>'
-        stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && +layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
-        vector-effect='non-scaling-stroke'/>
-</g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
-    <g>
-    </g>
+      d='M 0 0 L 0 56 L 32 46 L 64 56 L 64 0z'
+      stroke='<%= setColor('borderColor') %>'
+      fill='<%= setColor('fillColor') %>'
+      stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && +layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
+      vector-effect='non-scaling-stroke'/>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
 </svg>

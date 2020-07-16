@@ -9,7 +9,7 @@
       border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
       z-index: <%=currentSlide.layers.length + 1%>;
       border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 1.5 : layer.settings.layerSettings.shapeStyles.round / 16) + 'em';%>"
-     href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link, currentSlide.position)%>"
+    href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link, currentSlide.position)%>"
     id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%>
   </a>
 </div>
