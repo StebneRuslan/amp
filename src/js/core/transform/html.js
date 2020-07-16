@@ -28,6 +28,17 @@ const brackets = '<div class="dg-hdl dg-rotator"></div>\
         <div class="dg-hdl dg-hdl-m dg-hdl-l dg-hdl-ml"></div>\
         <div class="dg-hdl dg-hdl-m dg-hdl-r dg-hdl-mr"></div>';
 
+const guidLinesConfig = {
+    stopDragX: false,
+    tempPositionX: 0,
+    stopDragY: false,
+    tempPositionY: 0,
+    normalizeX: 0,
+    normalizeY: 0,
+    newPositionX: 0,
+    newPositionY: 0
+}
+
 export default class Draggable extends Subject {
     
     constructor(el, options, Observable) {
@@ -143,10 +154,17 @@ export default class Draggable extends Subject {
 }
 
 let locked = true;
-
+let dissableX = false;
+let dissableY = false;
+let savedLeft = 0;
+let savedTop = 0;
+let normalizeX = false;
+let isLockedLayer = false;
 function handleLayerLock (event) {
     if (event.data.event === 'set-lock-settings') {
         locked = event.data.locked;
+    } else if (event.data.event === 'lock-layer') {
+        isLockedLayer = event.data.locked;
     }
 }
 
@@ -165,7 +183,6 @@ function _init(sel) {
       l = _sel.css('left');
     
     const _parent = Helper(container.parentNode);
-    
     const css = {
         top: t,
         left: l,
@@ -175,6 +192,45 @@ function _init(sel) {
     };
     
     const controls = document.createElement('div');
+    const guidlines = {
+        centerX: document.querySelector('.guid-line.guid-line-y.guid-center-y'),
+        centerY: document.querySelector('.guid-line.guid-line-x.guid-center-x'),
+        left: document.querySelector('.guid-line.guid-line-y.guid-left'),
+        right: document.querySelector('.guid-line.guid-line-y.guid-right'),
+        top: document.querySelector('.guid-line.guid-line-x.guid-top'),
+        bottom: document.querySelector('.guid-line.guid-line-x.guid-bottom')
+    }
+    let activeElement = document.querySelector('.dg-wrapper + .drag-item-content');
+    if (!activeElement) {
+        activeElement = document.querySelector('.drag-item-content');
+    }
+    isLockedLayer = !!+activeElement.dataset.locked;
+    let coordinates = [];
+    let activeElementCoordinates = {};
+    const activeElementConfig = activeElement.getBoundingClientRect();
+    coordinates = [].map.call(document.querySelectorAll('.drag-item-content'), element => {
+        if (activeElement !== element) {
+            const config = element.getBoundingClientRect();
+            return {
+                left: config.left,
+                top: config.top,
+                right: config.right,
+                bottom: config.bottom,
+                centerX: config.left + config.width / 2,
+                centerY: config.top + config.height / 2
+            }
+        }
+    }).filter(config => config);
+    activeElementCoordinates = {
+        left: activeElementConfig.left,
+        top: activeElementConfig.top,
+        right: activeElementConfig.right,
+        bottom: activeElementConfig.bottom,
+        centerX: activeElementConfig.left + activeElementConfig.width / 2,
+        centerY: activeElementConfig.top + activeElementConfig.height / 2
+    }
+    const screenCenterX = document.body.clientWidth / 2;
+    const screenCenterY = document.body.clientHeight / 2;
     controls.innerHTML = brackets;
     
     addClass(controls, 'dg-controls');
@@ -185,9 +241,16 @@ function _init(sel) {
     _controls.css(css);
     
     const _container = Helper(container);
-    
     Object.assign(this.storage, {
         controls: controls,
+        guidlines: guidlines,
+        coordinates: coordinates,
+        screenCenterX: screenCenterX,
+        screenCenterY: screenCenterY,
+        verticalCoordinates: getArrayOfCoorditates(coordinates, screenCenterX, 'left'),
+        horizontalCoordinates: getArrayOfCoorditates(coordinates, screenCenterY, 'top'),
+        activeElementCoordinates: activeElementCoordinates,
+        activeElement: activeElement,
         handles: {
             tl: _container.find('.dg-hdl-tl'),
             tr: _container.find('.dg-hdl-tr'),
@@ -201,7 +264,6 @@ function _init(sel) {
         },
         parent: _parent
     });
-    
     _controls.on('mousedown', this._onMouseDown)
       .on('touchstart', this._onTouchStart);
     const textContainer = _sel[0].querySelector('.text-container');
@@ -222,6 +284,15 @@ function _destroy() {
 }
 
 function _compute(e) {
+    guidLinesConfig.stopDragX = false;
+    guidLinesConfig.stopDragY = false;
+    guidLinesConfig.tempPositionX = 0;
+    guidLinesConfig.tempPositionY = 0;
+    guidLinesConfig.normalizeX = 0;
+    guidLinesConfig.newPositionX = 0;
+    guidLinesConfig.newPositionY = 0;
+    guidLinesConfig.tempPositionX = 0;
+    guidLinesConfig.tempPositionY = 0;
     window.parent.postMessage({ event: 'compute-from-iframe' }, 'http://127.0.0.1:3978/#/edit');
     const {
         el,
@@ -401,212 +472,389 @@ function processResize(
   revX,
   revY
 ) {
-    
-    const {
-        el,
-        storage
-    } = this;
-    
-    const {
-        controls,
-        handle,
-        snap,
-        left,
-        top,
-        coordX,
-        coordY,
-        refang,
-        dimens,
-        parent,
-        transform
-    } = storage;
-    
-    
-    const { style } = controls;
-    
-    if (width !== null) {
-        style.width = `${snapToGrid(width, snap.x)}px`;
-    }
-    
-    const canResizeWithShiftKey = handle[0].classList.contains('dg-hdl-br') ||
-      handle[0].classList.contains('dg-hdl-tr') ||
-      handle[0].classList.contains('dg-hdl-bl') ||
-      handle[0].classList.contains('dg-hdl-tl');
-    let isText = false;
-    const container = el.querySelector('.text-container');
-    if (container && canResizeWithShiftKey) {
-        isText = true;
-    }
-    const scaleHeight = storage.ch / storage.cw;
-    if (height !== null) {
-        console.log()
-        if (((!storage.shiftKey && locked) || isText) && canResizeWithShiftKey) {
-            height = width * scaleHeight;
+    if (!isLockedLayer) {
+        const {
+            el,
+            storage
+        } = this;
+        
+        const {
+            controls,
+            handle,
+            snap,
+            left,
+            top,
+            coordX,
+            coordY,
+            refang,
+            dimens,
+            parent,
+            transform
+        } = storage;
+        
+        const { style } = controls;
+        
+        if (width !== null) {
+            style.width = `${snapToGrid(width, snap.x)}px`;
         }
-        style.height = `${snapToGrid(height, snap.y)}px`;
+        
+        const canResizeWithShiftKey = handle[0].classList.contains('dg-hdl-br') ||
+          handle[0].classList.contains('dg-hdl-tr') ||
+          handle[0].classList.contains('dg-hdl-bl') ||
+          handle[0].classList.contains('dg-hdl-tl');
+        let isText = false;
+        const container = el.querySelector('.text-container');
+        if (container && canResizeWithShiftKey) {
+            isText = true;
+        }
+        const scaleHeight = storage.ch / storage.cw;
+        if (height !== null) {
+            if (((!storage.shiftKey && locked) || isText) && canResizeWithShiftKey) {
+                height = width * scaleHeight;
+            }
+            style.height = `${snapToGrid(height, snap.y)}px`;
+        }
+        
+        if (container && (handle[0].classList.contains('dg-hdl-mr') || handle[0].classList.contains('dg-hdl-ml'))) {
+            let newHeight = 0;
+            [].forEach.call(container.querySelectorAll('.simple-text-line'), (el) => {
+                newHeight += el.clientHeight || el.offsetHeight;
+            })
+            style.height = !newHeight ? `${snapToGrid(container.parentNode.clientHeight, snap.y)}px` : `${snapToGrid(newHeight, snap.y)}px`;
+        }
+        
+        const coords = rotatedTopLeft(
+          left,
+          top,
+          style.width,
+          style.height,
+          refang,
+          revX,
+          revY
+        );
+        let resultY = top - (coords.top - coordY);
+        let resultX = left - (coords.left - coordX);
+        
+        const matrix = [...transform];
+        
+        if (isText) {
+            container.style.transformOrigin = `top left`;
+            container.style.transform = `scale(${parseFloat(style.width) / storage.cw})`;
+        }
+        matrix[4] = resultX;
+        matrix[5] = resultY;
+        
+        const css = matrixToCSS(matrix);
+        
+        Helper(controls).css(css);
+        
+        css.width = fromPX(
+          style.width,
+          parent.css('width'),
+          dimens.width
+        );
+        
+        css.height = fromPX(
+          style.height,
+          parent.css('height'),
+          dimens.height
+        );
+        
+        const size = {
+            width: css.width,
+            height: css.height,
+        }
+        
+        Helper(el).css(css);
+        window.parent.postMessage({
+            event: 'resize-from-package',
+            size: size,
+            isText: isText
+        }, 'http://127.0.0.1:3978/#/edit');
+        storage.cached = matrix;
     }
-    
-    if (container && (handle[0].classList.contains('dg-hdl-mr') || handle[0].classList.contains('dg-hdl-ml'))) {
-        let newHeight = 0;
-        [].forEach.call(container.querySelectorAll('.simple-text-line'), (el) => {
-            newHeight += el.clientHeight || el.offsetHeight;
-        })
-        style.height = !newHeight ? `${snapToGrid(container.parentNode.clientHeight, snap.y)}px` : `${snapToGrid(newHeight, snap.y)}px`;
-    }
-    
-    const coords = rotatedTopLeft(
-      left,
-      top,
-      style.width,
-      style.height,
-      refang,
-      revX,
-      revY
-    );
-    let resultY = top - (coords.top - coordY);
-    let resultX = left - (coords.left - coordX);
-    
-    const matrix = [...transform];
-    
-    if (isText) {
-        container.style.transformOrigin = `top left`;
-        container.style.transform = `scale(${parseFloat(style.width) / storage.cw})`;
-    }
-    matrix[4] = resultX;
-    matrix[5] = resultY;
-    
-    const css = matrixToCSS(matrix);
-    
-    Helper(controls).css(css);
-    
-    
-    css.width = fromPX(
-      style.width,
-      parent.css('width'),
-      dimens.width
-    );
-    
-    css.height = fromPX(
-      style.height,
-      parent.css('height'),
-      dimens.height
-    );
-    
-    const size = {
-        width: css.width,
-        height: css.height,
-    }
-    
-    
-    Helper(el).css(css);
-    window.parent.postMessage({ event: 'resize-from-package', size: size, isText: isText }, 'http://127.0.0.1:3978/#/edit');
-    storage.cached = matrix;
 }
-
+let normalizeValue = 0;
 function processMove(
   top,
   left
 ) {
-    const {
-        el,
-        storage
-    } = this;
-    
-    const {
-        controls,
-        transform,
-        snap
-    } = storage;
-    
-    const matrix = [...transform];
-    
-    const props = {
-        elDrag: el,
-        elDragContainer: document.querySelector('body')
-    }
-    
-    if (props.elDrag.name && props.elDrag.name.match('fullscreen')) {
-        props.elDragClient = {
-            left: Math.floor(+props.elDrag.name.split('/')[1]),
-            right: Math.floor(+props.elDrag.name.split('/')[2]),
-            top: Math.floor(+props.elDrag.name.split('/')[3]),
-            bottom: Math.floor(+props.elDrag.name.split('/')[4])
-        }
-        if (props.elDragClient.left || Math.abs(Math.floor(props.elDragClient.right + 2)) - Math.floor(props.elDragContainer.clientWidth)) {
-            if (left > 0 && props.elDragClient.left) {
-                // need to optimize this
-                if (Math.abs(props.elDragClient.left) > Math.abs(left)) {
-                    matrix[4] = snapToGrid(transform[4] + Math.floor(left), snap.x);
-                } else {
-                    matrix[4] = snapToGrid(transform[4] + Math.abs(props.elDragClient.left), snap.x);
-                }
-            } else if (left <= 0 && Math.floor(props.elDragClient.right - 2) - Math.floor(props.elDragContainer.clientWidth)) {
-                if ((Math.abs(Math.floor(props.elDragClient.right)) - Math.floor(props.elDragContainer.clientWidth)) - Math.abs(left) > 0) {
-                    matrix[4] = snapToGrid(transform[4] + left, snap.x);
-                } else {
-                    matrix[4] = snapToGrid(transform[4] - (Math.abs(Math.floor(props.elDragClient.right)) - Math.floor(props.elDragContainer.clientWidth)), snap.x);
-                }
-            }
-        }
-        if (props.elDragClient.top) {
-            if (top > 0 && props.elDragClient.top) {
-                // need to optimize this
-                if (Math.abs(props.elDragClient.top) > Math.abs(top)) {
-                    matrix[5] = snapToGrid(transform[5] + Math.floor(top), snap.y);
-                } else {
-                    matrix[5] = snapToGrid(transform[5] + (Math.abs(props.elDragClient.top)), snap.y);
-                }
-            } else if (left <= 0 && Math.floor(props.elDragClient.bottom - 2) - Math.floor(props.elDragContainer.clientHeight)) {
-                if ((Math.abs(Math.floor(props.elDragClient.bottom)) - Math.floor(props.elDragContainer.clientHeight)) - Math.abs(top) > 0) {
-                    matrix[5] = snapToGrid(transform[5] + top, snap.y);
-                } else {
-                    matrix[5] = snapToGrid(transform[5] - (Math.abs(Math.floor(props.elDragClient.bottom)) - Math.floor(props.elDragContainer.clientHeight)), snap.y);
-                }
-            }
-        }
+    if (!isLockedLayer) {
+        const {
+            el,
+            storage
+        } = this;
+        const {
+            controls,
+            transform,
+            snap
+        } = storage;
         
-    } else {
-        matrix[4] = snapToGrid(transform[4] + left, snap.x);
-        matrix[5] = snapToGrid(transform[5] + top, snap.y);
+        const matrix = [...transform];
+        
+        const props = {
+            elDrag: el,
+            elDragContainer: document.querySelector('body')
+        }
+        if (props.elDrag.name && props.elDrag.name.match('fullscreen')) {
+            props.elDragClient = {
+                left: Math.floor(+props.elDrag.name.split('/')[1]),
+                right: Math.floor(+props.elDrag.name.split('/')[2]),
+                top: Math.floor(+props.elDrag.name.split('/')[3]),
+                bottom: Math.floor(+props.elDrag.name.split('/')[4])
+            }
+            if (props.elDragClient.left || Math.abs(Math.floor(props.elDragClient.right + 2)) - Math.floor(props.elDragContainer.clientWidth)) {
+                if (left > 0 && props.elDragClient.left) {
+                    // need to optimize this
+                    if (Math.abs(props.elDragClient.left) > Math.abs(left)) {
+                        matrix[4] = snapToGrid(transform[4] + Math.floor(left), snap.x);
+                    } else {
+                        matrix[4] = snapToGrid(transform[4] + Math.abs(props.elDragClient.left), snap.x);
+                    }
+                } else if (left <= 0 && Math.floor(props.elDragClient.right - 2) - Math.floor(props.elDragContainer.clientWidth)) {
+                    if ((Math.abs(Math.floor(props.elDragClient.right)) - Math.floor(props.elDragContainer.clientWidth)) - Math.abs(left) > 0) {
+                        matrix[4] = snapToGrid(transform[4] + left, snap.x);
+                    } else {
+                        matrix[4] = snapToGrid(transform[4] - (Math.abs(Math.floor(props.elDragClient.right)) - Math.floor(props.elDragContainer.clientWidth)), snap.x);
+                    }
+                }
+            }
+            if (props.elDragClient.top) {
+                if (top > 0 && props.elDragClient.top) {
+                    // need to optimize this
+                    if (Math.abs(props.elDragClient.top) > Math.abs(top)) {
+                        matrix[5] = snapToGrid(transform[5] + Math.floor(top), snap.y);
+                    } else {
+                        matrix[5] = snapToGrid(transform[5] + (Math.abs(props.elDragClient.top)), snap.y);
+                    }
+                } else if (left <= 0 && Math.floor(props.elDragClient.bottom - 2) - Math.floor(props.elDragContainer.clientHeight)) {
+                    if ((Math.abs(Math.floor(props.elDragClient.bottom)) - Math.floor(props.elDragContainer.clientHeight)) - Math.abs(top) > 0) {
+                        matrix[5] = snapToGrid(transform[5] + top, snap.y);
+                    } else {
+                        matrix[5] = snapToGrid(transform[5] - (Math.abs(Math.floor(props.elDragClient.bottom)) - Math.floor(props.elDragContainer.clientHeight)), snap.y);
+                    }
+                }
+            }
+            
+        } else {
+            const activeElementClientRect = storage.activeElement.getBoundingClientRect();
+            const activeElementConfig = {
+                left: activeElementClientRect.left,
+                top: activeElementClientRect.top,
+                right: activeElementClientRect.right,
+                bottom: activeElementClientRect.bottom,
+                centerX: activeElementClientRect.left + activeElementClientRect.width / 2,
+                centerY: activeElementClientRect.top + activeElementClientRect.height / 2
+            };
+            matrix[4] = snapToGrid(transform[4] + handleGuideLines(storage, left, activeElementConfig, 'left'), snap.x);
+            // matrix[4] = snapToGrid(transform[4] + left, snap.x);
+            matrix[5] = snapToGrid(transform[5] + handleGuideLines(storage, top, activeElementConfig, 'top'), snap.y);
+            // matrix[5] = snapToGrid(transform[5] + top, snap.y);
+        }
+        const css = matrixToCSS(matrix);
+        Helper(controls).css(css);
+        Helper(el).css(css);
+        storage.cached = matrix;
     }
-    const css = matrixToCSS(matrix);
-    
-    Helper(controls).css(css);
-    Helper(el).css(css);
-    
-    storage.cached = matrix;
 }
 
+
+const vertivalConfigFields = ['left', 'right', 'centerX']
+const horizontalConfigFields = ['top', 'bottom', 'centerY']
+
+let tmp = 0;
+let stopDrag = false;
+
+
+
+// GUIDLINES
+function approxeq(numbers, controlNumber, epsilon) {
+    if (epsilon == null) {
+        epsilon = 5;
+    }
+    return Array.from(numbers).find(number => Math.abs(number - controlNumber) < epsilon)
+};
+
+function getGuidlinesConfig(elenentPositions, activeElemetPosition, screenCenterX) {
+    const config = {
+        left: false,
+        centerX: false,
+        right: false,
+        top: false,
+        centerY: false,
+        bottom: false
+    }
+    const coorditates = {
+    
+    }
+    let diffsX = [];
+    let diffsY = [];
+    
+    const sides = {
+        leftSide: approxeq(elenentPositions, activeElemetPosition.left),
+        centerElementSideX: approxeq(elenentPositions, activeElemetPosition.centerX),
+        rightSide: approxeq(elenentPositions, activeElemetPosition.right),
+        topSide: approxeq(elenentPositions, activeElemetPosition.top),
+        bottomSide: approxeq(elenentPositions, activeElemetPosition.bottom),
+        centerElementSideY: approxeq(elenentPositions, activeElemetPosition.centerY)
+    }
+    
+    for (let [key, value] of Object.entries(sides)) {
+        if (value) {
+            switch (key) {
+                case 'leftSide': {
+                    coorditates.left = sides.leftSide;
+                    config.left = true;
+                    diffsX.push(+sides.leftSide - +activeElemetPosition.left);
+                    break;
+                }
+                case 'centerElementSideX': {
+                    coorditates.centerX = sides.centerElementSideX;
+                    config.centerX = true;
+                    diffsX.push(+sides.centerElementSideX - +activeElemetPosition.centerX);
+                    break;
+                }
+                case 'rightSide': {
+                    coorditates.right = sides.rightSide;
+                    config.right = true;
+                    diffsX.push(+sides.rightSide - +activeElemetPosition.right);
+                    break;
+                }
+                case 'topSide': {
+                    coorditates.top = sides.topSide;
+                    config.top = true;
+                    diffsY.push(+sides.topSide - +activeElemetPosition.top);
+                    break;
+                }
+                case 'centerElementSideY': {
+                    coorditates.centerY = sides.centerElementSideY;
+                    config.centerY = true;
+                    diffsY.push(+sides.centerElementSideY - +activeElemetPosition.centerY);
+                    break;
+                }
+                case 'bottomSide': {
+                    coorditates.bottom = sides.bottomSide;
+                    config.bottom = true;
+                    diffsY.push(+sides.bottomSide - +activeElemetPosition.bottom);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
+    return {
+        config: config,
+        coorditates: coorditates,
+        diffX: diffsX.length ? Math.min.apply(null, diffsX) : 10,
+        diffY: diffsY.length ? Math.min.apply(null, diffsY) : 10
+    };
+}
+
+function getArrayOfCoorditates(coordinates, center, type) {
+    let res = [center];
+    coordinates.map(element => {
+        res = type === 'left'
+          ? res.concat(Object.values((({left, right, centerX}) => ({left, right, centerX}))(element)))
+          : res.concat(Object.values((({top, bottom, centerY}) => ({top, bottom, centerY}))(element)))
+    })
+    return res;
+}
+
+function handleGuideLines (storage, position, activeElementConfig, type) {
+    const linesConfig = getGuidlinesConfig(type === 'left' ? storage.verticalCoordinates : storage.horizontalCoordinates, activeElementConfig);
+    const linesCoordinates = type === 'left'
+      ? (({left, right, centerX}) => ({left, right, centerX}))(linesConfig.coorditates)
+      : (({top, bottom, centerY}) => ({top, bottom, centerY}))(linesConfig.coorditates)
+    const resPosition = type === 'left'
+      ? stopDragHandlerX(linesCoordinates, linesConfig.diffX, position)
+      : stopDragHandlerY(linesCoordinates, linesConfig.diffY, position);
+    for (let [key, value] of Object.entries(linesCoordinates)) {
+        if (value && Math.abs(value - activeElementConfig[key]) < 2.5) {
+            storage.guidlines[key].style.display = 'block';
+            storage.guidlines[key].style[type] = `${parseInt(value)}px`;
+            storage.guidlines[key].style[type === 'left' ? 'borderLeft' : 'borderTop'] = (value === storage.screenCenterY || value === storage.screenCenterX)
+              ? `1.5px solid rgba(51, 122, 255, 0.51)`
+              : `1.5px dotted rgba(51, 122, 255, 0.51)`;
+        } else {
+            storage.guidlines[key].style.display = 'none';
+        }
+    }
+    return resPosition;
+    
+}
+
+// TODO: optimize (to one function)
+function stopDragHandlerX(linesConfig, diffX, position) {
+    guidLinesConfig.normalizeX = guidLinesConfig.newPositionX - position
+    guidLinesConfig.newPositionX = position;
+    for (let [key, value] of Object.entries(linesConfig)) {
+        if (value && !guidLinesConfig.stopDragX && !guidLinesConfig.tempPositionX && !guidLinesConfig.stopDragX) {
+            guidLinesConfig.stopDragX = true;
+            guidLinesConfig.newPositionX += (diffX + guidLinesConfig.normalizeX);
+            guidLinesConfig.tempPositionX = guidLinesConfig.newPositionX;
+        }  else if (Math.abs(guidLinesConfig.newPositionX - guidLinesConfig.tempPositionX) >= 5 && guidLinesConfig.stopDragX) {
+            guidLinesConfig.stopDragX = false;
+            guidLinesConfig.normalizeX = 0;
+            guidLinesConfig.tempPositionX = 0;
+        }
+    }
+    return !guidLinesConfig.stopDragX ? guidLinesConfig.newPositionX : guidLinesConfig.tempPositionX;
+}
+
+function stopDragHandlerY(linesConfig, diffY, position) {
+    guidLinesConfig.normalizeY = guidLinesConfig.newPositionY - position
+    guidLinesConfig.newPositionY = position;
+    for (let [key, value] of Object.entries(linesConfig)) {
+        if (value && !guidLinesConfig.stopDragY && !guidLinesConfig.tempPositionY) {
+            guidLinesConfig.stopDragY = true;
+            guidLinesConfig.newPositionY += (diffY + guidLinesConfig.normalizeY);
+            guidLinesConfig.tempPositionY = guidLinesConfig.newPositionY;
+        }  else if (Math.abs(guidLinesConfig.newPositionY - guidLinesConfig.tempPositionY) >= 5 && guidLinesConfig.stopDragY) {
+            guidLinesConfig.stopDragY = false;
+            guidLinesConfig.normalizeY = 0;
+            guidLinesConfig.tempPositionY = 0;
+        }
+    }
+    return !guidLinesConfig.stopDragY ? guidLinesConfig.newPositionY : guidLinesConfig.tempPositionY;
+}
+
+// END GUIDLINES
+
 function processRotate(radians) {
-    
-    const {
-        el,
-        storage
-    } = this;
-    
-    const {
-        controls,
-        transform,
-        refang,
-        snap
-    } = storage;
-    
-    const matrix = [...transform];
-    
-    const angle = snapToGrid(refang + radians, snap.angle);
-    //rotate(Xdeg) = matrix(cos(X), sin(X), -sin(X), cos(X), 0, 0);
-    matrix[0] = floatToFixed(Math.cos(angle));
-    matrix[1] = floatToFixed(Math.sin(angle));
-    matrix[2] = - floatToFixed(Math.sin(angle));
-    matrix[3] = floatToFixed(Math.cos(angle));
-    
-    window.parent.postMessage({ event: 'rotate-from-resizer', value: angle * (180 / Math.PI) }, 'http://127.0.0.1:3978/#/edit');
-    const css = matrixToCSS(matrix);
-    
-    Helper(controls).css(css);
-    Helper(el).css(css);
-    
-    storage.cached = matrix;
+    if (!isLockedLayer) {
+        const {
+            el,
+            storage
+        } = this;
+        
+        const {
+            controls,
+            transform,
+            refang,
+            snap
+        } = storage;
+        
+        const matrix = [...transform];
+        
+        const angle = snapToGrid(refang + radians, snap.angle);
+        //rotate(Xdeg) = matrix(cos(X), sin(X), -sin(X), cos(X), 0, 0);
+        matrix[0] = floatToFixed(Math.cos(angle));
+        matrix[1] = floatToFixed(Math.sin(angle));
+        matrix[2] = -floatToFixed(Math.sin(angle));
+        matrix[3] = floatToFixed(Math.cos(angle));
+        
+        window.parent.postMessage({
+            event: 'rotate-from-resizer',
+            value: angle * (180 / Math.PI)
+        }, 'http://127.0.0.1:3978/#/edit');
+        const css = matrixToCSS(matrix);
+        
+        Helper(controls).css(css);
+        Helper(el).css(css);
+        
+        storage.cached = matrix;
+    }
 }
 
 function matrixToCSS(arr) {

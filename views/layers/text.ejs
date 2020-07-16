@@ -10,11 +10,8 @@
   }
   return styles
 } %>
-<div
-        class="text-container"
-        style="<%= getStyles(layer.settings.generalSettings)%>; position: relative"
->
-  <div
-          class="single-text" id="text<%= layer.position%>"
-  ><%- (layer.content.value || layer.content.html) || '' %></div>
+<div class="text-container" style="<%= getStyles(layer.settings.generalSettings)%>; position: relative">
+  <div class="single-text" id="text<%= layer.position%>">
+    <%- (layer.content.value || layer.content.html) || '' %>
+  </div>
 </div>

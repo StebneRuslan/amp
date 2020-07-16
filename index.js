@@ -8,91 +8,73 @@ let Amp = class Amp {
     this.configPaths = configPaths
   }
 
-  setConfigPath (data) {
-    return Object.assign(data, Object.assign({ type: this.type }, pick(this.configPaths, ['v0Path', 'ampStoryPath', 'ampVideoPath', 'ampAnimationPath', 'fontPath'])))
+  setConfigPath (data, fontHost = '', type, snippets = [], zipExport = false, bookendLink = '') {
+    return Object.assign(data, Object.assign({
+      snippets,
+      bookendLink,
+      fontsHost: fontHost || 'https://fonts.cutnut.tv/',
+      zipExport,
+      type: type || this.type
+    }, pick(this.configPaths, ['v0Path', 'ampStoryPath', 'ampVideoPath', 'ampAnimationPath', 'fontPath'])))
   }
 
-  createSinglePage (data, calback) {
+  createSinglePage (data, callback) {
     let resultHtml = ''
-    let fullData = this.setConfigPath(data)
-    fullData.snippets = []
-    fullData.bookendLink = ''
-    fullData.fontsHost = ''
-    fullData.zipExport = false
-    app.render(path.resolve(__dirname, 'views', 'ampSinglePage.ejs'), fullData, function (err, html) {
+    app.render(path.resolve(__dirname, 'views/ampSinglePage.ejs'), this.setConfigPath(data), function (err, html) {
       if (err) {
         console.log(err)
       } else {
         resultHtml = html.replace(/\n/g, '')
       }
-      calback(resultHtml)
+      callback(resultHtml)
     })
   }
 
-  createStaticSinglePage (data, calback) {
+  createStaticSinglePage (data, callback) {
     let resultHtml = ''
-    let fullData = this.setConfigPath(data)
-    fullData.snippets = []
-    fullData.bookendLink = ''
-    fullData.fontsHost = ''
-    fullData.zipExport = false
-    app.render(path.resolve(__dirname, 'views', 'ampPupeteerSinglePage.ejs'), fullData, function (err, html) {
+    app.render(path.resolve(__dirname, 'views/ampPupeteerSinglePage.ejs'), this.setConfigPath(data), function (err, html) {
       if (err) {
         console.log(err)
       } else {
         resultHtml = html.replace(/\n/g, '')
       }
-      calback(resultHtml)
+      callback(resultHtml)
     })
   }
 
-  createSinglePageWithAnimations (data, calback) {
+  createSinglePageWithAnimations (data, callback) {
     let resultHtml = ''
-    let fullData = this.setConfigPath(data)
-    fullData.snippets = []
-    fullData.bookendLink = ''
-    fullData.fontsHost = ''
-    fullData.zipExport = false
-    app.render(path.resolve(__dirname, 'views', 'ampSinglePageWithAnimations.ejs'), fullData, function (err, html) {
+    app.render(path.resolve(__dirname, 'views/ampSinglePageWithAnimations.ejs'), this.setConfigPath(data), function (err, html) {
       if (err) {
         console.log(err)
       } else {
         resultHtml = html.replace(/\n/g, '')
       }
-      calback(resultHtml)
+      callback(resultHtml)
     })
   }
 
-  createSinglePageWithoutScripts (data, fontHost, calback) {
+  createSinglePageWithoutScripts (data, fontHost, callback) {
     let resultHtml = ''
-    let fullData = this.setConfigPath(data)
-    fullData.snippets = []
-    fullData.bookendLink = ''
-    fullData.zipExport = false
-    fullData.fontsHost = fontHost || 'https://fonts.cutnut.tv/'
-    app.render(path.resolve(__dirname, 'views', 'singlePageWithoutScripts.ejs'), fullData, function (err, html) {
+    let fullData = this.setConfigPath(data, fontHost || 'https://fonts.cutnut.tv/')
+    app.render(path.resolve(__dirname, 'views/singlePageWithoutScripts.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
       } else {
         resultHtml = html.replace(/\n/g, '')
       }
-      calback(resultHtml)
+      callback(resultHtml)
     })
   }
 
   createFullStory ({ config, userAnalytics = null, customerAnalyticsKey = null, snippets = [], bookendLink = '', fontsHost, zipExport = false }, callback) {
     let resultHtml = ''
-    config.type = this.type
     let fullData = this.setConfigPath(config)
-    if (config.ampStory) {
-      config.ampStory.googleAnalytics = userAnalytics
-      config.ampStory.customerAnalyticsKey = customerAnalyticsKey
+    if (fullData.ampStory) {
+      fullData.ampStory.googleAnalytics = userAnalytics
+      fullData.ampStory.customerAnalyticsKey = customerAnalyticsKey
     }
-    config.snippets = snippets
-    config.zipExport = zipExport
-    config.bookendLink = bookendLink
-    config.fontsHost = fontsHost || 'https://fonts.cutnut.tv/'
-    app.render(path.resolve(__dirname, 'views', 'ampViewer.ejs'), fullData, function (err, html) {
+    app.render(path.resolve(__dirname, 'views/ampViewer.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
       } else {

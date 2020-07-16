@@ -1,0 +1,38 @@
+<%getSvgSizeInProcentage = function(type) {
+  return (100 * (layer.settings.layerSettings[type] + layer.settings.layerSettings.shapeStyles.thickness / 2)) /
+    (layer.settings.layerSettings[type] + layer.settings.layerSettings.shapeStyles.thickness * 2) + '%';
+} %>
+
+<%getSvgTranslate = function() {
+  return ((layer.settings.layerSettings.shapeStyles.thickness / 2) / 16).toFixed(2);
+} %>
+
+<%setColor = function(type) {
+  if (layer.settings.layerSettings) {
+    if (typeof layer.settings.layerSettings.shapeStyles[type] === 'string') {
+      return layer.settings.layerSettings.shapeStyles[type]
+    } else {
+      return layer.settings.layerSettings.shapeStyles[type].type === 'solid' ? layer.settings.layerSettings.shapeStyles[type].leftColor :
+        `url(#${layer.settings.layerSettings.shapeStyles[type].type === 'linear' ? 'linear' : 'radial'}${type}${currentSlide.position}${layer.position})`
+    }
+  } else {
+    return 'black'
+  }
+} %>
+
+<%setCoordinates = function(type, colorType) {
+  if (isNaN(layer.settings.layerSettings.shapeStyles[colorType].angle)) {
+    return 0
+  }
+  const anglePI = -layer.settings.layerSettings.shapeStyles[colorType].angle * (Math.PI / 180);
+  switch (type) {
+    case 'x1':
+      return Math.round(50 + Math.sin(anglePI) * 50) + '%';
+    case 'y1':
+      return Math.round(50 + Math.cos(anglePI) * 50) + '%';
+    case 'x2':
+      return Math.round(50 + Math.sin(anglePI + Math.PI) * 50) + '%'
+    case 'y2':
+      return Math.round(50 + Math.cos(anglePI + Math.PI) * 50) + '%'
+  }
+} %>

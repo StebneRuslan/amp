@@ -21,6 +21,17 @@
             "send_to": ["<%=analyticsKey%>"]
           }
         },
+        "click on amp-story-cta-layer trigger": {
+          "on": "click",
+          "selector": "${storyPageId} amp-story-cta-layer a",
+          "vars": {
+            "event_name": "custom",
+            "event_action": "link_click",
+            "event_category": "${title}",
+            "event_label": "${storyPageId}",
+            "send_to": ["<%=analyticsKey%>"]
+          }
+        },
         "storyEnd": {
           "on": "story-last-page-visible",
           "vars": {

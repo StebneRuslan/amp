@@ -29,6 +29,35 @@
         .drag-item-content, .dg-controls {
             pointer-events: auto;
         }
+
+        .guid-lines-container {
+            position: absolute;
+        }
+        .guid-line {
+            position: absolute;
+            height: 0;
+            display: none;
+            width: 0;
+            z-index: 100;
+        }
+        .guid-line-x {
+            width: 100vw;
+            z-index: 100;
+            border-top: 1.5px dotted rgba(51, 122, 255, 0.51);
+        }
+        .guid-line-y {
+            height: 100vh;
+            z-index: 100;
+            border-left: 1.5px dotted rgba(51, 122, 255, 0.51);
+        }
+        .center-x {
+            width: 100vw;
+            top: 50vh;
+        }
+        .center-y {
+            left: 50vw;
+        }
+
         <% } %>
 
         amp-story.single-slide > div {
@@ -39,6 +68,9 @@
         }
         .container:not(#full-screen) {
             background-color: #eeeeee;
+        }
+        amp-img.small-image img {
+            object-fit: fill;
         }
         .fullscreen img, .fullscreen video{
             object-fit: cover;
