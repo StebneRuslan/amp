@@ -62,7 +62,7 @@ ampStory.cuts.map(currentSlide => { %>
   <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
   <%if (currentSlide.position >= 1 && ampStory.type !== 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link' && (layer.settings.ctaLayerSettings.link || layer.settings.ctaLayerSettings.withQueries)) {%>
     <% if (layer.settings.ctaLayerSettings.withQueries) { withQueries = true }%>
-    <% include ./components/cta-layer.ejs %>
+    <%- include('components/cta-layer.ejs', {layer, currentSlide}); %>
   <% } else if (ampStory.type === 'amp-template' && layer.settings.ctaLayerSettings && layer.type === 'cta-link' && layer.settings.ctaLayerSettings.link) {%>
     <%- include('./components/dirty-cta-layer.ejs', {withEvent: false, layer, currentSlide})%>
   <% } %>

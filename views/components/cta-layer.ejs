@@ -1,13 +1,13 @@
 <% include ../main.ejs %>
 <amp-story-cta-layer>
-  <a class='cta-link'
-    style="
-      background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
-      color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-      border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-      bottom: 10%;
-      border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 1.5 : layer.settings.layerSettings.shapeStyles.round / 16) + 'em';%>"
-    href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link, currentSlide.position)%>"
-    id="<%=`cta-${currentSlide.position}`%>"><%=layer.settings.ctaLayerSettings.linkTitle%>
+  <a class="<%=layer.settings.ctaLayerSettings.withQueries ? 'cta-link cta-link-with-queries' : 'cta-link'%>"
+     style="
+       background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
+       color: <%=layer.settings.ctaLayerSettings.fontColor%>;
+       border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
+       bottom: 10%;
+       border-radius: <%=(isNaN(layer.settings.layerSettings.shapeStyles.round) ? 1.5 : layer.settings.layerSettings.shapeStyles.round / 16) + 'em';%>"
+     href="<%=changeCtaLink(layer.settings.ctaLayerSettings.link, currentSlide.position)%>"
+     id="<%=`cta-${currentSlide.position}`%>"><%=layer.settings.ctaLayerSettings.linkTitle%>
   </a>
 </amp-story-cta-layer>

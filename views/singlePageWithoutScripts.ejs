@@ -81,8 +81,9 @@
     </style>
   </noscript>
   <style amp-custom>
-    <% include ./fonts/custom.ejs %><% if (ampStory.fromPreview || !v0Path.includes('https')) {
-        %><% include ./fonts/alegreya.ejs %><% include ./fonts/anonymousPro.ejs %><% include ./fonts/archivonarrow.ejs %><% include ./fonts/arvo.ejs %><% include ./fonts/biorhyme.ejs %><% include ./fonts/cabin.ejs %><% include ./fonts/cardo.ejs %><% include ./fonts/chivo.ejs %><% include ./fonts/cormorant.ejs %><% include ./fonts/crimsontext.ejs %><% include ./fonts/domine.ejs %><% include ./fonts/eczar.ejs %><% include ./fonts/firasans.ejs %><% include ./fonts/ibmplexsans.ejs %><% include ./fonts/inconsolata.ejs %><% include ./fonts/inknutantiqua.ejs %><% include ./fonts/karla.ejs %><% include ./fonts/lato.ejs %><% include ./fonts/librebaskerville.ejs %><% include ./fonts/librefranklin.ejs %><% include ./fonts/lora.ejs %><% include ./fonts/merriweather.ejs %><% include ./fonts/montserrat.ejs %><% include ./fonts/neuton.ejs %><% include ./fonts/opensans.ejs %><% include ./fonts/playfairdisplay.ejs %><% include ./fonts/poppins.ejs %><% include ./fonts/prozalibre.ejs %><% include ./fonts/ptsans.ejs %><% include ./fonts/ptserif.ejs %><% include ./fonts/raleway.ejs %><% include ./fonts/roboto.ejs %><% include ./fonts/robotoslab.ejs %><% include ./fonts/rubik.ejs %><% include ./fonts/sourcesanspro.ejs %><% include ./fonts/sourceserifpro.ejs %><% include ./fonts/spectral.ejs %><% include ./fonts/worksans.ejs %>.resizable .resizers .resizer {
+    <% include ./fonts/custom.ejs %>
+    <% if (ampStory.fromPreview || !v0Path.includes('https')) { %>
+    .resizable .resizers .resizer {
       width: 10px;
       height: 10px;
       border-radius: 50%;
@@ -344,7 +345,7 @@
     @media (max-width: 1023px) {
       @media screen and (min-aspect-ratio: 9/12) {
         .single-text {
-          font-size: 1.55vh;
+          font-size: 1.46vh;
         }
 
         .animate {
@@ -364,7 +365,7 @@
 
       @media screen and (max-aspect-ratio: 9/20) {
         .single-text {
-          font-size: 2.4vw;
+          font-size: 2.62vw;
         }
 
         div.animate {
@@ -381,7 +382,7 @@
 
     @media screen and (min-width: 1024px) {
       .single-text {
-        font-size: 1.53vh;
+        font-size: 1.55vh;
       }
 
       div.animate {

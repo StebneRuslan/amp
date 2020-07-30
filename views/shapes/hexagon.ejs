@@ -7,16 +7,16 @@
      viewBox='0 -24 64 64'
      preserveAspectRatio='none'>
     <% include ./defs.ejs %>
-<g>
     <g>
-        <path
-          d='M 0 8 L 12 36 L 52 36 L 64 8 L 52 -20 L 12 -20 z'
-          stroke='<%= setColor('borderColor') %>'
-          fill='<%= setColor('fillColor') %>'
-          stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && +layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
-          vector-effect='non-scaling-stroke'/>
+        <g>
+            <path
+              d='M 0 8 L 12 40 L 52 40 L 64 8 L 52 -24 L 12 -24 z'
+              stroke='<%= setColor('borderColor') %>'
+              fill='<%= setColor('fillColor') %>'
+              stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && +layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
+              vector-effect='non-scaling-stroke'/>
+        </g>
     </g>
-</g>
     <g>
     </g>
     <g>

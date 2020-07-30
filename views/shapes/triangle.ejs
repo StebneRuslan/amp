@@ -6,9 +6,8 @@
     height='<%= getSvgSizeInProcentage('height') %>'
     style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(0px, 0px); width: calc(100%); height: calc(100% - ${((layer.settings.layerSettings.shapeStyles.thickness / 2) / 16).toFixed(3)}em);`%>'
     viewBox='0 0 50 50'
-    preserveAspectRatio='none'
+    preserveAspectRatio='none'>
     <% include ./defs.ejs %>
->
     <g>
         <g transform='translate(-1100 -228.25)'>
             <use fill='transparent'/>

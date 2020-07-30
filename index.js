@@ -8,7 +8,7 @@ let Amp = class Amp {
     this.configPaths = configPaths
   }
 
-  setConfigPath (data, fontHost = '', type, snippets = [], zipExport = false, bookendLink = '') {
+  setConfigPath ({ data, fontHost = '', type, snippets = [], zipExport = false, bookendLink = '' }) {
     return Object.assign(data, Object.assign({
       snippets,
       bookendLink,
@@ -20,7 +20,7 @@ let Amp = class Amp {
 
   createSinglePage (data, callback) {
     let resultHtml = ''
-    app.render(path.resolve(__dirname, 'views/ampSinglePage.ejs'), this.setConfigPath(data), function (err, html) {
+    app.render(path.resolve(__dirname, 'views/ampSinglePage.ejs'), this.setConfigPath({ data }), function (err, html) {
       if (err) {
         console.log(err)
       } else {
@@ -32,7 +32,7 @@ let Amp = class Amp {
 
   createStaticSinglePage (data, callback) {
     let resultHtml = ''
-    app.render(path.resolve(__dirname, 'views/ampPupeteerSinglePage.ejs'), this.setConfigPath(data), function (err, html) {
+    app.render(path.resolve(__dirname, 'views/ampPupeteerSinglePage.ejs'), this.setConfigPath({ data }), function (err, html) {
       if (err) {
         console.log(err)
       } else {
@@ -44,7 +44,7 @@ let Amp = class Amp {
 
   createSinglePageWithAnimations (data, callback) {
     let resultHtml = ''
-    app.render(path.resolve(__dirname, 'views/ampSinglePageWithAnimations.ejs'), this.setConfigPath(data), function (err, html) {
+    app.render(path.resolve(__dirname, 'views/ampSinglePageWithAnimations.ejs'), this.setConfigPath({ data }), function (err, html) {
       if (err) {
         console.log(err)
       } else {
@@ -56,7 +56,7 @@ let Amp = class Amp {
 
   createSinglePageWithoutScripts (data, fontHost, callback) {
     let resultHtml = ''
-    let fullData = this.setConfigPath(data, fontHost || 'https://fonts.cutnut.tv/')
+    let fullData = this.setConfigPath({ data, fontHost })
     app.render(path.resolve(__dirname, 'views/singlePageWithoutScripts.ejs'), fullData, function (err, html) {
       if (err) {
         console.log(err)
@@ -69,7 +69,7 @@ let Amp = class Amp {
 
   createFullStory ({ config, userAnalytics = null, customerAnalyticsKey = null, snippets = [], bookendLink = '', fontsHost, zipExport = false }, callback) {
     let resultHtml = ''
-    let fullData = this.setConfigPath(config)
+    let fullData = this.setConfigPath({ data: config, fontHost: fontsHost, snippets, bookendLink, zipExport })
     if (fullData.ampStory) {
       fullData.ampStory.googleAnalytics = userAnalytics
       fullData.ampStory.customerAnalyticsKey = customerAnalyticsKey

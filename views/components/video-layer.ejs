@@ -27,7 +27,7 @@
        || !layer.settings.layerSettings.fullscreen && layer.settings.animateIn)){ %>animate-in="<%= layer.settings.animateIn %>"<% } %>
      <% if (layer.settings.animateDuration && !['pan-left', 'pan-right'].includes(layer.settings.animateIn) &&  layer.settings.animateIn){ %>animate-in-duration="<%= layer.settings.animateDuration %>s" <% } %>
      <% if (layer.settings.animateDelay && !['pan-left', 'pan-right'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>animate-in-delay="<%= layer.settings.animateDelay %>s" <% } %>
-  <%if (['zoom-in'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen) { %> scale-start="0.01" scale-end="1" <% } %>
+  <%if (['zoom-in'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen) { %> scale-start="0.001" scale-end="1" <% } %>
   <%if (['zoom-out'].includes(layer.settings.animateIn) && !layer.settings.layerSettings.fullscreen) { %> scale-start="1.9" scale-end="1" <% } %>
   >
     <div draggable="true" id="layer<%=layer.position%>" <%if (layer.settings.layerSettings.fullscreen) {%>

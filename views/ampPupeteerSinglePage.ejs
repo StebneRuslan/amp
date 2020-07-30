@@ -47,7 +47,7 @@
               <% break
             case 'cta-link': %>
               <%if (layer.settings.ctaLayerSettings.link || layer.settings.ctaLayerSettings.withQueries) {%>
-                <% include ./components/dirty-cta-layer.ejs %>
+                <%- include('./components/dirty-cta-layer.ejs', {withEvent: true, layer, currentSlide})%>
               <% } %>
               <% break
           } %>
