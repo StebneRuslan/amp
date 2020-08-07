@@ -7,17 +7,18 @@ let Amp = class Amp {
     this.type = type
     this.configPaths = configPaths
   }
-
-  setConfigPath ({ data, fontHost = '', type, snippets = [], zipExport = false, bookendLink = '' }) {
+  
+  setConfigPath ({ data, fontHost = '', type, snippets = [], zipExport = false, bookendLink = '', publisherDetails = null }) {
     return Object.assign(data, Object.assign({
       snippets,
       bookendLink,
       fontsHost: fontHost || 'https://fonts.cutnut.tv/',
       zipExport,
+      publisherDetails,
       type: type || this.type
     }, pick(this.configPaths, ['v0Path', 'ampStoryPath', 'ampVideoPath', 'ampAnimationPath', 'fontPath'])))
   }
-
+  
   createSinglePage (data, callback) {
     let resultHtml = ''
     app.render(path.resolve(__dirname, 'views/ampSinglePage.ejs'), this.setConfigPath({ data }), function (err, html) {
@@ -29,7 +30,7 @@ let Amp = class Amp {
       callback(resultHtml)
     })
   }
-
+  
   createStaticSinglePage (data, callback) {
     let resultHtml = ''
     app.render(path.resolve(__dirname, 'views/ampPupeteerSinglePage.ejs'), this.setConfigPath({ data }), function (err, html) {
@@ -41,7 +42,7 @@ let Amp = class Amp {
       callback(resultHtml)
     })
   }
-
+  
   createSinglePageWithAnimations (data, callback) {
     let resultHtml = ''
     app.render(path.resolve(__dirname, 'views/ampSinglePageWithAnimations.ejs'), this.setConfigPath({ data }), function (err, html) {
@@ -53,7 +54,7 @@ let Amp = class Amp {
       callback(resultHtml)
     })
   }
-
+  
   createSinglePageWithoutScripts (data, fontHost, callback) {
     let resultHtml = ''
     let fullData = this.setConfigPath({ data, fontHost })
@@ -67,9 +68,18 @@ let Amp = class Amp {
     })
   }
 
-  createFullStory ({ config, userAnalytics = null, customerAnalyticsKey = null, snippets = [], bookendLink = '', fontsHost, zipExport = false }, callback) {
+  createFullStory ({
+    config,
+    userAnalytics = null,
+    customerAnalyticsKey = null,
+    snippets = [],
+    bookendLink = '',
+    fontsHost,
+    zipExport = false,
+    publisherDetails = null
+  }, callback) {
     let resultHtml = ''
-    let fullData = this.setConfigPath({ data: config, fontHost: fontsHost, snippets, bookendLink, zipExport })
+    let fullData = this.setConfigPath({ data: config, fontHost: fontsHost, snippets, bookendLink, zipExport, publisherDetails })
     if (fullData.ampStory) {
       fullData.ampStory.googleAnalytics = userAnalytics
       fullData.ampStory.customerAnalyticsKey = customerAnalyticsKey
