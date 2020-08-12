@@ -2,7 +2,7 @@
 <%let preview = false;
 let withQueries = false;
 ampStory.cuts.map(currentSlide => { %>
-<amp-story-page auto-advance-after="<%=currentSlide ? currentSlide.duration : 10%>s" id="<%= currentSlide.position %>" style="background: #eeeeee">
+<amp-story-page auto-advance-after="<%=currentSlide ? currentSlide.duration : 10%>s" id="<%= currentSlide.position %>" style="background: <%=currentSlide && currentSlide.backgroundColor ? setLinkBgColor(currentSlide.backgroundColor) : '#eeeeee'%>;">
   <% currentSlide.layers.sort((first, second) => {
     var keyA = first.position,
       keyB = second.position;
