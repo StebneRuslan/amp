@@ -17,6 +17,7 @@
 </div>
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="" style="background-color: #eeeeee!important;">
   <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="10s" class="container">
+  <div class="bg-wrapper" style="background: <%=getBgColor(currentSlide)%>;"></div>
     <% let preview = false;
     if (currentSlide) {
       currentSlide.layers.sort((first, second) => {
@@ -33,13 +34,13 @@
           switch (layer.type) {
           case 'text':
           case 'html': %>
-            <amp-story-grid-layer template="horizontal" style="background: <%=getBgColor(currentSlide)%>;">
+            <amp-story-grid-layer template="horizontal">
               <%- include('./components/text-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
             </amp-story-grid-layer>
             <% break;
 
           case 'shape': %>
-            <amp-story-grid-layer template="horizontal" style="background: <%=getBgColor(currentSlide)%>;">
+            <amp-story-grid-layer template="horizontal">
               <%- include('./components/shape-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
             </amp-story-grid-layer>
             <% break;
@@ -47,7 +48,7 @@
           case 'image':
           case 'gifs': %>
             <% if (layer.content.image && layer.content.image.url) { %>
-            <amp-story-grid-layer template="horizontal" style="background: <%=getBgColor(currentSlide)%>;">
+            <amp-story-grid-layer template="horizontal">
               <%- include('./components/dirty-image-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
             </amp-story-grid-layer>
             <% } %>
@@ -55,7 +56,7 @@
 
           case 'video': %>
             <% if (layer.content.video && layer.content.video.url) { %>
-            <amp-story-grid-layer template="horizontal" style="background: <%=getBgColor(currentSlide)%>;">
+            <amp-story-grid-layer template="horizontal">
               <%- include('./components/dirty-video-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
             </amp-story-grid-layer>
             <% } %>

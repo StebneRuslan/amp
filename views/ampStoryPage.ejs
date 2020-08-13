@@ -3,6 +3,7 @@
 let withQueries = false;
 ampStory.cuts.map(currentSlide => { %>
 <amp-story-page auto-advance-after="<%=currentSlide ? currentSlide.duration : 10%>s" id="<%= currentSlide.position %>" style="background: #eeeeee">
+  <div class="bg-wrapper" style="background: <%=getBgColor(currentSlide)%>;"></div>
   <% currentSlide.layers.sort((first, second) => {
     var keyA = first.position,
       keyB = second.position;
@@ -14,13 +15,13 @@ ampStory.cuts.map(currentSlide => { %>
     <% switch (layer.type) {
     	case 'text':
       case 'html': %>
-        <amp-story-grid-layer template="horizontal" style="background: <%=getBgColor(currentSlide)%>;">
+        <amp-story-grid-layer template="horizontal">
           <%- include('./components/text-layer.ejs', {withEvent: false, withAnimations: true, layer, currentSlide, preview})%>
         </amp-story-grid-layer>
         <% break;
 
       case 'shape': %>
-        <amp-story-grid-layer template="horizontal" style="background: <%=getBgColor(currentSlide)%>;">
+        <amp-story-grid-layer template="horizontal">
           <%- include('./components/shape-layer.ejs', {withEvent: false, withAnimations: true, layer, currentSlide, preview})%>
         </amp-story-grid-layer>
         <% break;
@@ -31,11 +32,11 @@ ampStory.cuts.map(currentSlide => { %>
           <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && (!layer.content.compressed && !zipExport)) ||
             (((layer.content.compressed || zipExport) && !layer.settings.layerSettings.fullscreen)) ||
             ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)) { %>
-            <amp-story-grid-layer template="horizontal" style="background: <%=getBgColor(currentSlide)%>;">
+            <amp-story-grid-layer template="horizontal">
               <%- include('./components/image-layer.ejs', {layer, currentSlide, preview})%>
             </amp-story-grid-layer>
           <% } else { %>
-            <amp-story-grid-layer template="fill" style="background: <%=getBgColor(currentSlide)%>;">
+            <amp-story-grid-layer template="fill">
               <%- include('layers/image.ejs', {withAnimations: true, layer, zipExport }); %>
             </amp-story-grid-layer>
           <% } %>
@@ -47,11 +48,11 @@ ampStory.cuts.map(currentSlide => { %>
           <% if (((!['pan-left', 'pan-right', 'pan-up', 'pan-down'].includes(layer.settings.animateIn) || !layer.settings.animateIn) && (!layer.content.compressed && !zipExport)) ||
             (((layer.content.compressed || zipExport) && !layer.settings.layerSettings.fullscreen)) ||
             ['rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)) { %>
-            <amp-story-grid-layer template="horizontal" style="background: <%=getBgColor(currentSlide)%>;">
+            <amp-story-grid-layer template="horizontal">
               <%- include('./components/video-layer.ejs', {layer, currentSlide, preview})%>
             </amp-story-grid-layer>
           <% } else { %>
-            <amp-story-grid-layer template="fill" style="background: <%=getBgColor(currentSlide)%>;">
+            <amp-story-grid-layer template="fill">
               <%- include('layers/video.ejs', {withAnimations: true, layer, duration: currentSlide.duration, zipExport }); %>
             </amp-story-grid-layer>
           <% } %>
