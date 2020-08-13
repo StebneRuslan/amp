@@ -12,6 +12,7 @@
   publisher="<%= publisherDetails ? publisherDetails.publisher : '' %>"
   publisher-logo-src="<%= (publisherDetails && publisherDetails.publisherLogoUrl) ? publisherDetails.publisherLogoUrl : defaultPublisherLogo%>"
   poster-portrait-src="<%= ampStory.posterPortrait3x4Url || defaultPublisherPortrait%>"
+  style="background-color: #eeeeee!important;"
   <% if (ampStory.posterPortrait1x1Url) { %>poster-square-src="<%= ampStory.posterPortrait1x1Url %>" <% } %>
   <% if (ampStory.posterLandscapeUrl) { %>poster-landscape-src="<%= ampStory.posterLandscapeUrl %>" <% } %>
   <% if (ampStory.backgroundAudioUrl) { %>background-audio="<%= ampStory.backgroundAudioUrl %>" <% } %>

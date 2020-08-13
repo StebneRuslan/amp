@@ -6,7 +6,7 @@
 
 <body>
 <% include ./override-amp-styles.ejs %>
-<amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
+<amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="" style="background-color: #eeeeee!important;">
   <amp-story-page style="text-rendering: auto;background: <%=currentSlide && currentSlide.backgroundColor ? setLinkBgColor(currentSlide.backgroundColor) : '#eeeeee'%>;" id='story' auto-advance-after="<%=currentSlide ? currentSlide.duration : 10%>s" class="container">
     <% let preview = false;
     if (currentSlide) {
