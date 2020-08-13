@@ -126,6 +126,10 @@ setLinkBgColor = function (data) {
   }
 }
 
+getBgColor = function (currentSlide) {
+  return currentSlide && currentSlide.backgroundColor ? setLinkBgColor(currentSlide.backgroundColor) : '#eeeeee';
+}
+
 changeCtaLink = function(link, cutPosition) {
   const queries = cutPosition ? `?ref=ampstories&slide_id=${cutPosition}` : '';
   return link.match('^https?:\/\/') ? `${link}${queries}` : `https://${link}${queries}`;
