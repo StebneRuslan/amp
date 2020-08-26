@@ -1,23 +1,24 @@
 <% include ./index.ejs %>
+<% include ./round.ejs %>
 <svg
-        xmlns='http://www.w3.org/2000/svg'
-        xmlns:xlink='http://www.w3.org/1999/xlink'
-        width='<%= getSvgSizeInProcentage('width') %>'
-        height='<%= getSvgSizeInProcentage('height') %>'
-        style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
-        viewBox='0 0 33 33'
-        preserveAspectRatio='none'
+  xmlns='http://www.w3.org/2000/svg'
+  xmlns:xlink='http://www.w3.org/1999/xlink'
+  width='<%= getSvgSizeInProcentage('width') %>'
+  height='<%= getSvgSizeInProcentage('height') %>'
+  style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
+  viewBox='0 0 100 100'
+  preserveAspectRatio='none'
 >
     <% include ./defs.ejs %>
     <g>
-        <g transform='translate(-1013 -228.25)'>
+        <g>
             <use fill='transparent' />
             <path
-                    d='M1013, 261.25 v-33h33v33z'
-                    stroke='<%= setColor('borderColor') %>'
-                    fill='<%= setColor('fillColor') %>'
-                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
-                    vector-effect='non-scaling-stroke'
+              d='<%= roundShape('M0 0 L 100 0 L100 100 L 0 100 Z', 30) %>'
+              stroke='<%= setColor('borderColor') %>'
+              fill='<%= setColor('fillColor') %>'
+              stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
+              vector-effect='non-scaling-stroke'
             ></path>
         </g>
     </g>

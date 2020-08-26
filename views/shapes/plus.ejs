@@ -1,17 +1,18 @@
 <% include ./index.ejs %>
+<% include ./round.ejs %>
 <svg
-        xmlns='http://www.w3.org/2000/svg'
-        xmlns:xlink='http://www.w3.org/1999/xlink'
-        width='<%= getSvgSizeInProcentage('width') %>'
-        height='<%= getSvgSizeInProcentage('height') %>'
-        style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
-        viewBox='0 0 64 64'
-        preserveAspectRatio='none'>
+  xmlns='http://www.w3.org/2000/svg'
+  xmlns:xlink='http://www.w3.org/1999/xlink'
+  width='<%= getSvgSizeInProcentage('width') %>'
+  height='<%= getSvgSizeInProcentage('height') %>'
+  style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
+  viewBox='0 0 100 100'
+  preserveAspectRatio='none'>
   <% include ./defs.ejs %>
   <path
-        d='M 0 38 L 26 38 L 26 64 L 38 64 L 38 38 L 64 38 L 64 26 L 38 26 L 38 0 L 26 0 L 26 26 L 0 26 z'
-        stroke='<%= setColor('borderColor') %>'
-        fill='<%= setColor('fillColor') %>'
-        stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && +layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
-        vector-effect='non-scaling-stroke'/>
+    d='<%= roundShape('M 0 60 L 40 60 L 40 100 L 60 100 L 60 60 L 100 60 L 100 40 L 60 40 L 60 0 L 40 0 L 40 40 L 0 40 Z', 1) %>'
+    stroke='<%= setColor('borderColor') %>'
+    fill='<%= setColor('fillColor') %>'
+    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && +layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
+    vector-effect='non-scaling-stroke'/>
 </svg>
