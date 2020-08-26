@@ -12,6 +12,7 @@
 
 <amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
   <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="<%=currentSlide ? currentSlide.duration : 10%>s" class="container">
+    <amp-story-grid-layer template="fill"><div class="bg-wrapper" style="background: <%=getBgColor(currentSlide)%>;"></div></amp-story-grid-layer>
     <% let preview = false;
     if (currentSlide) {
       currentSlide.layers.sort((first, second) => {

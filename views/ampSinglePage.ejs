@@ -15,8 +15,9 @@
   <div class="guid-line guid-line-x guid-center-x"></div>
   <div class="guid-line guid-line-y guid-center-y"></div>
 </div>
-<amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
+<amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="" style="background-color: #eeeeee!important;">
   <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="10s" class="container">
+  <amp-story-grid-layer template="fill"><div class="bg-wrapper" style="background: <%=getBgColor(currentSlide)%>;"></div></amp-story-grid-layer>
     <% let preview = false;
     if (currentSlide) {
       currentSlide.layers.sort((first, second) => {

@@ -3,6 +3,7 @@
 let withQueries = false;
 ampStory.cuts.map(currentSlide => { %>
 <amp-story-page auto-advance-after="<%=currentSlide ? currentSlide.duration : 10%>s" id="<%= currentSlide.position %>" style="background: #eeeeee">
+  <amp-story-grid-layer template="fill"><div class="bg-wrapper" style="background: <%=getBgColor(currentSlide)%>;"></div></amp-story-grid-layer>
   <% currentSlide.layers.sort((first, second) => {
     var keyA = first.position,
       keyB = second.position;
