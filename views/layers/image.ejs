@@ -50,12 +50,11 @@ if (layer.settings.layerSettings.fullscreen) { %>
     layout="responsive"
     alt="an image"
   <% if (layer.settings.generalSettings.shadow !== '0') { %>
-    style="
+    style="height: 100%;
       filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));
-      position: initial;
-      opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+      opacity: <%=layer.settings.generalSettings.opacity / 100 %>;border-radius: <%=layer.settings.generalSettings.round %>px;"
     <% } else { %>
-    style="position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+    style="height: 100%;border-radius: <%=layer.settings.generalSettings.round %>px; opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
     <% } %>
   ></amp-img>
 <% } %>
