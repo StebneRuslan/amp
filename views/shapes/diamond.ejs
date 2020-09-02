@@ -5,12 +5,12 @@
      width='<%= getSvgSizeInProcentage('width') %>'
      height='<%= getSvgSizeInProcentage('height') %>'
      style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
-     viewBox='0 0 500 500'
+     viewBox='0 0 600 600'
      preserveAspectRatio='none'>
     <% include ./defs.ejs %>
     <g>
         <path
-          d='<%= roundShape('M 0 150 L 250 500 L 500 150 L 400 0 L 100 0 Z', layer.settings.generalSettings.round || 0) %>'
+          d='<%= roundShape('M 0 180 L 300 600 L 600 180 L 500 0 L 100 0 Z', layer.settings.generalSettings.round || 0) %>'
           stroke='<%= setColor('borderColor') %>'
           fill='<%= setColor('fillColor') %>'
           stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && +layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
