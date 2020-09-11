@@ -59,7 +59,7 @@ if (layer.settings.layerSettings.fullscreen) { %>
     alt="an image"
   <% if (layer.settings.generalSettings.shadow !== '0') { %>
     style="height: 100%;
-      filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>% rgba(0,0,0,0.75));
+      filter: drop-shadow(rgba(0, 0, 0, 0.75) 1px 1px <%= layer.settings.generalSettings.shadow %>px);
       opacity: <%=layer.settings.generalSettings.opacity / 100 %>;border-radius: <%=layer.settings.generalSettings.round * 2 || 0%>px;"
     <% } else { %>
     style="height: 100%;border-radius: <%=layer.settings.generalSettings.round * 2 || 0%>px; opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
