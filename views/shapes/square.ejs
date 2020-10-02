@@ -1,23 +1,23 @@
 <% include ./index.ejs %>
 <% include ./round.ejs %>
-<% width = +layer.settings.layerSettings.width %>
-<% height = +layer.settings.layerSettings.height %>
+<% width = +layer.settings.layerSettings.width || 0 %>
+<% height = +layer.settings.layerSettings.height || 0 %>
 <% round = +layer.settings.generalSettings.round || 0 %>
-<% thickness = layer.settings.layerSettings.shapeStyles.thickness * 2 %>
+<% thickness = layer.settings.layerSettings.shapeStyles.thickness || 0 * 2 %>
 <% getRectRound = function () {
-    if (+round > (+width + thickness) / 2 || +round > (+height + thickness) / 2) {
-        return (+width + thickness) < (+height + thickness) ? (+width + thickness) / 2 : (+height + thickness) / 2;
+    if (round > (width + thickness) / 2 || round > (height + thickness) / 2) {
+        return (width + thickness) < (height + thickness) ? (width + thickness) / 2 : (height + thickness) / 2;
     } else {
         return round;
     }
 }
 
 getRectPath = function () {
-    return `M0 0 L ${+width + thickness} 0 L${+width + thickness} ${+height + thickness} L 0 ${+height + thickness} Z`;
+    return `M0 0 L ${width + thickness} 0 L${width + thickness} ${height + thickness} L 0 ${height + thickness} Z`;
 }
 
 getViewBox = function () {
-    return `0 0 ${+width + thickness} ${+height + thickness}`
+    return `0 0 ${width + thickness} ${height + thickness}`
 }
 %>
 <svg

@@ -29,6 +29,7 @@
 		stopPropagation(e);
 		const previousContenteditable = father.children.length > 1 ? father.children[1] : father.children[0];
 		previousContenteditable.setAttribute('contenteditable', false);
+		handleControls('auto');
 		previousContenteditable.firstElementChild.style.width = '';
 		document.querySelector('.dg-controls').style.zIndex = '10000';
 		previousContenteditable.removeEventListener('keydown', keyDownOperation);
@@ -62,6 +63,7 @@
 	}
 	function dbEvent(event) {
 		if (!isLockedLayer) {
+			handleControls('none');
 			stopPropagation(event);
 			document.querySelector('.dg-controls').style.zIndex = '0';
 			father.children[1].removeEventListener('keydown', keyDownOperation);
@@ -115,6 +117,18 @@
 		}
 	}
 
+	function handleControls (value) {
+		if (!controls) {
+			controls = document.querySelectorAll('.dg-hdl');
+		}
+		if (controls) {
+			controls.forEach(control => {
+				control.style.pointerEvents = value;
+			})
+		}
+	}
+
+	let controls = null;
 	let father = null;
 	let oldLayerId = -1;
 	let newLayerId = -1;

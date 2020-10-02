@@ -7,6 +7,15 @@
       : typeof content.image === 'string' ? ((content.value || content.image) || '') : content.image.url || (content.value || content.image) || ''
   }
 }
+
+function getFullscreenImageLayout (layer) {
+  return ['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)
+    ? 'fill'
+    : ['pan-right', 'pan-left'].includes(layer.settings.animateIn)
+      ? 'fixed'
+      : 'responsive'
+}
+
 if (layer.settings.layerSettings.fullscreen) { %>
   <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
   <div style="transform: translateX(50%);">
@@ -24,7 +33,7 @@ if (layer.settings.layerSettings.fullscreen) { %>
       src="<%= getImageUrl(layer.content) %>"
       width="<%= layer.settings.layerSettings.width %>"
       height="<%= layer.settings.layerSettings.height %>"
-      layout="<%=['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport) ? 'fill' : 'responsive'%>"
+      layout="<%=getFullscreenImageLayout(layer)%>"
       alt="an image"
       <% if (((!layer.content.compressed && !zipExport) && ((layer.content.compressed || zipExport) && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) || (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) { %>
       style="
