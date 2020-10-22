@@ -1,0 +1,18 @@
+<% include ./index.ejs %>
+<% include ./round.ejs %>
+<svg
+  xmlns='http://www.w3.org/2000/svg'
+  xmlns:xlink='http://www.w3.org/1999/xlink'
+  width='<%= getSvgSizeInProcentage('width') %>'
+  height='<%= getSvgSizeInProcentage('height') %>'
+  style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
+  viewBox='0 0 1500 1500'
+  preserveAspectRatio='none'>
+  <% include ./defs.ejs %>
+  <path
+    d='<%= roundShape('M 0 900 L 600 900 L 600 1500 L 900 1500 L 900 900 L 1500 900 L 1500 600 L 900 600 L 900 0 L 600 0 L 600 600 L 0 600 Z', layer.settings.generalSettings.round || 0) %>'
+    stroke='<%= setColor('borderColor') %>'
+    fill='<%= setColor('fillColor') %>'
+    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && +layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
+    vector-effect='non-scaling-stroke'/>
+</svg>

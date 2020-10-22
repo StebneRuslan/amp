@@ -1,0 +1,14 @@
+<script>
+	window.onload = () => {
+		const css = 'amp-story-bookend {display: none!important;} .amp-story-draggable-drawer-root {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}';
+		const head = document.head || document.getElementsByTagName('head')[0];
+		const style = document.createElement('style');
+		style.type = 'text/css';
+		if (style.styleSheet) {
+			style.styleSheet.cssText = css;
+		} else {
+			style.appendChild(document.createTextNode(css));
+		};
+		head.appendChild(style);
+	};
+</script>

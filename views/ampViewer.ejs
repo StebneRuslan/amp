@@ -1,19 +1,23 @@
+<% const defaultPublisherLogo = 'https://www.google.com.ua/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiU4L6X2YfcAhWMkiwKHTnLCzAQjRx6BAgBEAU&url=https%3A%2F%2Fthemodernentrepreneur.com%2Fproducts%2Famp-for-wordpress%2F&psig=AOvVaw0nM5DdfxSmpyBJp3lSlUi-&ust=1530871040243265'%>
+<% const defaultPublisherPortrait = 'https://www.google.com.ua/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiU4L6X2YfcAhWMkiwKHTnLCzAQjRx6BAgBEAU&url=https%3A%2F%2Fthemodernentrepreneur.com%2Fproducts%2Famp-for-wordpress%2F&psig=AOvVaw0nM5DdfxSmpyBJp3lSlUi-&ust=1530871040243265'%>
 <!doctype html>
 <html ⚡="">
 <% include ampViewerHead.ejs %>
 <body id='story'>
 <% if (ampStory.cuts.length) {%>
 <amp-story
-        id="story"
-        standalone
-        title="<%= ampStory.title %>"
-        publisher="<%= ampStory.publisher %>"
-        publisher-logo-src="https://www.google.com.ua/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiU4L6X2YfcAhWMkiwKHTnLCzAQjRx6BAgBEAU&url=https%3A%2F%2Fthemodernentrepreneur.com%2Fproducts%2Famp-for-wordpress%2F&psig=AOvVaw0nM5DdfxSmpyBJp3lSlUi-&ust=1530871040243265"
-        poster-portrait-src="https://www.google.com.ua/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiU4L6X2YfcAhWMkiwKHTnLCzAQjRx6BAgBEAU&url=https%3A%2F%2Fthemodernentrepreneur.com%2Fproducts%2Famp-for-wordpress%2F&psig=AOvVaw0nM5DdfxSmpyBJp3lSlUi-&ust=1530871040243265"
-
+  id="story"
+  standalone
+  title="<%= ampStory.title %>"
+  publisher="<%= publisherDetails ? publisherDetails.publisher : '' %>"
+  publisher-logo-src="<%= (publisherDetails && publisherDetails.publisherLogoUrl) ? publisherDetails.publisherLogoUrl : defaultPublisherLogo%>"
+  poster-portrait-src="<%= ampStory.posterPortrait3x4Url || defaultPublisherPortrait%>"
+  <% if (ampStory.posterPortrait1x1Url) { %>poster-square-src="<%= ampStory.posterPortrait1x1Url %>" <% } %>
+  <% if (ampStory.posterLandscapeUrl) { %>poster-landscape-src="<%= ampStory.posterLandscapeUrl %>" <% } %>
+  <% if (ampStory.backgroundAudioUrl) { %>background-audio="<%= ampStory.backgroundAudioUrl %>" <% } %>
 >
-    <%}%>
-    <% include ampStoryPage.ejs %>
+  <%}%>
+  <% include ampStoryPage.ejs %>
 </amp-story>
 </body>
 </html>

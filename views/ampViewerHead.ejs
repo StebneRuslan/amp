@@ -1,112 +1,69 @@
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-    <script async custom-element="amp-video" src=<%=ampVideoPath%>></script>
-    <script async src=<%=v0Path%>></script>
-    <script async custom-element="amp-story"
-            src=<%=ampStoryPath%>></script>
-    <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
-    <% if (ampAnimationPath !== null) { %>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <meta property="title" content="<%= ampStory.title%>">
+  <meta property="og:title" content="<%= ampStory.title%>">
+  <% if (ampStory.description) {%>
+    <meta property="description" content="<%=ampStory.description%>">
+    <meta property="og:description" content="<%=ampStory.description%>">
+  <% } %>
+  <script async custom-element="amp-video" src=<%=ampVideoPath%>></script>
+  <script async src=<%=v0Path%>></script>
+  <% snippets.map(snippet => { %>
+    <%- Buffer.from(snippet.headCode || '', 'base64').toString() %>
+  <% })%>
+  <script async custom-element="amp-story" src=<%=ampStoryPath%>></script>
+  <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+  <% if (ampAnimationPath !== null) { %>
     <script async custom-element="amp-animation" src=<%=ampAnimationPath%>></script>
-    <% } %>
-    <title><%= ampStory.title%></title>
-    <link rel="canonical" href="https://test-cutnut-tv.cdn.ampproject.org/c/s/test.cutnut.tv/amp/<%=ampStory.key%>" />
-    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
-    <style amp-custom>
-
+  <% } %>
+  <title><%= ampStory.title%></title>
+  <link rel="canonical" href="<%=bookendLink || 'http://127.0.0.1:3978/amp'%>" />
+  <% if (publisherDetails) { %><link href="<%=publisherDetails.favIconLogo%>" rel="shortcut icon"> <% } %>
+  <% include ./fonts/googleFonts.ejs %>
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <style amp-custom>
         <% include ./fonts/custom.ejs %>
-        <% if (ampStory.fromPreview || !v0Path.includes('https')) { %>
-        <% include ./fonts/alegreya.ejs %>
-        <% include ./fonts/anonymousPro.ejs %>
-        <% include ./fonts/archivonarrow.ejs %>
-        <% include ./fonts/arvo.ejs %>
-        <% include ./fonts/biorhyme.ejs %>
-        <% include ./fonts/cabin.ejs %>
-        <% include ./fonts/cardo.ejs %>
-        <% include ./fonts/chivo.ejs %>
-        <% include ./fonts/cormorant.ejs %>
-        <% include ./fonts/crimsontext.ejs %>
-        <% include ./fonts/domine.ejs %>
-        <% include ./fonts/eczar.ejs %>
-        <% include ./fonts/firasans.ejs %>
-        <% include ./fonts/ibmplexsans.ejs %>
-        <% include ./fonts/inconsolata.ejs %>
-        <% include ./fonts/inknutantiqua.ejs %>
-        <% include ./fonts/karla.ejs %>
-        <% include ./fonts/lato.ejs %>
-        <% include ./fonts/librebaskerville.ejs %>
-        <% include ./fonts/librefranklin.ejs %>
-        <% include ./fonts/lora.ejs %>
-        <% include ./fonts/merriweather.ejs %>
+        <% if ((ampStory.fromPreview || !v0Path.includes('https')) && !zipExport) { %>
         <% include ./fonts/montserrat.ejs %>
-        <% include ./fonts/neuton.ejs %>
-        <% include ./fonts/opensans.ejs %>
-        <% include ./fonts/playfairdisplay.ejs %>
-        <% include ./fonts/poppins.ejs %>
-        <% include ./fonts/prozalibre.ejs %>
-        <% include ./fonts/ptsans.ejs %>
-        <% include ./fonts/ptserif.ejs %>
-        <% include ./fonts/raleway.ejs %>
-        <% include ./fonts/roboto.ejs %>
-        <% include ./fonts/robotoslab.ejs %>
-        <% include ./fonts/rubik.ejs %>
-        <% include ./fonts/sourcesanspro.ejs %>
-        <% include ./fonts/sourceserifpro.ejs %>
-        <% include ./fonts/spectral.ejs %>
-        <% include ./fonts/worksans.ejs %>
-
-
-        .resizable .resizers .resizer{
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: white;
-            border: 3px solid #4286f4;
+        .drag-item {
             position: absolute;
-            z-index: 1;
+            top: 50%;
+            left: 35%;
+            pointer-events: none!important;
         }
-        .resizable .resizers .resizer.top-left {
-            left: -5px;
-            top: -5px;
-            cursor: nwse-resize;
-        }
-        .resizable .resizers .resizer.top-right {
-            right: -5px;
-            top: -5px;
-            cursor: nesw-resize;
-        }
-        .resizable .resizers .resizer.bottom-left {
-            left: -5px;
-            bottom: -5px;
-            cursor: nesw-resize;
-        }
-        .resizable .resizers .resizer.bottom-right {
-            right: -5px;
-            bottom: -5px;
-            cursor: nwse-resize;
+        .drag-item-content, .dg-controls {
+            pointer-events: auto;
         }
 
-        .rotate {
-            background-color: #23241f;
-            width: 1px;
-            height: 50px;
+        .guid-lines-container {
             position: absolute;
+        }
+        .guid-line {
+            position: absolute;
+            height: 0;
             display: none;
-            left: 50%;
-            top: -50px;
+            width: 0;
+            z-index: 100;
         }
-        .rotate:before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            position: absolute;
-            display: flex;
-            left: -4px;
-            top: -9px;
-            border-radius: 4px;
-            border: 1px solid black;
-            cursor: alias;
+        .guid-line-x {
+            width: 100vw;
+            z-index: 100;
+            border-top: 1.5px dotted rgba(51, 122, 255, 0.51);
         }
+        .guid-line-y {
+            height: 100vh;
+            z-index: 100;
+            border-left: 1.5px dotted rgba(51, 122, 255, 0.51);
+        }
+        .center-x {
+            width: 100vw;
+            top: 50vh;
+        }
+        .center-y {
+            left: 50vw;
+        }
+
         <% } %>
 
         amp-story.single-slide > div {
@@ -118,10 +75,10 @@
         .container:not(#full-screen) {
             background-color: #eeeeee;
         }
-        #story img {
+        amp-img.small-image img {
             object-fit: fill;
         }
-        #story .full-screan-image img {
+        .fullscreen img, .fullscreen video{
             object-fit: cover;
         }
         .text-container {
@@ -131,14 +88,9 @@
         .text-container p {
             white-space: nowrap;
         }
-        /* .simple-text-line span {
-            font-weight: normal;
-            font-style: normal;
-            color: #000000;
-            font-family: Montserrat;
-        } */
 
         img {
+            object-fit: fill;
             width: 100%;
             height: 100%;
             pointer-events: none;
@@ -153,12 +105,6 @@
             user-select: none;
         }
 
-        .drag-item {
-            position: absolute;
-            top: 50%;
-            left: 35%;
-        }
-
         video {
             object-fit: fill;
         }
@@ -166,7 +112,18 @@
         .small-image img {
             width: 100%;
             height: 100%;
-            object-fit: fill;
+        }
+
+        .drag-item {
+            position: absolute;
+            top: 50%;
+            left: 35%;
+        }
+
+        .rotate-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
         }
 
         .single-text div {
@@ -174,11 +131,10 @@
             font-weight: 500;
             white-space: nowrap;
             text-rendering: auto;
+            line-height: 1;
         }
 
-        .single-text span {
-            text-decoration: inherit;
-            line-height: 1.4em;
+        .single-text * {
             white-space: pre-wrap;
             word-break: break-word;
             background-color: inherit;
@@ -189,11 +145,30 @@
             outline: 1px solid black;
         }
 
+        .cta-link {
+            margin: auto;
+            padding: 0.6em 1em;
+            font-size: 0.8em;
+            font-family: 'Verdana';
+            text-decoration: none;
+            text-align: center;
+            cursor: default;
+            transform-origin: center;
+
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+
+            bottom: 20%;
+            max-width: 35%;
+            word-wrap: break-word;
+        }
+
         @media screen and (max-width: 1023px) {
             .single-text {
                 font-size: 2.6vw;
             }
-            .animate {
+            .animate, .cta-link {
                 font-size: 3.434vw;
             }
             .rotate-wrapper {
@@ -203,9 +178,9 @@
         @media (max-width: 1023px) {
             @media screen and (min-aspect-ratio: 9/12) {
                 .single-text {
-                    font-size: 1.55vh ;
+                    font-size: 1.46vh ;
                 }
-                .animate {
+                .animate, .cta-link {
                     font-size: 1.94vh;
                 }
                 amp-story-grid-layer {
@@ -220,9 +195,9 @@
 
             @media screen and (max-aspect-ratio: 9/20) {
                 .single-text {
-                    font-size: 2.4vw;
+                    font-size: 2.62vw;
                 }
-                div.animate {
+                div.animate, .cta-link {
                     font-size: 3.48vw;
                 }
                 amp-story-grid-layer {
@@ -234,14 +209,14 @@
         }
         @media screen and (min-width: 1024px) {
             .single-text {
-                font-size: 1.53vh;
+                font-size: 1.55vh;
             }
-            div.animate {
-                font-size: 2.07vh;
+            div.animate, .cta-link {
+                font-size: 2.06vh;
             }
         }
     </style>
-    <% if (ampStory.fromPreview || !v0Path.includes('https')) { %>
-        <link rel="stylesheet" href="/resize-files?path=amp-to-html/dist/style/subjx.css"/>
-    <% } %>
+  <% if ((ampStory.fromPreview || !v0Path.includes('https')) && !zipExport) { %>
+    <link rel="stylesheet" href="/resize-files?path=amp-to-html/dist/style/subjx.css"/>
+  <% } %>
 </head>

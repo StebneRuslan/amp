@@ -1,0 +1,25 @@
+<script>
+	let getParams = function (url) {
+		const params = {};
+		const parser = document.createElement('a');
+		parser.href = url;
+		const query = parser.search.substring(1);
+		const vars = query.split('&');
+		for (let i = 0; i < vars.length; i++) {
+			const pair = vars[i].split('=');
+			params[pair[0]] = decodeURIComponent(pair[1]);
+		}
+		return params;
+	};
+	let handleUrlProtocol = function(url) {
+		return !url.match(/^[a-zA-Z]+:\/\//) ? `https://${url}` : url;
+	};
+	let ctaLinkTags = document.querySelectorAll('.cta-link-with-queries');
+	let storyQueryUrl = getParams(window.location.href).url;
+	if (ctaLinkTags.length && storyQueryUrl) {
+		Array.prototype.forEach.call(ctaLinkTags, tag => {
+			const ctaLinkQueries = getParams(tag.href);
+			tag.setAttribute('href', `${handleUrlProtocol(storyQueryUrl)}?ref=ampstories&slide_id=${ctaLinkQueries.slide_id}`);
+		});
+	}
+</script>

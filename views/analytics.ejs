@@ -1,0 +1,58 @@
+<amp-analytics type="gtag" data-credentials="include">
+  <script type="application/json">
+    {
+      "vars": {
+        "gtag_id": "<%=analyticsKey%>",
+        "config": {
+            "<%analyticsKey%>": {
+            "groups": "default"
+          }
+        }
+      },
+      "triggers": {
+        "storyProgress": {
+          "on": "story-page-visible",
+          "vars": {
+            "event_name": "custom",
+            "event_action": "story_progress",
+            "event_category": "${title}",
+            "event_label": "${storyPageId}",
+            "event_value": "${storyProgress}",
+            "send_to": ["<%=analyticsKey%>"]
+          }
+        },
+        "click on amp-story-cta-layer trigger": {
+          "on": "click",
+          "selector": "${storyPageId} amp-story-cta-layer a",
+          "vars": {
+            "event_name": "custom",
+            "event_action": "link_click",
+            "event_category": "${title}",
+            "event_label": "${storyPageId}",
+            "send_to": ["<%=analyticsKey%>"]
+          }
+        },
+        "storyEnd": {
+          "on": "story-last-page-visible",
+          "vars": {
+            "event_name": "custom",
+            "event_action": "story_complete",
+            "event_label": "story_complete",
+            "event_category": "${title}",
+            "send_to": ["<%=analyticsKey%>"]
+          }
+        },
+        "storyPageVisible": {
+          "on": "visible",
+            "vars": {
+              "event_name": "custom",
+              "event_action": "<%=analyticsKey%>_story_visible",
+              "event_label": "story_visible",
+              "event_category": "${title}",
+              "send_to": ["<%=analyticsKey%>"]
+            }
+          }
+      }
+    }
+  </script>
+</amp-analytics>

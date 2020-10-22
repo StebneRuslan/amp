@@ -2,571 +2,71 @@
 <html lang="en">
 <% include ampViewerHead.ejs %>
 <% let currentSlide = ampStory.cuts.find(cut => cut.position === +current) %>
+<% include ./main.ejs %>
 
 <body>
-<script>
-    function mouseUpOnSelection(e) {
-        e.stopPropagation();
-        window.parent.postMessage({ event: 'text-was-selected', value: true }, '*');
-        document.removeEventListener('mouseup', mouseUpOnSelection);
-    }
+<% include ./single-page-scripts.ejs %>
+<% include ./override-amp-styles.ejs %>
+<div class="guid-lines-container">
+  <div class="guid-line guid-line-y guid-left"></div>
+  <div class="guid-line guid-line-y guid-right"></div>
+  <div class="guid-line guid-line-x guid-top"></div>
+  <div class="guid-line guid-line-x guid-bottom"></div>
+  <div class="guid-line guid-line-x guid-center-x"></div>
+  <div class="guid-line guid-line-y guid-center-y"></div>
+</div>
+<amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="" style="background-color: #eeeeee!important;">
+  <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="10s" class="container">
+  <amp-story-grid-layer template="fill"><div class="bg-wrapper" style="background: <%=getBgColor(currentSlide)%>;"></div></amp-story-grid-layer>
+    <% let preview = false;
+    if (currentSlide) {
+      currentSlide.layers.sort((first, second) => {
+        var keyA = first.position,
+          keyB = second.position;
+        if(keyA < keyB) return -1;
+        if(keyA > keyB) return 1;
+        return 0;
+      })
+    } %>
+    <% if (currentSlide) { %>
+      <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
+        <% var page = null
+          switch (layer.type) {
+          case 'text':
+          case 'html': %>
+            <amp-story-grid-layer template="horizontal">
+              <%- include('./components/text-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
+            </amp-story-grid-layer>
+            <% break;
 
-    let oldLayerId = -1;
-    window.addEventListener('message', function (event) {
-        const currentLayer = document.getElementById(`layer${event.data.currentId}`);
-        Array.prototype.forEach.call(document.querySelectorAll('.draggable'), (element) => {
-            if (element) {
-                element.classList.remove('draggable');
-            }
-        });
-        Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
-            element.remove();
-        });
-        if (currentLayer) {
-            currentLayer.classList.add('draggable');
-            Subjx('.draggable').drag({
-                each: {
-                    resize: true
-                },
-                snap: {
-                    x: 1,
-                    y: 1
-                }
-            });
-        }
+          case 'shape': %>
+            <amp-story-grid-layer template="horizontal">
+              <%- include('./components/shape-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
+            </amp-story-grid-layer>
+            <% break;
 
-        const father = currentLayer ? currentLayer.parentNode : null;
-        if (oldLayerId !== -1 && event.data.message === 'remove-contenteditable') {
-            father.children[1].setAttribute('contenteditable', false);
-            father.querySelector('.text-container').style.width = '';
-            document.querySelector('.dg-controls').style.zIndex = '10000';
-        }
-        if (oldLayerId !== event.data.currentId) {
-            oldLayerId = event.data.currentId;
-            function selectText() {
-                document.addEventListener('mouseup', mouseUpOnSelection);
-                father.children[1].addEventListener('mouseup', keyDownOperation);
-            }
-            function convertTextSizeToPx(selectorContainer) {
-              const iframeWidth = document.documentElement.clientWidth;
-              [].map.call(selectorContainer.querySelectorAll('*'), (node) => {
-                if (node.style.fontSize && !node.style.fontSize.includes('em') && node.nodeName !== 'DIV' && node.style.fontSize !== node.parentNode.style.fontSize) {
-                  node.style.fontSize = `${parseFloat(node.style.fontSize) / (2.6 * iframeWidth / 100)}em`;
-                } else if (node.nodeName === 'DIV') {
-                  node.style.fontSize = '';
-                }
-              });
-            }
-            function handlePaste(e) {
-                let clipboardData, pastedData;
-                e.stopPropagation();
-                e.preventDefault();
-                clipboardData = e.clipboardData;
-                pastedData = clipboardData.getData('text/html');
-                const selectorContainer = document.createElement('DIV');
-                selectorContainer.innerHTML = pastedData;
-                convertTextSizeToPx(selectorContainer);
-                document.execCommand('insertHTML', false, selectorContainer.innerHTML);
-                window.parent.postMessage({event: 'textselected', value: true}, '*');
-            }
-            function keyDownOperation(e) {
-                console.log('12312312312312');
-                if ((e.target.innerText.length <= 1 && (e.keyCode === 8 || e.which === 8))) {
-                    e.preventDefault();
-                }
-                window.addEventListener('click', stopEditing);
-                e.stopPropagation();
-                convertTextSizeToPx(e.target);
+          case 'image':
+          case 'gifs': %>
+            <% if (layer.content.image && layer.content.image.url) { %>
+            <amp-story-grid-layer template="horizontal">
+              <%- include('./components/dirty-image-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
+            </amp-story-grid-layer>
+            <% } %>
+            <% break
 
-                window.parent.postMessage({event: 'textselected', value: true}, '*');
-            }
-            if (currentLayer && event.data.message !== 'KEY_PRESS_TEXT_EDITOR') {
-                currentLayer.onmousedown = null;
-                if (currentLayer.querySelector('.text-container')) {
-                    function apmModeMouseClick() {
-                        window.parent.document.querySelector('body').removeEventListener('click', apmModeMouseClick);
-                        father.children[1].removeEventListener('selectstart', selectText);
-                        father.children[1].addEventListener('mouseup', keyDownOperation);
-                    }
-
-                    function stopPropagation(event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-
-                    function stopEditing(e) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                          const selectedNode = getDraggableNode(e.path);
-                              if ((selectedNode && selectedNode.classList && [].includes.call(selectedNode.classList, 'animate')) ||
-                                  (e.target.tagName !== 'SPAN' && e.target.tagName !== 'DIV' && e.target.tagName !== 'B' && e.target.tagName !== 'I' && e.target.tagName !== 'U')) {
-                                  const previousContenteditable = father.children.length > 1 ? father.children[1] : father.children[0];
-                                  previousContenteditable.setAttribute('contenteditable', false);
-                                  previousContenteditable.firstElementChild.style.width = '';
-                                  document.querySelector('.dg-controls').style.zIndex = '10000';
-                                  previousContenteditable.removeEventListener('keydown', keyDownOperation);
-                                  previousContenteditable.removeEventListener('paste', handlePaste);
-                                  window.removeEventListener('click', stopEditing);
-                                  father.onmousedown = selectLayer;
-                                  if (oldLayerId !== event.data.currentId) {
-                                      currentLayer.parentElement.parentElement.removeEventListener('dblclick', dbEvent);
-                                  }
-                              }
-                              window.parent.postMessage({event: 'textselected', value: false}, '*');
-                    }
-                    function handleSelectStart() {
-                       window.removeEventListener('click', stopEditing);
-                    }
-
-                    function handleSelectEnd() {
-                      window.addEventListener('click', stopEditing);
-                    }
-
-                    function dbEvent(event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        document.querySelector('.dg-controls').style.zIndex = '0';
-                        father.children[1].removeEventListener('keydown', keyDownOperation);
-                        if (!father.children[1].querySelector('span')) {
-                            father.children[1].innerHTML = '<div class="text-container" style="opacity:1; position: relative" id="text80">  <div class="single-text"><div style="white-space:nowrap; text-align: left"><div style="text-align:left;white-space:nowrap;" id="0"><span style="white-space: pre-wrap; font-size: 1.5em; padding: 0px; font-weight: normal; font-style: normal; text-decoration-line: none; color: rgb(0, 0, 0); font-family: Montserrat;"><br></span></div></div></div></div>';
-                        }
-                        father.children[1].setAttribute('contenteditable', true);
-                        father.children[1].addEventListener('selectstart', selectText);
-                        father.children[1].focus();
-                        father.children[1].addEventListener('click', stopPropagation);
-                        father.children[1].addEventListener('keydown', keyDownOperation);
-                        father.children[1].addEventListener('selectstart', handleSelectStart);
-                        father.children[1].addEventListener('mouseup', keyDownOperation);
-                        father.children[1].addEventListener('paste', handlePaste);
-                        father.setAttribute('onmousedown', null);
-                        window.addEventListener('click', stopEditing);
-                        window.addEventListener('click', handleSelectEnd);
-                        window.parent.document.querySelector('body').addEventListener('click', apmModeMouseClick);
-                    }
-                    currentLayer.parentElement.parentElement.ondblclick = dbEvent;
-                }
-            }
-            if (currentLayer) {
-                if ([].includes.call(currentLayer.parentNode.classList, 'fullscreen')) {
-                    Array.prototype.forEach.call(document.querySelectorAll('.dg-hdl'), (element) => {
-                        element.style.display = 'none';
-                    });
-                    document.querySelector('.dg-controls').style.border = '1px dashed transparent';
-                }
-            }
-            if (event.data.previousId !== null && event.data.previousId !== undefined) {
-                const previousLayer = document.getElementById(`layer${event.data.previousId}`);
-                if (previousLayer) {
-                    previousLayer.classList.remove('resizable');
-                    previousLayer.classList.remove('draggable');
-                    previousLayer.parentNode.classList.remove('layer-border');
-                }
-            }
-        }
-    });
-
-    window.addEventListener('keydown', (e) => {
-        if (e.keyCode === 90 && (e.ctrlKey || e.metaKey) && e.shiftKey) {
-            window.parent.postMessage({ event: 'redoStep' }, '*');
-        } else if (e.keyCode === 90 && (e.ctrlKey || e.metaKey)) {
-            window.parent.postMessage({ event: 'undoStep' }, '*');
-        }
-    });
-
-    window.onload = () => {
-        let css = 'amp-story-bookend {display: none!important;} .i-amphtml-story-bookend-active amp-story-page[active] {transition: none!important; filter: none!important;} .i-amphtml-story-bookend-active amp-story-page[active]:after {content: none!important}',
-            head = document.head || document.getElementsByTagName('head')[0],
-            style = document.createElement('style');
-        style.type = 'text/css';
-        if (style.styleSheet) {
-            style.styleSheet.cssText = css;
-        } else {
-            style.appendChild(document.createTextNode(css));
-        };
-        head.appendChild(style);
-    };
-    const element = null;
-
-    function selectLayer(event) {
-        let position = 0;
-        if (event.target.id === 'cta-link') {
-            Array.prototype.forEach.call(document.querySelectorAll('.dg-wrapper'), (element) => {
-                element.remove();
-            });
-            position = event.target.parentNode.id;
-        } else {
-            position = getDraggableNode(event.path).children[0].id.toString().slice(5);
-        }
-        window.parent.postMessage({ event: 'selectLayer', position: position }, 'http://127.0.0.1:3978/#/edit');
-    }
-
-    function getDraggableNode(path) {
-        for (let i = 0; i < path.length; i++) {
-            if (path[i].classList && path[i].classList.value) {
-                if ([].includes.call(path[i].classList, 'drag-item')) {
-                    return path[i];
-                }
-            }
-        }
-    }
-</script>
-
-<%
-function getRotateValue (layer) {
-    if (layer.settings.layerSettings.fullscreen) {
-        var dist = Math.sqrt((Math.pow(ampStory.initialWidth, 2)) + (Math.pow(ampStory.initialHeight, 2)));
-        var diagAngle = Math.asin((ampStory.initialHeight) / dist);
-
-        var a1 = (((layer.settings.generalSettings.rotate * Math.PI / 180) % (Math.PI * 2)) + Math.PI * 4) % (Math.PI * 2);
-        if (a1 > Math.PI) {
-            a1 -= Math.PI;
-        }
-        if (a1 > Math.PI / 2 && a1 <= Math.PI) {
-            a1 = (Math.PI / 2) - (a1 - (Math.PI / 2));
-        }
-
-        var ang1 = Math.PI / 2 - diagAngle - Math.abs(a1)
-        var ang2 = Math.abs(diagAngle - Math.abs(a1))
-
-        var scale1 = Math.cos(ang1) * dist / layer.settings.layerSettings.originalHeight
-        var scale2 = Math.cos(ang2) * dist / layer.settings.layerSettings.originalWidth
-        var scale = Math.max(scale1, scale2)
-        return scale
-    } else {
-        return scale
-    }
-}
-
-function getFullScreenAnimationContainerWidth (layer) {
-    return parseFloat((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10)
-}
-
-function getFullScreenAnimationContainerHeight (layer) {
-    return parseFloat((100 * (Math.abs((+layer.settings.layerSettings.originalWidth * getRotateValue (layer)) *
-            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.originalHeight * getRotateValue (layer)) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10)
-}
-
-function getAnimationWidthEm (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
-}
-function getAnimationHeightEm (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    return parseInt((Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))), 10) / (3.434 * ampStory.initialWidth / 100) + 'em';
-}
-
-function getAnimationContainerWidth (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialWidth, 10) + '%';
-}
-
-function getAnimationContainerHeight (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    return parseInt((100 * (Math.abs((+layer.settings.layerSettings.width + thickness) *
-            Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-            Math.abs((+layer.settings.layerSettings.height + thickness) *
-                    Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) / ampStory.initialHeight, 10) + '%';
-}
-
-function getDraggableElementWidth (layer) {
-    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
-        return (100 * layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180)))));
-    } else {
-        return (100 * layer.settings.layerSettings.width) / parseInt((Math.abs(layer.settings.layerSettings.width *
-                Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.height *
-                        Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
-    }
-}
-function getDraggableElementHeight (layer) {
-    if (layer.settings.layerSettings.fullscreen && layer.type === 'image') {
-        return (100 * layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / parseInt((Math.abs(layer.settings.layerSettings.originalWidth * getRotateValue(layer) *
-                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.originalHeight * getRotateValue(layer) *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180)))));
-    } else {
-        return (100 * layer.settings.layerSettings.height) / parseInt((Math.abs(layer.settings.layerSettings.width *
-                Math.sin(layer.settings.generalSettings.rotate * (Math.PI / 180))) +
-                Math.abs(layer.settings.layerSettings.height *
-                        Math.cos(layer.settings.generalSettings.rotate * (Math.PI / 180))))) + '%';
-    }
-}
-
-function getDeraggableElementOffsetX (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    if (layer.settings.generalSettings.rotate !== '0') {
-        return layer.settings.generalSettings.innerOffsetX / (3.434 * (ampStory.initialWidth / 100)) + 'em';
-    } else return '0';
-}
-function getDeraggableElementOffsetY (layer) {
-    let thickness = 0;
-    if (layer.settings.layerSettings.shapeStyles) {
-        thickness = layer.settings.layerSettings.shapeStyles.thickness * 2;
-    }
-    if (layer.settings.generalSettings.rotate !== '0') {
-        return layer.settings.generalSettings.innerOffsetY / (3.434 * (ampStory.initialWidth / 100)) + 'em';
-    } else return '0';
-}
-
-function getFullScreenElementOffsetY (layer) {
-    const heightContainerPx = ampStory.initialHeight * getFullScreenAnimationContainerHeight(layer) / 100;
-    const heightContentPx = heightContainerPx * getDraggableElementHeight(layer) / 100;
-    return (100 * ((heightContainerPx - heightContentPx) / 2) / heightContainerPx)
-}
-
-function getFullScreenElementOffsetX (layer) {
-    const widthContainerPx = ampStory.initialWidth * getFullScreenAnimationContainerWidth(layer) / 100;
-    const widthContentPx = widthContainerPx * getDraggableElementWidth(layer) / 100;
-    return (100 * ((widthContainerPx - widthContentPx) / 2) / widthContainerPx)
-}
-
-function setLinkBgColor (data) {
-    if (data.type === 'solid') {
-        console.log('1111', data.leftColor);
-        return data.leftColor;
-    } else if (data.type === 'linear') {
-        return `linear-gradient(${data.angle}deg, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
-    } else if (data.type === 'radial') {
-        return `radial-gradient(circle at ${data.horizontalDirection}% ${data.verticalDirection}%, ${data.leftColor} ${data.leftColorPercent}%, ${data.rightColor} ${data.rightColorPercent}%)`;
-    }
-}
-
-function getFullScreenContainerX(layer) {
-    return layer.settings.layerSettings.fullscreen
-            ? `${(100 * (ampStory.initialWidth - layer.settings.layerSettings.originalWidth * getRotateValue(layer)) / 2) / ampStory.initialWidth}`
-            : `${((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100)}`
-}
-
-function getFullScreenContainerY(layer) {
-    return layer.settings.layerSettings.fullscreen
-            ? `${(100 * (ampStory.initialHeight - layer.settings.layerSettings.originalHeight * getRotateValue(layer)) / 2) / ampStory.initialHeight}`
-            : `${((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100)}`
-}
-%>
-
-<amp-story class="single-slide" standalone poster-portrait-src="" publisher-logo-src="">
-    <amp-story-page style="text-rendering: auto;background: #eeeeee" id='story' auto-advance-after="10s"
-                    class="container">
-        <% let preview = false;
-        if (currentSlide) {
-            currentSlide.layers.sort((first, second) => {
-                var keyA = first.position,
-                        keyB = second.position;
-                if(keyA < keyB) return -1;
-                if(keyA > keyB) return 1;
-                return 0;
-            })
-        } %>
-        <% if (currentSlide) { %>
-            <% currentSlide && currentSlide.layers && currentSlide.layers.map((layer, layerIndex) => { %>
-                <% var page = null
-                        switch (layer.type) {
-                    case 'text':
-                case 'html': %>
-                <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="selectLayer(event)"
-                         class="drag-item single-page-item animate"
-                         style="
-                                 width: <%=getAnimationWidthEm(layer)%>;
-                                 height: <%=getAnimationHeightEm(layer)%>;
-                         <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
-                             bottom: 0;
-                                     top: initial;
-                         <% } else {%>
-                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
-                         <% }%>
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
-                        <div id="layer<%=layer.position%>" style="
-                                outline: none;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;">
-                            <% include layers/text.ejs %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% break;
-
-                case 'shape': %>
-                <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="selectLayer(event)"
-                         class="drag-item single-page-item animate"
-                         style="
-                                 position: absolute;
-                                 width: <%=getAnimationWidthEm(layer)%>;
-                                 height: <%=getAnimationHeightEm(layer)%>;
-                         <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
-                             bottom: 0;
-                                     top: initial;
-                         <% } else {%>
-                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
-                         <% }%>
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
-                        <div id="layer<%=layer.position%>" draggable="true" class="rotate-wrapper " style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;">
-                            <% include layers/shape.ejs %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% break;
-
-                    case 'image':
-                case 'gifs': %>
-                <% if (layer.content.image.url) { %>
-                <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="selectLayer(event)"
-                         class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item single-page-item animate small-image' : 'fullscreen drag-item single-page-item animate small-image'%>"
-                         style="
-                                 position: absolute;
-                         <%if (layer.settings.layerSettings.fullscreen) {%>
-                                 width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
-                                 height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
-                         <% } else {%>
-                                 width: <%=getAnimationWidthEm(layer)%>;
-                                 height: <%=getAnimationHeightEm(layer)%>;
-                         <% }%>
-                         <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
-                             bottom: 0;
-                                     top: initial;
-                         <% } else {%>
-                             top: <%= getFullScreenContainerY(layer) + '%' %>;
-                         <% }%>
-                                 left: <%= getFullScreenContainerX(layer) + '%' %>;">
-                        <div draggable="true" id="layer<%=layer.position%>"
-                                <%if (layer.settings.layerSettings.fullscreen) {%> style="
-                                position: absolute;
-                                left: <%=getFullScreenElementOffsetX(layer) + '%'%>;
-                                top: <%=getFullScreenElementOffsetY(layer) + '%';%>;
-                                width: <%=getDraggableElementWidth(layer) + '%'%>;
-                                height: <%=getDraggableElementHeight(layer) + '%';%>;
-                                transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                " <% } else { %> class="rotate-wrapper" style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                            <%- include('layers/image.ejs', {withAnimations: false, layer: layer }); %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% } %>
-                <% break
-
-                case 'video': %>
-                <% if (layer.content.video.url) { %>
-                <amp-story-grid-layer template="horizontal">
-                    <div onmousedown="selectLayer(event)"
-                         class="<%=!layer.settings.layerSettings.fullscreen ? 'drag-item animate small-image' : 'fullscreen drag-item animate small-image'%>"
-                         style="
-                                 position: absolute;
-                         <%if (layer.settings.layerSettings.fullscreen) {%>
-                                 width: <%=getFullScreenAnimationContainerWidth(layer) + '%'%>;
-                                 height: <%=getFullScreenAnimationContainerHeight(layer) + '%'%>;
-                         <% } else {%>
-                                 width: <%=getAnimationWidthEm(layer)%>;
-                                 height: <%=getAnimationHeightEm(layer)%>;
-                         <% }%>
-                         <%if (+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height) === 0) {%>
-                             bottom: 0;
-                                     top: initial;
-                         <% } else {%>
-                             top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100) + '%' %>;
-                         <% }%>
-                                 left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100) + '%' %>;">
-                        <div draggable="true" id="layer<%=layer.position%>"
-                                <%if (layer.settings.layerSettings.fullscreen) {%> style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer)%>;
-                                height: <%=getDraggableElementHeight(layer)%>;
-                                transform: <%=`rotate(${layer.settings.generalSettings.rotate}deg)`%>;
-                                " <% } else { %> class="rotate-wrapper" style="
-                                position: absolute;
-                                width: <%=getDraggableElementWidth(layer);%>;
-                                height: <%=getDraggableElementHeight(layer);%>;
-                                transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;
-                                top: <%=getDeraggableElementOffsetY(layer);%>;
-                                left: <%=getDeraggableElementOffsetX(layer);%>;" <% } %>>
-                            <%- include('layers/video.ejs', {withAnimations: false, layer: layer, duration: currentSlide.duration }); %>
-                        </div>
-                    </div>
-                </amp-story-grid-layer>
-                <% } %>
-                <% break
-                case 'cta-link': %>
-                <div style="
-                    width: 100%;
-                    position: absolute;
-                    height: 10vh;
-                    top: 90%;
-                    display: grid;
-                 " id="<%=layer.position%>">
-                    <a onmousedown="selectLayer(event)"
-                       style="
-                           position: absolute;
-                           left: 50%;
-                           bottom: 10%;
-                           transform: translateX(-50%);
-                           margin: auto;
-                           padding: 10px 20px;
-                           text-align: center;
-                           font-size: 16px;
-                           font-family: 'Verdana';
-                           text-decoration: none;
-                           background: <%=setLinkBgColor(layer.settings.layerSettings.shapeStyles.fillColor)%>;
-                           color: <%=layer.settings.ctaLayerSettings.fontColor%>;
-                           border: <%=layer.settings.layerSettings.shapeStyles.thickness + 'px solid ' + layer.settings.layerSettings.shapeStyles.borderColor.leftColor%>;
-                           text-align: center;
-                           cursor: default;
-                           z-index: <%=currentSlide.layers.length + 1%>;
-                           border-radius: <%=(layer.settings.layerSettings.shapeStyles.round.toString() || '25') + 'px'%>"
-                       href="<%=layer.settings.ctaLayerSettings.link%>"
-                       id="<%=`cta-link`%>"><%=layer.settings.ctaLayerSettings.linkTitle%></a>
-                </div>
-                <% break } %>
-            <% }) %>
-        <% } %>
-    </amp-story-page>
+          case 'video': %>
+            <% if (layer.content.video && layer.content.video.url) { %>
+            <amp-story-grid-layer template="horizontal">
+              <%- include('./components/dirty-video-layer.ejs', {withEvent: true, withAnimations: false, layer, currentSlide, preview})%>
+            </amp-story-grid-layer>
+            <% } %>
+            <% break
+          case 'cta-link': %>
+            <%- include('./components/dirty-cta-layer.ejs', {withEvent: true, layer, currentSlide})%>
+            <% break } %>
+        <% }) %>
+      <% } %>
+  </amp-story-page>
 </amp-story>
 
 <script type="text/javascript" src="/resize-files?path=amp-to-html/dist/js/subjx.js"></script>

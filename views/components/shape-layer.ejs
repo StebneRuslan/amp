@@ -1,0 +1,33 @@
+<% include ../main.ejs %>
+<div <% if (withEvent) { %>onmousedown="selectLayer(event)" <% } %>
+     class="drag-item single-page-item animate"
+     style="
+       position: absolute;
+       width: <%=getAnimationWidthEm(layer)%>;
+       height: <%=getAnimationHeightEm(layer)%>;
+     <%if (Math.abs(+ampStory.initialHeight - (+layer.settings.generalSettings.offsetY + +layer.settings.layerSettings.height)) <= 1.5) {%>
+       bottom: 0;top: initial;
+     <% } else {%>
+       top: <%= ((layer.settings.generalSettings.offsetY / ampStory.initialHeight) * 100).toFixed(2) + '%' %>;
+     <% }%>
+       left: <%= ((layer.settings.generalSettings.offsetX / ampStory.initialWidth) * 100).toFixed(2) + '%' %>;"
+
+<%if (withAnimations) { %>
+  <% if (layer.settings.animateIn && !preview){ %> animate-in="<%= layer.settings.animateIn %>" <% } %>
+  <% if (layer.settings.animateDuration){ %> animate-in-duration="<%= layer.settings.animateDuration %>s"<% } %>
+  <% if (layer.settings.animateDelay){ %> animate-in-delay="<%= layer.settings.animateDelay %>s"<% } %>
+     <%if (['zoom-in'].includes(layer.settings.animateIn)) { %>scale-start="0.001" scale-end="1"<% } %>
+     <%if (['zoom-out'].includes(layer.settings.animateIn)) { %>scale-start="1.9" scale-end="1"<% } %>
+  <% } %>>
+
+  <div id="layer<%=layer.position%>"
+       draggable="true"
+       class="rotate-wrapper drag-item-content"
+       data-locked="<%=layer.settings.generalSettings.locked ? 1 : 0%>"
+       data-round="<%=layer.settings.generalSettings.round || 0%>"
+       data-rect="<%=layer.content.value === 'square' || layer.content.shape === 'square' ? 1 : 0%>"
+       style="
+         transform: <%='rotate(' + layer.settings.generalSettings.rotate + 'deg)'%>;">
+    <% include ../layers/shape.ejs %>
+  </div>
+</div>
