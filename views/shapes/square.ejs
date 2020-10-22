@@ -1,23 +1,44 @@
 <% include ./index.ejs %>
+<% include ./round.ejs %>
+<% width = +layer.settings.layerSettings.width || 0 %>
+<% height = +layer.settings.layerSettings.height || 0 %>
+<% round = +layer.settings.generalSettings.round || 0 %>
+<% thickness = layer.settings.layerSettings.shapeStyles.thickness || 0 * 2 %>
+<% getRectRound = function () {
+    if (round > (width + thickness) / 2 || round > (height + thickness) / 2) {
+        return (width + thickness) < (height + thickness) ? (width + thickness) / 2 : (height + thickness) / 2;
+    } else {
+        return round;
+    }
+}
+
+getRectPath = function () {
+    return `M0 0 L ${width + thickness} 0 L${width + thickness} ${height + thickness} L 0 ${height + thickness} Z`;
+}
+
+getViewBox = function () {
+    return `0 0 ${width + thickness} ${height + thickness}`
+}
+%>
 <svg
-        xmlns='http://www.w3.org/2000/svg'
-        xmlns:xlink='http://www.w3.org/1999/xlink'
-        width='<%= getSvgSizeInProcentage('width') %>'
-        height='<%= getSvgSizeInProcentage('height') %>'
-        style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
-        viewBox='0 0 33 33'
-        preserveAspectRatio='none'
+  xmlns='http://www.w3.org/2000/svg'
+  xmlns:xlink='http://www.w3.org/1999/xlink'
+  width='<%= getSvgSizeInProcentage('width') %>'
+  height='<%= getSvgSizeInProcentage('height') %>'
+  style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(${getSvgTranslate()}em, ${getSvgTranslate()}em); width: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em); height: calc(100% - ${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em);`%>'
+  viewBox='<%=getViewBox()%>'
+  preserveAspectRatio='none'
 >
     <% include ./defs.ejs %>
     <g>
-        <g transform='translate(-1013 -228.25)'>
+        <g>
             <use fill='transparent' />
             <path
-                    d='M1013, 261.25 v-33h33v33z'
-                    stroke='<%= setColor('borderColor') %>'
-                    fill='<%= setColor('fillColor') %>'
-                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
-                    vector-effect='non-scaling-stroke'
+              d='<%= roundShape(getRectPath(), getRectRound()) %>'
+              stroke='<%= setColor('borderColor') %>'
+              fill='<%= setColor('fillColor') %>'
+              stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
+              vector-effect='non-scaling-stroke'
             ></path>
         </g>
     </g>

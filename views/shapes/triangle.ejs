@@ -1,22 +1,23 @@
 <% include ./index.ejs %>
+<% include ./round.ejs %>
 <svg
-    xmlns='http://www.w3.org/2000/svg'
-    xmlns:xlink='http://www.w3.org/1999/xlink'
-    width='<%= getSvgSizeInProcentage('width') %>'
-    height='<%= getSvgSizeInProcentage('height') %>'
-    style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(0px, 0px); width: calc(100%); height: calc(100% - ${((layer.settings.layerSettings.shapeStyles.thickness / 2) / 16).toFixed(3)}em);`%>'
-    viewBox='0 0 50 50'
-    preserveAspectRatio='none'>
+  xmlns='http://www.w3.org/2000/svg'
+  xmlns:xlink='http://www.w3.org/1999/xlink'
+  width='<%= getSvgSizeInProcentage('width') %>'
+  height='<%= getSvgSizeInProcentage('height') %>'
+  style='<%=`overflow: visible; filter: ${+layer.settings.generalSettings.shadow ? `url(#shadow${currentSlide.position}${layer.position})` : 'none'}; transform: translate(0px, 0px); width: calc(100%); height: calc(100% - ${((layer.settings.layerSettings.shapeStyles.thickness / 2) / 16).toFixed(3)}em);`%>'
+  viewBox='0 0 400 400'
+  preserveAspectRatio='none'>
     <% include ./defs.ejs %>
     <g>
-        <g transform='translate(-1100 -228.25)'>
+        <g>
             <use fill='transparent'/>
             <path
-                    d='M1125, 228.25 l25 50h -50z'
-                    stroke='<%= setColor('borderColor') %>'
-                    fill='<%= setColor('fillColor') %>'
-                    stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
-                    vector-effect='non-scaling-stroke'>
+              d='<%= roundShape('M200 0 L 0 400 L400 400 Z', layer.settings.generalSettings.round || 0) %>'
+              stroke='<%= setColor('borderColor') %>'
+              fill='<%= setColor('fillColor') %>'
+              stroke-width='<%= layer.settings.layerSettings.shapeStyles.thickness && layer.settings.layerSettings.shapeStyles.thickness >= 0 ? `${(layer.settings.layerSettings.shapeStyles.thickness / 16).toFixed(3)}em` : 0 %>'
+              vector-effect='non-scaling-stroke'>
             </path>
         </g>
     </g>

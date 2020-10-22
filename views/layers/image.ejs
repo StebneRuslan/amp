@@ -7,6 +7,15 @@
       : typeof content.image === 'string' ? ((content.value || content.image) || '') : content.image.url || (content.value || content.image) || ''
   }
 }
+
+function getFullscreenImageLayout (layer) {
+  return ['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport)
+    ? 'fill'
+    : ['pan-right', 'pan-left'].includes(layer.settings.animateIn)
+      ? 'fixed'
+      : 'responsive'
+}
+
 if (layer.settings.layerSettings.fullscreen) { %>
   <% if (withAnimations && ['pan-up', 'pan-down'].includes(layer.settings.animateIn) && layer.settings.animateIn){ %>
   <div style="transform: translateX(50%);">
@@ -24,16 +33,24 @@ if (layer.settings.layerSettings.fullscreen) { %>
       src="<%= getImageUrl(layer.content) %>"
       width="<%= layer.settings.layerSettings.width %>"
       height="<%= layer.settings.layerSettings.height %>"
-      layout="<%=['zoom-in', 'zoom-out'].includes(layer.settings.animateIn) && (layer.content.compressed || zipExport) ? 'fill' : 'responsive'%>"
+      layout="<%=getFullscreenImageLayout(layer)%>"
       alt="an image"
       <% if (((!layer.content.compressed && !zipExport) && ((layer.content.compressed || zipExport) && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) || (layer.content.compressed && ['pan-up', 'pan-down', 'rotate-in-right', 'rotate-in-left', 'twirl-in'].includes(layer.settings.animateIn))) { %>
-      style="width:100%;height:100%;object-fit:fill;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+      style="
+        border-radius: <%=layer.settings.generalSettings.round * 2 || 0%>px;
+        width:100%;height:100%;object-fit:fill;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
       <% } else if ((!layer.content.compressed && !zipExport) && !['pan-right', 'pan-left'].includes(layer.settings.animateIn)) { %>
-      style="width:100%;height:100%;object-fit:contain;position: static;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+      style="
+        border-radius: <%=layer.settings.generalSettings.round * 2 || 0%>px;
+        width:100%;height:100%;object-fit:contain;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
       <% } else if (!layer.content.compressed && !zipExport) { %>
-      style="position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+      style="
+        border-radius: <%=layer.settings.generalSettings.round * 2 || 0%>px;
+        position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
       <% } else { %>
-      style="opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"%>
+      style="
+        border-radius: <%=layer.settings.generalSettings.round * 2 || 0%>px;
+        opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"%>
       <% } %>
     >
     </amp-img>
@@ -50,12 +67,11 @@ if (layer.settings.layerSettings.fullscreen) { %>
     layout="responsive"
     alt="an image"
   <% if (layer.settings.generalSettings.shadow !== '0') { %>
-    style="
-      filter: drop-shadow(0px 0px <%= layer.settings.generalSettings.shadow %>px rgba(0,0,0,0.75));
-      position: initial;
-      opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+    style="height: 100%;
+      filter: drop-shadow(rgba(0, 0, 0, 0.75) 1px 1px <%= layer.settings.generalSettings.shadow %>px);
+      opacity: <%=layer.settings.generalSettings.opacity / 100 %>;border-radius: <%=layer.settings.generalSettings.round * 2 || 0%>px;"
     <% } else { %>
-    style="position: initial;opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
+    style="height: 100%;border-radius: <%=layer.settings.generalSettings.round * 2 || 0%>px; opacity: <%=layer.settings.generalSettings.opacity / 100 %>;"
     <% } %>
   ></amp-img>
 <% } %>

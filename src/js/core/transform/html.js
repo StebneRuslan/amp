@@ -1,21 +1,17 @@
 import { Helper } from '../helper'
 import Subject from './subject'
 
-import {
-    addClass,
-    getTransform,
-    parseMatrix,
-    getOffset
-} from '../util/css-util'
+import { addClass, getTransform, parseMatrix, getOffset } from '../util/css-util'
+import { roundShape } from '../util/round'
 
 import {
-    snapToGrid,
-    snapCandidate,
-    rotatedTopLeft,
-    toPX,
-    fromPX,
-    getUnitDimension,
-    floatToFixed, getRotatedPoint
+  snapToGrid,
+  snapCandidate,
+  rotatedTopLeft,
+  toPX,
+  fromPX,
+  getUnitDimension,
+  floatToFixed
 } from './common'
 
 const brackets = '<div class="dg-hdl dg-rotator"></div>\
@@ -29,101 +25,81 @@ const brackets = '<div class="dg-hdl dg-rotator"></div>\
         <div class="dg-hdl dg-hdl-m dg-hdl-r dg-hdl-mr"></div>';
 
 const guidLinesConfig = {
-    stopDragX: false,
-    tempPositionX: 0,
-    stopDragY: false,
-    tempPositionY: 0,
-    normalizeX: 0,
-    normalizeY: 0,
-    newPositionX: 0,
-    newPositionY: 0
+  stopDragX: false,
+  tempPositionX: 0,
+  stopDragY: false,
+  tempPositionY: 0,
+  normalizeX: 0,
+  normalizeY: 0,
+  newPositionX: 0,
+  newPositionY: 0
 }
 
 export default class Draggable extends Subject {
-    
-    constructor(el, options, Observable) {
-        
-        window.parent.addEventListener('message', handleLayerLock)
-        super(el, Observable);
-        this.enable(options);
-    }
-    
-    _init(item, options) {
-        _init.call(this, item, options);
-    }
-    
-    _destroy(item) {
-        _destroy.call(this, item);
-    }
-    
-    _drag() {
-        processMove.call(this, ...arguments);
-    }
-    
-    _rotate() {
-        processRotate.call(this, ...arguments);
-    }
-    
-    _resize() {
-        processResize.call(this, ...arguments);
-    }
-    
-    _compute() {
-        return _compute.call(this, ...arguments);
-    }
-    
-    _apply() {
-        window.parent.postMessage({ event: 'apply-from-iframe' }, 'http://127.0.0.1:3978/#/edit');
-        const {
-            storage,
-            el
-        } = this;
-        
-        const _el = Helper(el);
-        
-        const {
-            cached,
-            parent,
-            dimens,
-            handle,
-            controls
-        } = storage;
-        
-        if (!cached) return;
-        
-        const matrix = [...cached];
-        
-        const diffLeft = matrix[4];
-        const diffTop = matrix[5];
-        
-        // matrix[4] = 0;
-        // matrix[5] = 0;
-        
-        const css = matrixToCSS(matrix);
-        
-        const pW = parent.css('width'),
-          pH = parent.css('height');
-        
-        const left = parseFloat(
-          toPX(_el.css('left'), pW)
-        );
-        const top = parseFloat(
-          toPX(_el.css('top'), pH)
-        );
-        
-        css.left = fromPX(
-          left + diffLeft + 'px',
-          pW,
-          dimens.left
-        );
-        
-        css.top = fromPX(
-          top + diffTop + 'px',
-          pH,
-          dimens.top
-        );
-        
-        const container = el.querySelector('.text-container');
+  constructor (el, options, Observable) {
+    window.parent.addEventListener('message', handleEditorEvents)
+    super(el, Observable)
+    this.enable(options)
+  }
+
+  _init (item, options) {
+    _init.call(this, item, options)
+  }
+  _destroy (item) {
+    _destroy.call(this, item)
+  }
+
+  _drag () {
+    processMove.call(this, ...arguments)
+  }
+
+  _rotate () {
+    processRotate.call(this, ...arguments)
+  }
+
+  _resize () {
+    processResize.call(this, ...arguments)
+  }
+
+  _compute () {
+    return _compute.call(this, ...arguments)
+  }
+
+  _apply () {
+    window.parent.postMessage({ event: 'apply-from-iframe' }, 'http://127.0.0.1:3978/#/edit')
+    const {
+      storage,
+      el
+    } = this
+    const _el = Helper(el)
+
+    const {
+      cached,
+      parent,
+      dimens,
+      handle,
+      controls
+    } = storage
+
+    if (!cached) return
+
+    const matrix = [...cached]
+
+    const diffLeft = matrix[4]
+    const diffTop = matrix[5]
+
+    const css = matrixToCSS(matrix)
+
+    const pW = parent.css('width')
+    const pH = parent.css('height')
+
+    const left = parseFloat(toPX(_el.css('left'), pW))
+    const top = parseFloat(toPX(_el.css('top'), pH))
+
+    css.left = fromPX(left + diffLeft + 'px', pW, dimens.left)
+    css.top = fromPX(top + diffTop + 'px', pH, dimens.top)
+
+        const container = el.querySelector('.text-container')
         const isTextDrag = handle[0].classList.contains('dg-controls') || !container || (!handle[0].classList.contains('dg-hdl-ml') && !handle[0].classList.contains('dg-hdl-mr'))
         
         window.parent.postMessage({
@@ -160,11 +136,20 @@ let savedLeft = 0;
 let savedTop = 0;
 let normalizeX = false;
 let isLockedLayer = false;
-function handleLayerLock (event) {
+let round = 0;
+let rect = false;
+let thickness = 0;
+function handleEditorEvents (event) {
     if (event.data.event === 'set-lock-settings') {
         locked = event.data.locked;
     } else if (event.data.event === 'lock-layer') {
         isLockedLayer = event.data.locked;
+    } else if (event.data.event === 'set-shape-round-value') {
+        round = event.data.round;
+    } else if (event.data.event === 'select-shape') {
+        rect = event.data.rect;
+    } else if (event.data.event === 'срфтпу-thickness') {
+        thickness = event.data.thickness;
     }
 }
 
@@ -241,6 +226,10 @@ function _init(sel) {
     _controls.css(css);
     
     const _container = Helper(container);
+    const svg = activeElement.querySelector('svg');
+    const svgPath = activeElement.querySelector('svg path');
+    round = +activeElement.dataset.round;
+    rect = activeElement.dataset.rect === '1';
     Object.assign(this.storage, {
         controls: controls,
         guidlines: guidlines,
@@ -262,6 +251,8 @@ function _init(sel) {
             mr: _container.find('.dg-hdl-mr'),
             rotator: _container.find('.dg-rotator')
         },
+        svg: svg,
+        svgPath: svgPath,
         parent: _parent
     });
     _controls.on('mousedown', this._onMouseDown)
@@ -489,7 +480,9 @@ function processResize(
             refang,
             dimens,
             parent,
-            transform
+            transform,
+            svg,
+            svgPath
         } = storage;
         
         const { style } = controls;
@@ -566,6 +559,9 @@ function processResize(
         }
         
         Helper(el).css(css);
+        if (rect) {
+            handleRectPath(svg, svgPath, el.clientWidth, el.clientHeight);
+        }
         window.parent.postMessage({
             event: 'resize-from-package',
             size: size,
@@ -658,7 +654,6 @@ function processMove(
     }
 }
 
-
 const vertivalConfigFields = ['left', 'right', 'centerX']
 const horizontalConfigFields = ['top', 'bottom', 'centerY']
 
@@ -666,6 +661,18 @@ let tmp = 0;
 let stopDrag = false;
 
 
+// RECT HANDLER
+function handleRectPath (svg, svgPath, width, height) {
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    const newPath = `M0 0 L ${width} 0 L${width} ${height} L 0 ${height} Z`;
+    
+    let newRound = +round;
+    if (newRound > +width / 2 || newRound > +height / 2) {
+        newRound = +width < +height ? +width / 2 : +height / 2;
+    }
+    svgPath.setAttribute('d', roundShape(newPath, newRound));
+}
+// RECT HANDLER
 
 // GUIDLINES
 function approxeq(numbers, controlNumber, epsilon) {
