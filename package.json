@@ -2,7 +2,7 @@
   "dependencies": {
     "css-loader": "^1.0.0",
     "ejs": "^2.6.1",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "lodash": "^4.17.15",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "uglifyjs-webpack-plugin": "^2.0.1"
